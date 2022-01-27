@@ -1,7 +1,7 @@
 version: 2.1
 
 description: >
-  This ord will be used in the Cyber4All organization to globalize config.yml files
+  This orb will be used in the Cyber4All organization to globalize config.yml files
   The goal is to have the config.yml file in every repo to just be short and use this orb to complete
   all of its tasks.
 
