@@ -43,8 +43,6 @@ jobs:
           publish-version-tag: true
           ssh-fingerprints: "de:e9:34:ba:64:00:72:ae:28:d5:cc:b7:fe:5f:8c:45"
 
-
-
 workflows:
   # Prior to producing a development orb (which requires credentials) basic validation, linting, and even unit testing can be performed.
   # This workflow will run on every commit
