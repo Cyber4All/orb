@@ -33,9 +33,10 @@ jobs:
       # Push new changes first, before adding new tests to your config.
       - orb/tag-repo
   publish-version-to-github:
-    machine:
-      - image: ubuntu-2004:202010-01
+    docker:
+      - image: cimg/base:stable
     steps:
+      - checkout
       # Machine-user access https://circleci.com/docs/2.0/gh-bb-integration/#controlling-access-via-a-machine-user
       # This fingerprint is associated with Cyber4All/orb
       - orb-tools/dev-promote-prod-from-commit-subject:
