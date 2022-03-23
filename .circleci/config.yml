@@ -34,9 +34,9 @@ jobs:
       - orb/tag-repo
       # Machine-user access https://circleci.com/docs/2.0/gh-bb-integration/#controlling-access-via-a-machine-user
       # This fingerprint is associated with Cyber4All/orb
-      - orb-tools/dev-promote-prod-from-commit-subject:
-          publish-version-tag: true
-          ssh-fingerprints: "de:e9:34:ba:64:00:72:ae:28:d5:cc:b7:fe:5f:8c:45"
+  orb-tools/dev-promote-prod-from-commit-subject:
+    publish-version-tag: true
+    ssh-fingerprints: "de:e9:34:ba:64:00:72:ae:28:d5:cc:b7:fe:5f:8c:45"
 
 
 workflows:
