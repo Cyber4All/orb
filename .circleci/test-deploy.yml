@@ -1,0 +1,71 @@
+version: '2.1'
+
+orbs:
+  orb: 'cyber4all/orb@dev:<<pipeline.git.revision>>'
+  orb-tools: circleci/orb-tools@11.1
+
+jobs:
+  command-tests:
+    docker:
+      - image: 'cimg/base:current'
+    steps:
+      - checkout
+      - orb/check-docker-semver
+      - orb/setup-aws
+      - orb/setup-docker
+      - orb/tag-repo
+      - orb/validate-num-params
+      - orb/validate-str-params
+
+workflows:
+  test-deploy:
+    jobs:
+      # test our commands
+      - command-tests:
+          filters:
+            tags:
+              only: /.*/
+      
+      # test our jobs
+      - orb/deploy-eb:
+          filters:
+            tags:
+              only: /.*/
+      - orb/deploy-ecs:
+          filters:
+            tags:
+              only: /.*/
+      - orb/deploy-lambda:
+          filters:
+            tags:
+              only: /.*/
+      - orb/deploy-s3:
+          filters:
+            tags:
+              only: /.*/
+      - orb/lint-app:
+          filters:
+            tags:
+              only: /.*/
+      - orb/node-backend-tests:
+          filters:
+            tags:
+              only: /.*/
+      - orb/node-frontend-tests:
+          filters:
+            tags:
+              only: /.*/
+
+      # publish orb to production
+      - orb-tools/publish:
+          requires:
+            [command-tests, orb/deploy-eb, orb/deploy-ecs, orb/deploy-ecs, orb/deploy-lambda, orb/deploy-s3, orb/lint-app, orb/node-backend-tests, orb/node-frontend-tests]
+          context: orb-publishing
+          orb-name: namespace/my-orb
+          pub-type: production
+          vcs-type: <<pipeline.project.type>>
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: '/^v[0-9]+\.[0-9]+\.[0-9]+$/'
