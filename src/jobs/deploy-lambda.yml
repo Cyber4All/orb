@@ -1,9 +1,7 @@
 description: >
-  Sample description
-# What will this job do?
-# Descriptions should be short, simple, and clear.
+  This job deploys an application to aws lambda.
 
 executor: node/default
 
 steps:
-  - checkout
+  - run: echo "Not Yet Implemented"

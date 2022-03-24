@@ -1,7 +1,6 @@
 description: >
-  This command echos "Hello World" using file inclusion.
-# What will this command do?
-# Descriptions should be short, simple, and clear.
+  This command will install v2 of the aws-cli and add IAM programmatic keys to the credentials file.
+  This command should be used prior to working with aws orbs or cli commands.
 
 steps:
-  - run: echo "hello world"
+  - run: echo "Not Yet Implemented"

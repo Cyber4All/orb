@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   # Replace this with your own!
   orb: cyber4all/orb@<<pipeline.parameters.dev-orb-version>>
-  orb-tools: circleci/orb-tools@10.0
+  orb-tools: circleci/orb-tools@10.0.0
   bats: circleci/bats@1.0
   shellcheck: circleci/shellcheck@2.0
 
@@ -32,6 +32,16 @@ jobs:
       # "greet" is a sample command packaged with this orb config.
       # Push new changes first, before adding new tests to your config.
       - orb/tag-repo
+  publish-version-to-github:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      # Machine-user access https://circleci.com/docs/2.0/gh-bb-integration/#controlling-access-via-a-machine-user
+      # This fingerprint is associated with Cyber4All/orb
+      - orb-tools/dev-promote-prod-from-commit-subject:
+          publish-version-tag: true
+          ssh-fingerprints: "de:e9:34:ba:64:00:72:ae:28:d5:cc:b7:fe:5f:8c:45"
 
 workflows:
   # Prior to producing a development orb (which requires credentials) basic validation, linting, and even unit testing can be performed.

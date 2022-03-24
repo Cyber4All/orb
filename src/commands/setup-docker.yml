@@ -1,7 +1,6 @@
 description: >
-  This command echos "Hello World" using file inclusion.
-# What will this command do?
-# Descriptions should be short, simple, and clear.
+  This command will setup the remote docker environment and login to the docker cli.
+  This command should be used prior to running any docker commands that interact with the remote repository.
 
 steps:
-  - run: echo "hello world"
+  - run: echo "Not Yet Implemented"

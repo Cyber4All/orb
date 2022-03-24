@@ -1,7 +1,6 @@
 description: >
-  This command echos "Hello World" using file inclusion.
-# What will this command do?
-# Descriptions should be short, simple, and clear.
+  This command checks in the semantic version for a repository has been published already in docker.
+  This command is used a validation step prior to publishing the new docker image version.
 
 steps:
-  - run: echo "hello world"
+  - run: echo "Not Yet Implemented"
