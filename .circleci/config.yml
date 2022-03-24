@@ -33,13 +33,20 @@ jobs:
       # Push new changes first, before adding new tests to your config.
       - orb/tag-repo
   publish-version-to-github:
-    docker:
-      - image: cimg/base:stable
+    executor: orb-tools/ubuntu
     steps:
       - checkout
       # Machine-user access https://circleci.com/docs/2.0/gh-bb-integration/#controlling-access-via-a-machine-user
       # This fingerprint is associated with Cyber4All/orb
       - orb-tools/dev-promote-prod-from-commit-subject:
+          add-pr-comment: false
+          fail-if-semver-not-indicated: false
+          filters:
+            branches:
+              only: master
+          orb-name: Cyber4All/orb
+          requires:
+            - integration-test-1
           publish-version-tag: true
           ssh-fingerprints: "de:e9:34:ba:64:00:72:ae:28:d5:cc:b7:fe:5f:8c:45"
 
