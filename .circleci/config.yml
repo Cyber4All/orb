@@ -46,7 +46,7 @@ workflows:
 
       - orb-tools/continue:
           requires:
-            - orb-tools-/publish
+            - orb-tools/publish
           vcs-type: << pipeline.project.type >>
           pipeline-number: << pipeline.number >>
           filters:
