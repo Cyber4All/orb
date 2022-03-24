@@ -34,7 +34,7 @@ workflows:
             tags:
               only: /.*/
 
-      - orb-tools-/publish:
+      - orb-tools/publish:
           requires:
             [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check, bats/run]
           context: orb-publishing
@@ -44,7 +44,7 @@ workflows:
             tags:
               only: /.*/
 
-      - orb-tools-/continue:
+      - orb-tools/continue:
           requires:
             - orb-tools-/publish
           vcs-type: << pipeline.project.type >>
