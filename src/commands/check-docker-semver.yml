@@ -3,6 +3,6 @@ description: >
   This command is used a validation step prior to publishing the new docker image version.
 
 steps:
-  - run: 
+  - run:
       name: "Not Yet Implemented"
       command: echo "Not Yet Implemented"
