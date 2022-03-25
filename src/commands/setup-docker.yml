@@ -3,4 +3,6 @@ description: >
   This command should be used prior to running any docker commands that interact with the remote repository.
 
 steps:
-  - run: echo "Not Yet Implemented"
+  - run: 
+      name: "Not Yet Implemented"
+      command: echo "Not Yet Implemented"

@@ -1,4 +1,4 @@
-version: '2.1'
+version: 2.1
 
 orbs:
   orb: 'cyber4all/orb@dev:<<pipeline.git.revision>>'
@@ -61,11 +61,12 @@ workflows:
           requires:
             [command-tests, orb/deploy-eb, orb/deploy-ecs, orb/deploy-ecs, orb/deploy-lambda, orb/deploy-s3, orb/lint-app, orb/node-backend-tests, orb/node-frontend-tests]
           context: orb-publishing
-          orb-name: namespace/my-orb
+          orb-name: cyber4all/orb
           pub-type: production
           vcs-type: <<pipeline.project.type>>
           filters:
             branches:
               ignore: /.*/
+              only: releases
             tags:
               only: '/^v[0-9]+\.[0-9]+\.[0-9]+$/'

@@ -1,0 +1,2 @@
+description: >
+  This executor will be the default golang executor to be used by the jobs in cyber4all/orb

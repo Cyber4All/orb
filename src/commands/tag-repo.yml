@@ -3,4 +3,6 @@ description: >
   This command should be used prior to deploying the project.
 
 steps:
-  - run: echo "Not Yet Implemented"
+  - run: 
+      name: "Not Yet Implemented"
+      command: echo "Not Yet Implemented"

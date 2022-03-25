@@ -3,4 +3,6 @@ description: >
   This command should be used prior to working with aws orbs or cli commands.
 
 steps:
-  - run: echo "Not Yet Implemented"
+  - run: 
+      name: "Not Yet Implemented"
+      command: echo "Not Yet Implemented"

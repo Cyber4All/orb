@@ -4,4 +4,6 @@ description: >
 executor: node/default
 
 steps:
-  - run: echo "Not Yet Implemented"
+  - run: 
+      name: "Not Yet Implemented"
+      command: echo "Not Yet Implemented"

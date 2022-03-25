@@ -3,4 +3,6 @@ description: >
   This command should be used when a job needs to validate the parameters passed to it.
 
 steps:
-  - run: echo "Not Yet Implemented"
+  - run: 
+      name: "Not Yet Implemented"
+      command: echo "Not Yet Implemented"
