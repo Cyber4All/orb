@@ -8,9 +8,6 @@ check_version() {
     if curl --silent -f -lSL "https://index.docker.io/v1/repositories/cyber4all/${DOCKER_REPOSITORY}/tags/${DOCKER_SEMVER}" > /dev/null; then
         echo "${DOCKER_SEMVER} already exists in the ${DOCKER_REPOSITORY} on dockerhub"
         exit 1
-    else 
-        echo "Docker Version does not exist"
-    fi
 }
 
 ORB_TEST_ENV="bats-core"

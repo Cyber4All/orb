@@ -10,6 +10,5 @@ teardown() {
     export DOCKER_REPOSITORY="bundling-monitor-service"
     export DOCKER_SEMVER="latest"
 
-    result=$(check_version)
-    [ "$result" == "Docker Version does not exist" ]
+    check_version
 }
