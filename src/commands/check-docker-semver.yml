@@ -1,0 +1,8 @@
+description: >
+  This command checks in the semantic version for a repository has been published already in docker.
+  This command is used a validation step prior to publishing the new docker image version.
+
+steps:
+  - run:
+      name: "Not Yet Implemented"
+      command: echo "Not Yet Implemented"

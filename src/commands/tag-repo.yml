@@ -1,0 +1,8 @@
+description: >
+  This command will tag the github repository with the semantic version of the project.
+  This command should be used prior to deploying the project.
+
+steps:
+  - run:
+      name: "Not Yet Implemented"
+      command: echo "Not Yet Implemented"

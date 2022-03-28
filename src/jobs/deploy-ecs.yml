@@ -1,5 +1,5 @@
 description: >
-  This job deploys an application to aws s3.
+  This job deploys an application to aws elastic container service.
 
 executor: node/default
 
