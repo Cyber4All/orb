@@ -13,7 +13,7 @@ teardown() {
     export DOCKER_SEMVER="0.0.0"
 
     run check_version
-    echo "# ${status}" >&3
+    echo $status >&3
     echo ${output}
     echo $BATS_RUN_COMMAND
     [ "$status" -eq 1 ]
