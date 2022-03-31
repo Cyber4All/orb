@@ -14,7 +14,7 @@ print_output() {
     echo "$output"
 }
 
-@test '1: Check Semantic Version on Dockerhub' {
+@test 'Check Semantic Version on Dockerhub' {
     export DOCKER_REPOSITORY="bundling-monitor-service"
     export DOCKER_SEMVER="0.0.0"
 
@@ -27,7 +27,7 @@ print_output() {
     print_output
 }
 
-@test '2: Check Semantic Version Passes' {
+@test 'Check Semantic Version Passes' {
     export DOCKER_REPOSITORY="bundling-monitor-service"
     export DOCKER_SEMVER="latest"
 
@@ -40,7 +40,7 @@ print_output() {
     print_output
 }
 
-@test '3: Unset Variable DOCKER_SEMVER Fail Case' {
+@test 'Unset Variable DOCKER_SEMVER Fail Case' {
     export DOCKER_REPOSITORY="bundling-monitor-service"
 
     run check_version
@@ -52,7 +52,7 @@ print_output() {
     print_output
 }
 
-@test '4: Unset Variable DOCKER_REPOSITORY Fail Case' {
+@test 'Unset Variable DOCKER_REPOSITORY Fail Case' {
     export DOCKER_SEMVER="latest"
 
     run check_version
