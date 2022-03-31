@@ -16,7 +16,7 @@ teardown() {
     echo $status >&3
     echo ${output}
     echo $BATS_RUN_COMMAND
-    [ "$status" -eq 1 ]
+    [ $status -eq 1 ]
     [ "$output" = "curl: (22) The requested URL returned error: 404 NOT FOUND" ]
     [ "$BATS_RUN_COMMAND" = "check_version" ]
 }
