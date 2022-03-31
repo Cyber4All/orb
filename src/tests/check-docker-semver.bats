@@ -8,7 +8,7 @@ teardown() {
 
 @test '1: Check Semantic Version on Dockerhub' {
     export DOCKER_REPOSITORY="bundling-monitor-service"
-    export DOCKER_SEMVER="latest"
+    export DOCKER_SEMVER="0.0.0"
 
     check_version
 }
