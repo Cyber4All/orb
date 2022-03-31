@@ -12,6 +12,6 @@ teardown() {
 
     run check_version
     echo ${output}
-    [ "$output" = "${DOCKER_SEMVER} already exists in the ${DOCKER_REPOSITORY} on dockerhub" ]
+    [ "$output" = "curl: (22) The requested URL returned error: 404 NOT FOUND" ]
     [ "$BATS_RUN_COMMAND" = "check_version" ]
 }
