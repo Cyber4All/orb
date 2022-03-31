@@ -11,7 +11,7 @@ teardown() {
     export DOCKER_SEMVER="0.0.0"
 
     run check_version
-    [ "$status" -eq 1 ]
+    
     [ "$output" = "${DOCKER_SEMVER} already exists in the ${DOCKER_REPOSITORY} on dockerhub" ]
     [ "$BATS_RUN_COMMAND" = "check_version" ]
 }
