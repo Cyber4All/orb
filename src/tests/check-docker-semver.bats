@@ -10,5 +10,8 @@ teardown() {
     export DOCKER_REPOSITORY="bundling-monitor-service"
     export DOCKER_SEMVER="0.0.0"
 
-    check_version
+    run check_version
+    [ "$status" -eq 1 ]
+    [ "$output" = "${DOCKER_SEMVER} already exists in the ${DOCKER_REPOSITORY} on dockerhub" ]
+    [ "$BATS_RUN_COMMAND" = "check_version" ]
 }
