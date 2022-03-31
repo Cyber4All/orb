@@ -1,4 +1,4 @@
-#!/usr/src/bin bats
+#!/usr/bin/env bats
 
 setup() {
     source ./src/scripts/check-docker-semver.sh
@@ -13,10 +13,7 @@ teardown() {
     export DOCKER_SEMVER="0.0.0"
 
     run check_version
-    echo $status >&3
-    echo ${output}
-    echo $BATS_RUN_COMMAND
-    [ $status -eq 1 ]
+    echo "$BATS_RUN_COMMAND\n$result\n$output" >&3
     [ "$output" = "curl: (22) The requested URL returned error: 404 NOT FOUND" ]
     [ "$BATS_RUN_COMMAND" = "check_version" ]
 }
