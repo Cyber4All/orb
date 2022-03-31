@@ -9,9 +9,9 @@ teardown() {
 }
 
 print_output() {
-    echo "$BATS_RUN_COMMAND" >&3
-    echo "$status" >&3
-    echo "$output" >&3
+    echo "$BATS_RUN_COMMAND"
+    echo "$status"
+    echo "$output"
 }
 
 @test '1: Check Semantic Version on Dockerhub' {
