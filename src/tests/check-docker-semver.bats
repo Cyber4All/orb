@@ -33,7 +33,8 @@ teardown() {
     echo "$status" >&3
     echo "$output" >&3
 
-    [ "$status" -eq 0 ]
+    [ "$status" -eq 1 ]
+    [ "$output" = "$DOCKER_SEMVER already exists in the $DOCKER_REPOSITORY on dockerhub" ]
     [ "$BATS_RUN_COMMAND" = "check_version" ]
 }
 
@@ -46,11 +47,11 @@ teardown() {
     echo "$status" >&3
     echo "$output" >&3
 
-    [ "$status" -eq 0 ]
+    [ "$status" -eq 1 ]
     [ "$BATS_RUN_COMMAND" = "check_version" ]
 }
 
-@test '3: Unset Variable DOCKER_REPOSITORY Fail Case' {
+@test '4: Unset Variable DOCKER_REPOSITORY Fail Case' {
     export DOCKER_SEMVER="latest"
 
     run check_version
@@ -59,6 +60,6 @@ teardown() {
     echo "$status" >&3
     echo "$output" >&3
 
-    [ "$status" -eq 0 ]
+    [ "$status" -eq 1 ]
     [ "$BATS_RUN_COMMAND" = "check_version" ]
 }
