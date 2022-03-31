@@ -14,9 +14,9 @@ teardown() {
 
     run check_version
     echo "$BATS_RUN_COMMAND"
-    echo "$result"
+    echo "$status"
     echo "$output"
-    
+
     [ "$output" = "curl: (22) The requested URL returned error: 404 NOT FOUND" ]
     [ "$BATS_RUN_COMMAND" = "check_version" ]
 }
