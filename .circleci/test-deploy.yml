@@ -14,8 +14,6 @@ jobs:
       - orb/setup-aws
       - orb/setup-docker
       - orb/tag-repo
-      - orb/validate-num-params
-      - orb/validate-str-params
 
 workflows:
   test-deploy:
@@ -62,6 +60,7 @@ workflows:
             [command-tests, orb/deploy-eb, orb/deploy-ecs, orb/deploy-ecs, orb/deploy-lambda, orb/deploy-s3, orb/lint-app, orb/node-backend-tests, orb/node-frontend-tests]
           context: orb-publishing
           orb-name: cyber4all/orb
+          enable-pr-comment: false
           pub-type: production
           vcs-type: <<pipeline.project.type>>
           filters:

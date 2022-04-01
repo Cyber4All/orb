@@ -1,2 +1,13 @@
 description: >
   This executor will be the default node executor to be used by the jobs in cyber4all/orb
+
+parameters:
+  tag:
+    type: string
+    default: 'lts'
+    description: >
+      Pick a specific cimg/node image version tag:
+      https://hub.docker.com/r/cimg/node
+
+docker:
+  - image: cimg/node:<<parameters.tag>>

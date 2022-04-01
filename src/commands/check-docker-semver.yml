@@ -2,7 +2,23 @@ description: >
   This command checks in the semantic version for a repository has been published already in docker.
   This command is used a validation step prior to publishing the new docker image version.
 
+parameters:
+  docker_semver:
+    type: string
+    default: ""
+    description: >
+      The semantic version of the project trying to be deployed
+      https://semver.org/spec/v2.0.0.html
+  docker_repository:
+    type: string
+    default: ""
+    description: >
+      The name of the repository on dockerhub
+
 steps:
   - run:
-      name: "Not Yet Implemented"
-      command: echo "Not Yet Implemented"
+      name: "Check that semantic version is unique on Dockerhub"
+      command: <<include(scripts/check-docker-semver.sh)>>
+      environment:
+        DOCKER_SEMVER: <<parameters.docker_semver>>
+        DOCKER_REPOSITORY: <<parameters.docker_repository>>
