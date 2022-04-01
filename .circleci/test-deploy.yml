@@ -14,8 +14,6 @@ jobs:
       - orb/setup-aws
       - orb/setup-docker
       - orb/tag-repo
-      - orb/validate-num-params
-      - orb/validate-str-params
 
 workflows:
   test-deploy:

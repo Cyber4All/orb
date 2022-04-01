@@ -8,6 +8,6 @@ parameters:
     description: >
       Pick a specific cimg/node image version tag:
       https://hub.docker.com/r/cimg/node
- 
+
 docker:
   - image: cimg/node:<<parameters.tag>>
