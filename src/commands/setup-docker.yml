@@ -2,7 +2,21 @@ description: >
   This command will setup the remote docker environment and login to the docker cli.
   This command should be used prior to running any docker commands that interact with the remote repository.
 
+parameters:
+  docker-username:
+    type: env_var_name
+    default: DOCKER_USERNAME
+    description: >
+      Username for the docker acccount
+
+  docker-password:
+    type: env_var_name
+    default: DOCKER_PASSWORD
+    description: >
+      Password for the docker account
+
 steps:
-  - run:
-      name: "Not Yet Implemented"
-      command: echo "Not Yet Implemented"
+  - setup_remote_docker
+  - docker/install-docker
+  - run: |
+    docker login -u << parameters.docker-username >> -p << parameters.docker-password >>
