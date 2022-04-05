@@ -25,7 +25,7 @@ parameters:
 steps:
   - aws-cli/install
   - aws-cli/setup:
-    aws-access-key-id: AWS_ACCESS_KEY_ID
-    aws-region: AWS_REGION
-    aws-secret-access-key: AWS_SECRET_ACCESS_KEY_ID
+    aws-access-key-id: <<parameters.AWS_ACCESS_KEY_ID>>
+    aws-region: <<parameters.AWS_REGION>>
+    aws-secret-access-key: <<parameters.AWS_SECRET_ACCESS_KEY_ID>>
     version: "1"

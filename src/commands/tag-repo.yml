@@ -2,7 +2,26 @@ description: >
   This command will tag the github repository with the semantic version of the project.
   This command should be used prior to deploying the project.
 
+parameters:
+  image:
+    type: string
+    default: ""
+    description: >
+      "Full image name being tagged and pushed"
+  
+  tag:
+    type: string
+    default: ""
+    description: >
+      "Tag being assigned"
+
 steps:
   - run:
-      name: "Not Yet Implemented"
-      command: echo "Not Yet Implemented"
+    name: Validate params
+    command: |
+      if [ "<<parameters.image>>" = "" ] | [ "<<parameters.tag>>" = "" ]; then
+        echo "Both params must be defined"
+        circleci-agent step halt
+        exit 1
+      fi
+
