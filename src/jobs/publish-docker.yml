@@ -12,15 +12,28 @@ parameters:
     default: DOCKER_LOGIN
     description: |
       Name of environment variable storing your Docker username
+  gh_pat:
+    type: env_var_name
+    default: GH_PAT
+    description: |
+      Name of environment variable storing your Github Personal Access Token
   organization:
     type: string
     default: 'cyber4all'
+    description: |
+      Name of your docker organization
   repository:
     type: string
+    description: |
+      Name of the repository associated with your organization
   version:
     type: string
+    description: |
+      Semantic Version of the application
   executor:
     type: executor
+    description: |
+      Name of the executor to run the job as
 
 executor: <<parameters.executor>>
 
@@ -50,5 +63,13 @@ steps:
       image: "<<parameters.organization>>/<<parameters.repository>>"
       lint-dockerfile: true
       tag: <<parameters.version>>
-  - tag-repo
-  - docker/push
+  - tag-repo:
+      tag: <<parameters.version>>
+      gh_pat: <<parameters.gh_pat>>
+  - docker/push:
+      digest-path: /tmp/digest.txt
+      image: "<<parameters.organization>>/<<parameters.repository>>"
+      tag: <<parameters.version>>
+  - run:
+      command: |
+        echo "Digest is: $(</tmp/digest.txt)"
