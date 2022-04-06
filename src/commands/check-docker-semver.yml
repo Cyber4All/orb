@@ -9,6 +9,11 @@ parameters:
     description: >
       The semantic version of the project trying to be deployed
       https://semver.org/spec/v2.0.0.html
+  docker_organization:
+    type: string
+    default: "cyber4all"
+    description: >
+      The name of the docker organization
   docker_repository:
     type: string
     default: ""
@@ -21,4 +26,5 @@ steps:
       command: <<include(scripts/check-docker-semver.sh)>>
       environment:
         DOCKER_SEMVER: <<parameters.docker_semver>>
+        DOCKER_ORGANIZATION: <<parameters.docker_organization>>
         DOCKER_REPOSITORY: <<parameters.docker_repository>>

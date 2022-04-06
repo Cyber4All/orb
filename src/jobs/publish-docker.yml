@@ -1,0 +1,54 @@
+description: >
+  This job publishes a new version of the application to DockerHub and versions the Github Repository.
+
+parameters:
+  docker-password:
+    type: env_var_name
+    default: DOCKER_PASSWORD
+    description: |
+      Name of environment variable storing your Docker password
+  docker-username:
+    type: env_var_name
+    default: DOCKER_LOGIN
+    description: |
+      Name of environment variable storing your Docker username
+  organization:
+    type: string
+    default: 'cyber4all'
+  repository:
+    type: string
+  version:
+    type: string
+  executor:
+    type: executor
+
+executor: <<parameters.executor>>
+
+steps:
+  - checkout
+  - run:
+      name: "Verify Parameters"
+      command: |
+        if [ -z "<<parameters.version>>" ]; then
+          echo '"version" is missing.'
+          exit 1
+        fi
+
+        if [ -z "<<parameters.repository>>" ]; then
+          echo '"repository" is missing.'
+          exit 1
+        fi
+  - setup-docker:
+      docker-password: <<parameters.docker-password>>
+      docker-username: <<parameters.docker-username>>
+  - check-docker-semver:
+      docker_semver: <<parameters.version>>
+      docker_organization: <<parameters.organization>>
+      docker_repository: <<parameters.repository>>
+  - docker/build:
+      debug: true
+      image: "<<parameters.organization>>/<<parameters.repository>>"
+      lint-dockerfile: true
+      tag: <<parameters.version>>
+  - tag-repo
+  - docker/push

@@ -1,9 +1,60 @@
 description: >
   This job deploys an application to aws elastic container service.
 
+parameters:
+  # Applicaiton parameters
+  environment:
+    type: string
+    default: 'node'
+    description: >
+      Pick the language that the application is written in.
+      This value determines what type of executor should be used.
+  version:
+    type: string
+    default: 'latest'
+    description: >
+      Pick the version of the application to deploy to Dockerhub and ECS.
+  
+
 executor: node/default
 
 steps:
+  # Setup job
+  - checkout
+  - setup-aws
+  - setup-docker
+
+  # validate version
+  - check-docker-semver:
+      docker_org: $DOCKER_ORG
+      docker_repository: $DOCKER_REPO
+      docker_semver: $DOCKER_TAG
+
+  # tag repo with SEMVER
+  - tag-repo
+
+  # push docker iamge with SEMVER to DockerHub
+  - docker/build:
+      image: "$DOCKER_ORG/$DOCKER_REPO"
+      tag: $DOCKER_TAG
+      debug: true
+      lint-dockerfile: true
+      treat-warnings-as-errors: true
+  - docker/push:
+      image: <<parameters.image>>
+      tag: <<parameters.version>>
+      digest-path: /tmp/digest.txt
   - run:
-      name: "Not Yet Implemented"
-      command: echo "Not Yet Implemented"
+      command: |
+        echo "Digest is: $(</tmp/digest.txt)"
+
+  # deploy new container image to ECS
+  # if service, then update ECS service
+  # verify new task-definition version
+  # notify slack channel status of deployment
+
+environment:
+  DOCKER_ORG: <<parameters.organization>>
+  DOCKER_IMAGE: <<parameters.image>>
+  DOCKER_TAG: <<parameters.version>>
+  

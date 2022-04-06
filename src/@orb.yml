@@ -8,6 +8,8 @@ display:
 
 # Orbs that will be used in different jobs
 orbs:
-  aws-cli: circleci/aws-cli@1.2.1
-  docker: circleci/docker@2.0.3
-  node: circleci/node@1.1.6
+  aws-cli: circleci/aws-cli@2.1.0 # https://circleci.com/developer/orbs/orb/circleci/aws-cli?version=2.1.0
+  aws-ecs: circleci/aws-ecs@2.2.1 # https://circleci.com/developer/orbs/orb/circleci/aws-ecs?version=2.2.1
+  docker: circleci/docker@2.0.3 # https://circleci.com/developer/orbs/orb/circleci/docker?version=2.0.3
+  node: circleci/node@5.0.2 # https://circleci.com/developer/orbs/orb/circleci/node?version=5.0.2
+  slack: circleci/slack@4.9.3 # https://circleci.com/developer/orbs/orb/circleci/slack?version=4.9.3
