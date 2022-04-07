@@ -1,5 +1,5 @@
 description: >
-  This job publishes a new version of the application to DockerHub and versions the Github Repository.
+  This job publishes a new version of the application to DockerHub and versions the Github image.
 
 parameters:
   docker-password:
@@ -22,11 +22,11 @@ parameters:
     default: 'cyber4all'
     description: |
       Name of your docker organization
-  repository:
+  image:
     type: string
     description: |
-      Name of the repository associated with your organization
-  version:
+      Name of the image associated with your organization
+  tag:
     type: string
     description: |
       Semantic Version of the application
@@ -42,34 +42,34 @@ steps:
   - run:
       name: "Verify Parameters"
       command: |
-        if [ -z "<<parameters.version>>" ]; then
-          echo '"version" is missing.'
+        if [ -z "<<parameters.tag>>" ]; then
+          echo '"tag" is missing.'
           exit 1
         fi
 
-        if [ -z "<<parameters.repository>>" ]; then
-          echo '"repository" is missing.'
+        if [ -z "<<parameters.image>>" ]; then
+          echo '"image" is missing.'
           exit 1
         fi
   - setup-docker:
       docker-password: <<parameters.docker-password>>
       docker-username: <<parameters.docker-username>>
   - check-docker-semver:
-      docker_semver: <<parameters.version>>
-      docker_organization: <<parameters.organization>>
-      docker_repository: <<parameters.repository>>
+      tag: <<parameters.tag>>
+      organization: <<parameters.organization>>
+      image: <<parameters.image>>
   - docker/build:
       debug: true
-      image: "<<parameters.organization>>/<<parameters.repository>>"
+      image: "<<parameters.organization>>/<<parameters.image>>"
       lint-dockerfile: true
-      tag: <<parameters.version>>
+      tag: <<parameters.tag>>
   - tag-repo:
-      tag: <<parameters.version>>
+      tag: <<parameters.tag>>
       gh_pat: <<parameters.gh_pat>>
   - docker/push:
       digest-path: /tmp/digest.txt
-      image: "<<parameters.organization>>/<<parameters.repository>>"
-      tag: <<parameters.version>>
+      image: "<<parameters.organization>>/<<parameters.image>>"
+      tag: <<parameters.tag>>
   - run:
       command: |
         echo "Digest is: $(</tmp/digest.txt)"

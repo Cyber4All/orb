@@ -3,21 +3,21 @@ description: >
   This command is used a validation step prior to publishing the new docker image version.
 
 parameters:
-  docker_semver:
+  tag:
     type: string
     default: ""
-    description: >
+    description: |
       The semantic version of the project trying to be deployed
       https://semver.org/spec/v2.0.0.html
-  docker_organization:
+  organization:
     type: string
     default: "cyber4all"
-    description: >
+    description: |
       The name of the docker organization
-  docker_repository:
+  image:
     type: string
     default: ""
-    description: >
+    description: |
       The name of the repository on dockerhub
 
 steps:
@@ -25,6 +25,6 @@ steps:
       name: "Check that semantic version is unique on Dockerhub"
       command: <<include(scripts/check-docker-semver.sh)>>
       environment:
-        DOCKER_SEMVER: <<parameters.docker_semver>>
-        DOCKER_ORGANIZATION: <<parameters.docker_organization>>
-        DOCKER_REPOSITORY: <<parameters.docker_repository>>
+        DOCKER_SEMVER: <<parameters.tag>>
+        DOCKER_ORGANIZATION: <<parameters.organization>>
+        DOCKER_REPOSITORY: <<parameters.image>>

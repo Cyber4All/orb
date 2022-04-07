@@ -2,59 +2,118 @@ description: >
   This job deploys an application to aws elastic container service.
 
 parameters:
-  # Applicaiton parameters
-  environment:
+  container-name:
     type: string
-    default: 'node'
-    description: >
-      Pick the language that the application is written in.
-      This value determines what type of executor should be used.
-  version:
+    description: |
+      Name of the container name defined in the ecs task-definition
+  image-name:
     type: string
-    default: 'latest'
-    description: >
-      Pick the version of the application to deploy to Dockerhub and ECS.
-  
+    description: |
+      Name of the docker image in the docker.io repository
+  tag:
+    type: string
+    description: |
+      The semantic version of the project trying to be deployed
+      https://semver.org/spec/v2.0.0.html
+  family:
+    description: Name of the task definition's family.
+    type: string
+  cluster-name:
+    description: The short name or full ARN of the cluster that hosts the service.
+    type: string
+  service-name:
+    description: >-
+      The name of the service to update. If undefined, we assume `family` is the
+      name of both the service and task definition.
+    type: string
+  isService:
+    type: boolean
+    default: false
+    description: |
+      True if the task-definition is deployed as a service on ECS. (Default is false)
+  aws-access-key-id:
+    default: AWS_ACCESS_KEY_ID
+    description: |
+      AWS access key id for IAM role. Set this to the name of
+      the environment variable you will use to hold this
+      value, i.e. AWS_ACCESS_KEY.
+    type: env_var_name
+  aws-secret-access-key:
+    default: AWS_SECRET_ACCESS_KEY
+    description: |
+      AWS secret key for IAM role. Set this to the name of
+      the environment variable you will use to hold this
+      value, i.e. $AWS_SECRET_ACCESS_KEY.
+    type: env_var_name
+  mentions:
+    default: MENTIONS
+    type: env_var_name
+    description: |
+      MENTIONS is a the environment variable name for the slack context.
 
 executor: node/default
 
 steps:
-  # Setup job
   - checkout
-  - setup-aws
-  - setup-docker
-
-  # validate version
-  - check-docker-semver:
-      docker_org: $DOCKER_ORG
-      docker_repository: $DOCKER_REPO
-      docker_semver: $DOCKER_TAG
-
-  # tag repo with SEMVER
-  - tag-repo
-
-  # push docker iamge with SEMVER to DockerHub
-  - docker/build:
-      image: "$DOCKER_ORG/$DOCKER_REPO"
-      tag: $DOCKER_TAG
-      debug: true
-      lint-dockerfile: true
-      treat-warnings-as-errors: true
-  - docker/push:
-      image: <<parameters.image>>
-      tag: <<parameters.version>>
-      digest-path: /tmp/digest.txt
   - run:
-      command: |
-        echo "Digest is: $(</tmp/digest.txt)"
+      name: "Verify Parameters"
+      command: >
+        if [ -z "$SLACK_MENTIONS" ]; then
+          echo '"mentions" is missing'
+          exit 1
+        fi
 
-  # deploy new container image to ECS
-  # if service, then update ECS service
-  # verify new task-definition version
-  # notify slack channel status of deployment
+        if [ -z "<<parameters.container-name>>" ]; then
+          echo '"container-name" is missing.'
+          exit 1
+        fi
+
+        if [ -z "<<parameters.image-name>>" ]; then
+          echo '"image-name" is missing.'
+          exit 1
+        fi
+
+        if [ -z "<<parameters.tag>>" ]; then
+          echo '"tag" is missing.'
+          exit 1
+        fi
+
+        if [ -z "<<parameters.family>>" ]; then
+          echo '"family" is missing.'
+          exit 1
+        fi
+
+        if [ -z "<<parameters.cluster-name>>" ]; then
+          echo '"cluster-name" is missing.'
+          exit 1
+        fi
+
+        if [ -z "$ECS_PARAM_SERVICE_NAME"]; then
+          ECS_PARAM_SERVICE_NAME="<<parameters.family>>"
+        fi
+  - setup-aws:
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
+  - aws-ecs/update-task-definition:
+      container-image-name-updates: "container=<<parameters.container-name>>,image-and-tag=<<parameters.image-name>>:<<parameters.tag>>"
+      family: <<parameters.family>>
+  - when: 
+      condition: <<parameters.isService>>
+      steps:
+        - aws-ecs/update-service:
+            cluster-name: <<parameters.cluster-name>>
+            family: <<parameters.family>>
+            service-name: "$ECS_PARAM_SERVICE_NAME"
+            skip-task-definition-registration: true
+            verify-revision-is-deployed: true
+  - slack/notify:
+      event: fail
+      mentions: "@$SLACK_MENTIONS"
+      template: basic_fail_1
+  - slack/notify:
+      event: pass
+      custom: "<<include(message_templates/deploy_aws_success.json)>>"
 
 environment:
-  DOCKER_ORG: <<parameters.organization>>
-  DOCKER_IMAGE: <<parameters.image>>
-  DOCKER_TAG: <<parameters.version>>
-  
+  ECS_PARAM_SERVICE_NAME: <<parameters.service-name>>
+  SLACK_MENTIONS: <<parameters.mentions>>
