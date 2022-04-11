@@ -9,7 +9,7 @@ parameters:
       Name of environment variable storing your Docker password
     type: env_var_name
   docker-username:
-    default: DOCKER_LOGIN
+    default: DOCKER_USERNAME
     description: |
       Name of environment variable storing your Docker username
     type: env_var_name
