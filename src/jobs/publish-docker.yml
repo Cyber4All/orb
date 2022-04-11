@@ -71,5 +71,6 @@ steps:
       image: "<<parameters.organization>>/<<parameters.image>>"
       tag: <<parameters.tag>>
   - run:
+      name: Output Docker digest
       command: |
         echo "Digest is: $(</tmp/digest.txt)"

@@ -27,6 +27,7 @@ parameters:
 steps:
   - aws-cli/install
   - run:
+      name: Verify Parameters
       command: >
         if [[ -z "$aws-secret-access-key" ]]; then
           echo '"aws-secret-access-key" not set'

@@ -2,6 +2,12 @@ description: >
   This command will tag the github repository with the semantic version of the project.
   This command should be used prior to deploying the project.
 
+parameters:
+  tag:
+    type: string
+  gh_pat:
+    type: env_var_name
+
 steps:
   - run:
       name: "Not Yet Implemented"

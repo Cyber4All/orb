@@ -97,7 +97,7 @@ steps:
   - aws-ecs/update-task-definition:
       container-image-name-updates: "container=<<parameters.container-name>>,image-and-tag=<<parameters.image-name>>:<<parameters.tag>>"
       family: <<parameters.family>>
-  - when: 
+  - when:
       condition: <<parameters.isService>>
       steps:
         - aws-ecs/update-service:
