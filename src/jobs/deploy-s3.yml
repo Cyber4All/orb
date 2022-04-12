@@ -30,28 +30,28 @@ parameters:
 
 steps:
   - tag-repo:
-    tag: <<parameters.TAG>>
+      tag: <<parameters.TAG>>
   - checkout
   - run:
-    name: Install dependencies
-    command: npm install
+      name: Install dependencies
+      command: npm install
   - run:
-    name: Build Application
-    command: npm ng build --prod --no-progress
+      name: Build Application
+      command: npm ng build --prod --no-progress
   - persist_to_workspace:
-    root: #TO-DO
-    paths:
-      - ./
+      root: #TO-DO
+      paths:
+        - ./
   - setup-aws:
-    aws-access-key-id: <<parameters.AWS_ACCESS_KEY_ID>>
-    aws-region: <<parameters.AWS_REGION>>
-    aws-secret-access-key: <<parameters.AWS_SECRET_ACCESS_KEY_ID>>
-    version: "1"
+      aws-access-key-id: <<parameters.AWS_ACCESS_KEY_ID>>
+      aws-region: <<parameters.AWS_REGION>>
+      aws-secret-access-key: <<parameters.AWS_SECRET_ACCESS_KEY_ID>>
+      version: "1"
   - run:
-    name: sync changes
-    command: aws s3 sync ${SOURCE} s3://${S3_BUCKET} --region ${S3_REGION}
+      name: sync changes
+      command: aws s3 sync ${SOURCE} s3://${S3_BUCKET} --region ${S3_REGION}
   - run:
-    name: Invalidate index.html in CloudFront
-    command: aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_ID} --paths /index.html
+      name: Invalidate index.html in CloudFront
+      command: aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_ID} --paths /index.html
 #notify slack
   
