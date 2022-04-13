@@ -17,7 +17,7 @@ steps:
           exit 1
         fi
   - run:
-      name: Tag Repo
-      command: >
-        git tag "<<parameters.tag>>"
-        git push origin --tags
+    name: Tag Repo
+    command: |
+      git tag "<<parameters.tag>>"
+      git push origin --tags
