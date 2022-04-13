@@ -4,6 +4,25 @@ description: >
 executor: node/default
 
 steps:
+  - checkout
+  - docker/install-docker
+  - setup_remote_docker
+  # Tag repo here?
+  - setup-aws:
+    AWS_REGION: 
+    AWS_ACCESS_KEY_ID:
+    AWS_SECRET_ACCESS_KEY_ID:
+  - setup-docker:
+    docker-username:
+    docker-password: 
+  # Pull Image
+  # Publis Image
   - run:
-      name: "Not Yet Implemented"
-      command: echo "Not Yet Implemented"
+    name: Install and init eb cli
+    command: |
+      pip install awsebcli
+      eb init --region "<<parameters.region>>" "<<parameters.service_name>>" -p docker
+  - run:
+      name: Deploy to Elastic Beanstalk
+      command: |
+        eb deploy production --verbose --label "<<parameters.service_name>>"-v"<<parameters.version>>"
