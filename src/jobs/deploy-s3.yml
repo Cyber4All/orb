@@ -4,9 +4,20 @@ description: >
 executor: node/default
 
 parameters:
-  TAG:
+  SOURCE:
     type: string
-    default: ${SEMVER}
+    default: SOURCE
+    description: >
+      a local directory path to sync with s3
+
+  S3_BUCKET:
+    type: string
+    defualt: S3_BUCKET
+    description: >
+      A URI to an S3 bucket
+
+  tag:
+    type: string
     description: >
       tag for the repo
 
@@ -22,7 +33,7 @@ parameters:
     description: >
       Access Key for MACHINE_AWS_ECS
 
-  AWS_SECRET_ACCESS_KEY_ID:
+  AWS_SECRET_ACCESS_KEY:
     type: env_var_name
     default: MACHINE_AWS_ECS_SecretKey
     description: >
@@ -30,7 +41,7 @@ parameters:
 
 steps:
   - tag-repo:
-      tag: <<parameters.TAG>>
+      tag: <<parameters.tag>>
   - checkout
   - run:
       name: Install dependencies
@@ -39,19 +50,23 @@ steps:
       name: Build Application
       command: npm ng build --prod --no-progress
   - persist_to_workspace:
-      root: #TO-DO
+      root: ./dist
       paths:
         - ./
   - setup-aws:
       aws-access-key-id: <<parameters.AWS_ACCESS_KEY_ID>>
       aws-region: <<parameters.AWS_REGION>>
-      aws-secret-access-key: <<parameters.AWS_SECRET_ACCESS_KEY_ID>>
+      aws-secret-access-key: <<parameters.AWS_SECRET_ACCESS_KEY>>
       version: "1"
-  - run:
-      name: sync changes
-      command: aws s3 sync ${SOURCE} s3://${S3_BUCKET} --region ${S3_REGION}
+  - aws-s3/sync:
+      aws-region: <<parameters.AWS_REGION>>
+      from: <<parameters.SOURCE>>
+      to: s3://<<parameters.S3_BUCKET>>
+  # - run:
+  #     name: sync changes
+  #     command: aws s3 sync ${SOURCE} s3://${S3_BUCKET} --region ${S3_REGION}
   - run:
       name: Invalidate index.html in CloudFront
       command: aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_ID} --paths /index.html
-#notify slack
+#TO-DO notify slack
   
