@@ -18,6 +18,6 @@ steps:
         fi
   - run:
     name: Tag Repo
-    command: |
+    command: >
       git tag "<<parameters.tag>>"
       git push origin --tags
