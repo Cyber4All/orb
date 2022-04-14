@@ -24,7 +24,7 @@ parameters:
     type: env_var_name
     default: AWS_REGION_N_VA
     description: |
-      Specify the region for aws
+      Name of environment variable storing the AWS region
 
   aws_access_key_id:
     default: AWS_ACCESS_KEY_ID
