@@ -26,7 +26,7 @@ parameters:
     description: |
       Specify the region for aws
 
-  aws-access-key-id:
+  aws_access_key_id:
     default: AWS_ACCESS_KEY_ID
     type: env_var_name
     description: |
@@ -34,7 +34,7 @@ parameters:
       the environment variable you will use to hold this
       value, i.e. AWS_ACCESS_KEY.
 
-  aws-secret-access-key:
+  aws_secret_access_key:
     default: AWS_SECRET_ACCESS_KEY
     type: env_var_name
     description: |
