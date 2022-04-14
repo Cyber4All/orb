@@ -13,7 +13,7 @@ parameters:
   s3_bucket:
     type: string
     description: |
-      A URI to an S3 bucket
+      AWS S3 Bucket URI used to identify the resource
 
   tag:
     type: string
