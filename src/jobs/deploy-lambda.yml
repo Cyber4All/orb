@@ -20,9 +20,15 @@ parameters:
     description: |
       Secret Key for Machine_AWS_ECS
 
+  tag_repo:
+    type: string
+    description: |
+    The semantic version of the project to be deployed
+
 executor: node/default
 
 steps:
+  - tag-repo: <<parameters.tag>>
   - setup-aws:
       aws-access-key-id: <<parameters.aws_access_key_id>>
       aws-region: <<parameters.aws_region>>
