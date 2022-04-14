@@ -56,10 +56,6 @@ steps:
   - run:
       name: Build Application
       command: npm ng build --prod --no-progress
-  - persist_to_workspace:
-      root: ./dist
-      paths:
-        - ./
   - setup-aws:
       AWS_ACCESS_KEY_ID: <<parameters.aws_access_key_id>>
       AWS_REGION: <<parameters.aws_region>>

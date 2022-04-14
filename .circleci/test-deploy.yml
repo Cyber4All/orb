@@ -23,7 +23,6 @@ workflows:
           filters:
             tags:
               only: /.*/
-      
       # test our jobs
       - orb/deploy-eb:
           filters:
