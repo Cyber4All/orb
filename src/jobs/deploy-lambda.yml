@@ -1,9 +1,29 @@
 description: >
   This job deploys an application to aws lambda.
 
+parameters:
+  aws_region:
+    type: env_var_name
+    default: AWS_REGION_N_VA
+    description: |
+      Specify the region for aws
+
+  aws_access_key_id:
+    type: env_var_name
+    default: MACHINE_AWS_ECS_AccessKey
+    description: |
+      Access key for MACHINE_AWS_ECS
+
+  aws_secret_access_key_id:
+    type: env_var_name
+    default: MACHINE_AWS_ECS_SecretKey
+    description: |
+      Secret Key for Machine_AWS_ECS
+
 executor: node/default
 
 steps:
-  - run:
-      name: "Not Yet Implemented"
-      command: echo "Not Yet Implemented"
+  - setup-aws:
+      aws-access-key-id: <<parameters.aws_access_key_id>>
+      aws-region: <<parameters.aws_region>>
+      aws-secret-access-key: <<parameters.aws_secret_access_key_id>>
