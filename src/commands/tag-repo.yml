@@ -5,19 +5,19 @@ description: >
 parameters:
   tag:
     type: string
-    description: >
-      "Tag being assigned"
+    description: |
+      Tag being assigned
 
 steps:
   - run:
-    name: Validate params
-    command: |
-      if [[ -z "<<parameters.tag>>"]]; then
-        echo "tag parameter must be defined"
-        exit 1
-      fi
+      name: Validate params
+      command: >
+        if [[ -z "<<parameters.tag>>"]]; then
+          echo "tag parameter must be defined"
+          exit 1
+        fi
   - run:
-    name: Tag Repo
-    command: |
-      git tag "<<parameters.tag>>"
-      git push origin --tags
+      name: Tag Repo
+      command: >
+        git tag "<<parameters.tag>>"
+        git push origin --tags
