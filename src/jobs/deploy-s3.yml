@@ -64,7 +64,6 @@ steps:
       AWS_ACCESS_KEY_ID: <<parameters.aws_access_key_id>>
       AWS_REGION: <<parameters.aws_region>>
       AWS_SECRET_ACCESS_KEY_ID: <<parameters.aws_secret_access_key>>
-      version: "1"
   - aws-s3/sync:
       aws-region: <<parameters.aws_region>>
       from: <<parameters.source>>
