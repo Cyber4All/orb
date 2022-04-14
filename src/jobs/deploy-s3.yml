@@ -12,7 +12,6 @@ parameters:
 
   s3_bucket:
     type: string
-    defualt: S3_BUCKET
     description: |
       A URI to an S3 bucket
 
@@ -29,6 +28,7 @@ parameters:
 
   aws-access-key-id:
     default: AWS_ACCESS_KEY_ID
+    type: env_var_name
     description: |
       AWS access key id for IAM role. Set this to the name of
       the environment variable you will use to hold this
