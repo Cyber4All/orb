@@ -47,9 +47,9 @@ parameters:
       MENTIONS is a the environment variable name for the slack context.
 
 steps:
+  - checkout
   - tag-repo:
       tag: <<parameters.tag>>
-  - checkout
   - run:
       name: Install dependencies
       command: npm install
