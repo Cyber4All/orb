@@ -17,6 +17,13 @@ parameters:
 steps:
   - setup_remote_docker
   - docker/install-docker
+<<<<<<< HEAD
   - docker/check:
       docker-password: <<parameters.docker-password>>
       docker-username: <<parameters.docker-username>>
+=======
+  - run:
+      name: Login to Docker
+      command: >
+        docker login -u "<<parameters.docker-username>>" -p "<<parameters.docker-password>>"
+>>>>>>> 1a30e19 (fixing circle workflow)
