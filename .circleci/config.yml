@@ -19,7 +19,7 @@ workflows:
               only: /.*/
 
       - orb-tools/review:
-          excludes: "RC009"
+          exclude: "RC009"
           filters:
             tags:
               only: /.*/
