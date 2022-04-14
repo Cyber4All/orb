@@ -18,7 +18,8 @@ parameters:
   tag:
     type: string
     description: |
-      tag for the repo
+      The semantic version of the project trying to be deployed
+      https://semver.org/spec/v2.0.0.html
 
   aws_region:
     type: env_var_name
