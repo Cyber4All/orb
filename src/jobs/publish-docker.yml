@@ -11,7 +11,7 @@ parameters:
     type: string
     description: |
       Semantic Version of the application
-  
+
   # Not Required Parameters
   docker-password:
     type: env_var_name

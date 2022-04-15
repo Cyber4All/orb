@@ -15,7 +15,7 @@ parameters:
     description: |
       The semantic version of the project trying to be deployed
       https://semver.org/spec/v2.0.0.html
-  
+
   # Not Required Parameters
   organization:
     type: string

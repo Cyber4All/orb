@@ -44,7 +44,7 @@
 					"text": {
 						"type": "plain_text",
 						"emoji": true,
-						"text": "View Digest"
+						"text": "View Digest on S3"
 					},
 					"url": "${S3_OBJECT_URL}"
 				},

@@ -11,7 +11,7 @@ parameters:
     type: string
     description: |
       Semantic Version of the application
-  
+
   # Not Required Parameters
   aws-access-key-id:
     type: env_var_name
@@ -60,9 +60,7 @@ parameters:
       Path of the dockerfile to be scanned
     type: string
 
-executor:
-  docker: 
-    - image: alpine:3.15.4
+executor: cimg/go:1.18
 
 steps:
   - checkout
@@ -104,7 +102,7 @@ steps:
           --severity high \
           --file <<parameters.dockerfile-path>> \
           <<parameters.image>>:<<parameters.tag>> > "/tmp/${OUTPUT_FILENAME}.json"
-        
+
         apk add jq
 
         if jq -e '.[0].vulnerabilities == []' "cards-link-check:1.0.0.json" > /dev/null; then
@@ -127,12 +125,12 @@ steps:
             --body "/tmp/${OUTPUT_FILENAME}.txt" \
             --bucket <<parameters.bucket>> \
             --key "<<parameters.image>>/${OUTPUT_FILENAME}.txt"
-          
+
           aws s3api put-object \
             --body "/tmp/${OUTPUT_FILENAME}.json" \
             --bucket <<parameters.bucket>> \
             --key "<<parameters.image>>/${OUTPUT_FILENAME}.json"
-          
+  
           echo 'export S3_OBJECT_URL=https://s3.console.aws.amazon.com/s3/object/<<parameters.bucket>>?region=<<parameters.region>>&prefix=<<parameters.image>>/${OUTPUT_FILENAME}.txt' >> $BASH_ENV
         fi
   - slack/notify:

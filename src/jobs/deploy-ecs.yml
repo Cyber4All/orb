@@ -22,7 +22,7 @@ parameters:
   cluster-name:
     description: The short name or full ARN of the cluster that hosts the service.
     type: string
-  
+
   # Not Required Parameters
   service-name:
     type: string
