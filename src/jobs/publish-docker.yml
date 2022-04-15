@@ -2,6 +2,17 @@ description: >
   This job publishes a new version of the application to DockerHub and versions the Github image.
 
 parameters:
+  # Required Parameters
+  image:
+    type: string
+    description: |
+      Name of the image associated with your organization
+  tag:
+    type: string
+    description: |
+      Semantic Version of the application
+  
+  # Not Required Parameters
   docker-password:
     type: env_var_name
     default: DOCKER_PASSWORD
@@ -12,45 +23,21 @@ parameters:
     default: DOCKER_USERNAME
     description: |
       Name of environment variable storing your Docker username
-  gh_pat:
-    type: env_var_name
-    default: GH_PAT
-    description: |
-      Name of environment variable storing your Github Personal Access Token
   organization:
     type: string
     default: 'cyber4all'
     description: |
       Name of your docker organization
-  image:
-    type: string
+  deploy:
+    type: boolean
+    default: false
     description: |
-      Name of the image associated with your organization
-  tag:
-    type: string
-    description: |
-      Semantic Version of the application
-  executor:
-    type: executor
-    description: |
-      Name of the executor to run the job as
+      Push the image to a registry?
 
-executor: <<parameters.executor>>
+executor: cimg/go:lts
 
 steps:
   - checkout
-  - run:
-      name: "Verify Parameters"
-      command: |
-        if [ -z "<<parameters.tag>>" ]; then
-          echo '"tag" is missing.'
-          exit 1
-        fi
-
-        if [ -z "<<parameters.image>>" ]; then
-          echo '"image" is missing.'
-          exit 1
-        fi
   - setup-docker:
       docker-password: <<parameters.docker-password>>
       docker-username: <<parameters.docker-username>>
@@ -63,14 +50,16 @@ steps:
       image: "<<parameters.organization>>/<<parameters.image>>"
       lint-dockerfile: true
       tag: <<parameters.tag>>
-  - tag-repo:
-      tag: <<parameters.tag>>
-      gh_pat: <<parameters.gh_pat>>
-  - docker/push:
-      digest-path: /tmp/digest.txt
-      image: "<<parameters.organization>>/<<parameters.image>>"
-      tag: <<parameters.tag>>
-  - run:
-      name: Output Docker digest
-      command: |
-        echo "Digest is: $(</tmp/digest.txt)"
+  - when:
+      condition: <<parameters.deploy>>
+      steps:
+        - tag-repo:
+            tag: <<parameters.tag>>
+        - docker/push:
+            digest-path: /tmp/digest.txt
+            image: "<<parameters.organization>>/<<parameters.image>>"
+            tag: <<parameters.tag>>
+        - run:
+            name: Output Docker digest
+            command: |
+              echo "Digest is: $(</tmp/digest.txt)"

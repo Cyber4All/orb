@@ -5,8 +5,6 @@ description: >
 parameters:
   tag:
     type: string
-  gh_pat:
-    type: env_var_name
 
 steps:
   - run:

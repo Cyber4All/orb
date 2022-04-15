@@ -2,6 +2,7 @@ description: >
   This job deploys an application to aws elastic container service.
 
 parameters:
+  # Required Parameters
   container-name:
     type: string
     description: |
@@ -21,37 +22,45 @@ parameters:
   cluster-name:
     description: The short name or full ARN of the cluster that hosts the service.
     type: string
+  
+  # Not Required Parameters
   service-name:
-    description: >-
+    type: string
+    description: |
       The name of the service to update. If undefined, we assume `family` is the
       name of both the service and task definition.
-    type: string
   isService:
     type: boolean
     default: false
     description: |
       True if the task-definition is deployed as a service on ECS. (Default is false)
   aws-access-key-id:
+    type: env_var_name
     default: AWS_ACCESS_KEY_ID
     description: |
       AWS access key id for IAM role. Set this to the name of
       the environment variable you will use to hold this
-      value, i.e. AWS_ACCESS_KEY.
-    type: env_var_name
+      value, i.e. AWS_ACCESS_KEY_ID.
   aws-secret-access-key:
+    type: env_var_name
     default: AWS_SECRET_ACCESS_KEY
     description: |
       AWS secret key for IAM role. Set this to the name of
       the environment variable you will use to hold this
-      value, i.e. $AWS_SECRET_ACCESS_KEY.
+      value, i.e. AWS_SECRET_ACCESS_KEY.
+  aws-region:
     type: env_var_name
-  mentions:
-    default: MENTIONS
-    type: env_var_name
+    default: AWS_DEFAULT_REGION
     description: |
-      MENTIONS is a the environment variable name for the slack context.
+      Env var of AWS region to operate in
+      (defaults to AWS_DEFAULT_REGION)
+  mentions:
+    type: env_var_name
+    default: MENTIONS
+    description: |
+      MENTIONS is the environment variable storing the name for the slack context.
 
-executor: node/default
+executor: aws-cli/default
 
 steps:
   - checkout
@@ -59,7 +68,7 @@ steps:
       name: "Verify Parameters"
       command: >
         if [ -z "$SLACK_MENTIONS" ]; then
-          echo '"mentions" is missing'
+          echo '"mentions" is not set in the project env or context'
           exit 1
         fi
 
@@ -91,9 +100,10 @@ steps:
         if [ -z "$ECS_PARAM_SERVICE_NAME"]; then
           ECS_PARAM_SERVICE_NAME="<<parameters.family>>"
         fi
-  - setup-aws:
+  - aws-cli/setup:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
+      aws-region: <<parameters.aws-region>>
   - aws-ecs/update-task-definition:
       container-image-name-updates: "container=<<parameters.container-name>>,image-and-tag=<<parameters.image-name>>:<<parameters.tag>>"
       family: <<parameters.family>>
