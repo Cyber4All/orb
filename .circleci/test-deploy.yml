@@ -11,7 +11,6 @@ jobs:
     steps:
       - checkout
       - orb/check-docker-semver
-      - orb/setup-aws
       - orb/setup-docker
       - orb/tag-repo
 
