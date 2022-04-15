@@ -34,7 +34,7 @@ parameters:
     description: |
       Push the image to a registry?
 
-docker: 
+docker:
   - image: cimg/go:1.18
 
 steps:

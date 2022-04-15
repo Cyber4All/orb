@@ -60,7 +60,7 @@ parameters:
       Path of the dockerfile to be scanned
     type: string
 
-docker: 
+docker:
   - image: cimg/go:1.18
 
 steps:
@@ -132,7 +132,8 @@ steps:
             --bucket <<parameters.aws-s3-bucket>> \
             --key "<<parameters.image>>/${OUTPUT_FILENAME}.json"
 
-          echo 'export S3_OBJECT_URL=https://s3.console.aws.amazon.com/s3/object/<<parameters.aws-s3-bucket>>?region=<<parameters.aws-region>>&prefix=<<parameters.image>>/${OUTPUT_FILENAME}.txt' >> $BASH_ENV
+          S3_URL="https://s3.console.aws.amazon.com/s3/object/"
+          echo 'export S3_OBJECT_URL=${S3_URL}<<parameters.aws-s3-bucket>>?region=<<parameters.aws-region>>&prefix=<<parameters.image>>/${OUTPUT_FILENAME}.txt' >> $BASH_ENV
         fi
   - slack/notify:
       event: fail
