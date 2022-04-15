@@ -3,19 +3,19 @@ description: >
   This command should be used prior to working with aws orbs or cli commands.
 
 parameters:
-  AWS_REGION:
+  aws-region:
     type: env_var_name
     default: AWS_REGION_N_VA
     description: |
       Specify the region for aws
 
-  AWS_ACCESS_KEY_ID:
+  aws-access-key-id:
     type: env_var_name
     default: MACHINE_AWS_ECS_AccessKey
     description: |
       Access Key for MACHINE_AWS_ECS
 
-  AWS_SECRET_ACCESS_KEY_ID:
+  aws-secret-access-key-id:
     type: env_var_name
     default: MACHINE_AWS_ECS_SecretKey
     description: |
@@ -25,7 +25,7 @@ parameters:
 steps:
   - aws-cli/install
   - aws-cli/setup:
-      aws-access-key-id: <<parameters.AWS_ACCESS_KEY_ID>>
-      aws-region: <<parameters.AWS_REGION>>
-      aws-secret-access-key: <<parameters.AWS_SECRET_ACCESS_KEY_ID>>
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-region: <<parameters.aws-region>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key-id>>
       version: "1"
