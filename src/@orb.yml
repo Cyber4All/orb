@@ -11,3 +11,4 @@ orbs:
   aws-cli: circleci/aws-cli@1.2.1
   docker: circleci/docker@2.0.3
   node: circleci/node@1.1.6
+  eb: circleci/aws-elastic-beanstalk@2.0.1

@@ -1,9 +1,10 @@
 description: >
-  This job deploys an application to aws elasticbeanstalk.
+  This job deploys an application to aws elasticbeanstalk. Deploy-Eb requires publish-docker
 
 executor: node/default
 
 parameters:
+  # Required Parameters
   aws-region:
     type: env_var_type
     default: AWS_REGION
@@ -21,49 +22,40 @@ parameters:
     default: AWS_ACCESS_KEY_ID
     description: |
       The access key for the aws user
-    
-  docker-username:
-    type: env_var_type
-    default: DOCKER_USERNAME
-    description: |
-      The username for the docker account
-
-  docker-password:
-    type: env_var_type
-    default: DOCKER_PASSWORD
-    description: |
-      The password for the docker account
 
   application-name:
     type: string
     description: |
       The name of the elastic beanstalk instance that will be updated in this job
+    
+  environment-name:
+    type: string
 
   version:
     type: string
     description: |
       The updated version of the eb instance
 
+  is-docker:
+    type: boolean
+    default: true
+    description: 
+
 steps:
   - checkout
-  - docker/install-docker
-  - setup_remote_docker
-  # Tag repo here?
-  - setup-aws:
-      aws-region: <<parameters.aws-region>>
-      aws-access-key-id: <<parameters.aws-access-key-id>>
-      aws-secret-access-key-id: <<parameters.aws-secret-access-key-id>>
-  - setup-docker:
-      docker-username: <<parameters.docker-username>>
-      docker-password: <<parameters.docker-password>>
-  # Pull Image
-  # Publis Image
+  - eb/setup
+
+  # Tag after build success and version is unique
+  - tag-repo:
+      - tag: <<parameters.version>>
+  # Ensure 
   - run:
     name: Install and init eb cli
     command: |
       pip install awsebcli
-      eb init --region "<<parameters.aws-region>>" "<<parameters.application-name>>" -p docker
+      
   - run:
       name: Deploy to Elastic Beanstalk
       command: |
+        eb init --region "<<parameters.aws-region>>" "<<parameters.application-name>>" -p docker
         eb deploy production --verbose --label "<<parameters.service_name>>"-v"<<parameters.version>>"
