@@ -3,25 +3,66 @@ description: >
 
 executor: node/default
 
+parameters:
+  aws-region:
+    type: env_var_type
+    default: AWS_REGION
+    description: |
+      The region where the elasticbeanstalk instance is located
+
+  aws-secret-access-key-id:
+    type: env_var_type
+    default: AWS_SECRET_ACCESS_KEY_ID
+    description: |
+      The secret key for the aws user
+  
+  aws-access-key-id:
+    type: env_var_type
+    default: AWS_ACCESS_KEY_ID
+    description: |
+      The access key for the aws user
+    
+  docker-username:
+    type: env_var_type
+    default: DOCKER_USERNAME
+    description: |
+      The username for the docker account
+
+  docker-password:
+    type: env_var_type
+    default: DOCKER_PASSWORD
+    description: |
+      The password for the docker account
+
+  application-name:
+    type: string
+    description: |
+      The name of the elastic beanstalk instance that will be updated in this job
+
+  version:
+    type: string
+    description: |
+      The updated version of the eb instance
+
 steps:
   - checkout
   - docker/install-docker
   - setup_remote_docker
   # Tag repo here?
   - setup-aws:
-    AWS_REGION: 
-    AWS_ACCESS_KEY_ID:
-    AWS_SECRET_ACCESS_KEY_ID:
+      aws-region: <<parameters.aws-region>>
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key-id: <<parameters.aws-secret-access-key-id>>
   - setup-docker:
-    docker-username:
-    docker-password: 
+      docker-username: <<parameters.docker-username>>
+      docker-password: <<parameters.docker-password>>
   # Pull Image
   # Publis Image
   - run:
     name: Install and init eb cli
     command: |
       pip install awsebcli
-      eb init --region "<<parameters.region>>" "<<parameters.service_name>>" -p docker
+      eb init --region "<<parameters.aws-region>>" "<<parameters.application-name>>" -p docker
   - run:
       name: Deploy to Elastic Beanstalk
       command: |
