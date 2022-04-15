@@ -1,0 +1,8 @@
+description: >
+  This command will install v2 of the aws-cli and add IAM programmatic keys to the credentials file.
+  This command should be used prior to working with aws orbs or cli commands.
+
+steps:
+  - run:
+      name: "Not Yet Implemented"
+      command: echo "Not Yet Implemented"

@@ -1,0 +1,8 @@
+description: >
+  This command will validate that the parameters passed are string values.
+  This command should be used when a job needs to validate the parameters passed to it.
+
+steps:
+  - run:
+      name: "Not Yet Implemented"
+      command: echo "Not Yet Implemented"
