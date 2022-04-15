@@ -60,7 +60,8 @@ parameters:
       Path of the dockerfile to be scanned
     type: string
 
-executor: cimg/go:1.18
+docker: 
+  - image: cimg/go:1.18
 
 steps:
   - checkout
