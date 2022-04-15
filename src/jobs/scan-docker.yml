@@ -132,7 +132,7 @@ steps:
             --bucket <<parameters.aws-s3-bucket>> \
             --key "<<parameters.image>>/${OUTPUT_FILENAME}.json"
 
-          echo 'export S3_OBJECT_URL=https://s3.console.aws.amazon.com/s3/object/<<parameters.bucket>>?region=<<parameters.aws-region>>&prefix=<<parameters.image>>/${OUTPUT_FILENAME}.txt' >> $BASH_ENV
+          echo 'export S3_OBJECT_URL=https://s3.console.aws.amazon.com/s3/object/<<parameters.aws-s3-bucket>>?region=<<parameters.aws-region>>&prefix=<<parameters.image>>/${OUTPUT_FILENAME}.txt' >> $BASH_ENV
         fi
   - slack/notify:
       event: fail
