@@ -19,4 +19,4 @@ steps:
   - docker/install-docker
   - docker/check:
       docker-password: <<parameters.docker-password>>
-      docker-username: <parameters.docker-username>>
+      docker-username: <<parameters.docker-username>>
