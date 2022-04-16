@@ -6,11 +6,11 @@ executor: node/default
 parameters:
   source:
     type: string
-    default: SOURCE
+    default: ./dist
     description: |
       a local directory path to sync with s3
 
-  s3_bucket:
+  s3-bucket:
     type: string
     description: |
       AWS S3 Bucket URI used to identify the resource
@@ -21,23 +21,23 @@ parameters:
       The semantic version of the project trying to be deployed
       https://semver.org/spec/v2.0.0.html
 
-  aws_region:
+  aws-region:
     type: env_var_name
     default: AWS_REGION_N_VA
     description: |
       Name of environment variable storing the AWS region
 
   aws-access-key-id:
-    default: AWS_ACCESS_KEY_ID
     type: env_var_name
+    default: AWS_ACCESS_KEY_ID
     description: |
       AWS access key id for IAM role. Set this to the name of
       the environment variable you will use to hold this
       value, i.e. AWS_ACCESS_KEY_ID.
 
-  aws_secret_access_key:
-    default: AWS_SECRET_ACCESS_KEY
+  aws-secret-access-key:
     type: env_var_name
+    default: AWS_SECRET_ACCESS_KEY
     description: |
       AWS secret key for IAM role. Set this to the name of
       the environment variable you will use to hold this
@@ -47,7 +47,7 @@ parameters:
     type: env_var_name
     default: MENTIONS
     description: |
-      MENTIONS is a the environment variable name for the slack context.
+      MENTIONS is the environment variable storing the name for the slack context.
 
 steps:
   - checkout
@@ -58,26 +58,21 @@ steps:
       command: npm install
   - run:
       name: Build Application
-      command: npm ng build --prod --no-progress
-  - setup-aws:
-      AWS_ACCESS_KEY_ID: <<parameters.aws_access_key_id>>
-      AWS_REGION: <<parameters.aws_region>>
-      AWS_SECRET_ACCESS_KEY_ID: <<parameters.aws_secret_access_key>>
+      command: npm run ng build --aot --build-optimizer=true --optimization=true --configuration=production
   - aws-s3/sync:
-      aws-region: <<parameters.aws_region>>
+      aws-region: <<parameters.aws-region>>
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
       from: <<parameters.source>>
-      to: s3://<<parameters.s3_bucket>>
+      to: s3://<<parameters.s3-bucket>>
   - run:
       name: Invalidate index.html in CloudFront
       command: >
         aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_ID} --paths /index.html
   - slack/notify:
       event: fail
-      mentions: "@$SLACK_MENTIONS"
+      mentions: "@<<parameters.mentions>>"
       template: basic_fail_1
   - slack/notify:
       event: pass
       custom: "<<include(message_templates/deploy_aws_success.json)>>"
-
-environment:
-  SLACK_MENTIONS: <<parameters.mentions>>
