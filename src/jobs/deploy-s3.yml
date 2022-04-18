@@ -12,14 +12,14 @@ parameters:
       https://semver.org/spec/v2.0.0.html
 #optional parameters with defaults
   s3-bucket:
-    type: string
+    type: env_var_name
     default: S3_BUCKET
     description: |
       AWS S3 Bucket URI used to identify the resource
 
   source:
-    type: string
-    default: "./dist"
+    type: env_var_name
+    default: SOURCE
     description: |
       a local directory path to sync with s3
 
