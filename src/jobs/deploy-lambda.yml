@@ -2,30 +2,30 @@ description: >
   This job deploys an application to aws lambda.
 
 parameters:
-  aws_region:
+  aws-region:
     type: env_var_name
     default: AWS_REGION_N_VA
     description: |
       Specify the region for aws
 
-  aws_access_key_id:
+  aws-access-key-id:
     type: env_var_name
-    default: MACHINE_AWS_ECS_AccessKey
+    default: MACHINE_AWS_ECS_ACCESSKEY
     description: |
       Access key for MACHINE_AWS_ECS
 
-  aws_secret_access_key_id:
+  aws-secret-access-key-id:
     type: env_var_name
-    default: MACHINE_AWS_ECS_SecretKey
+    default: MACHINE_AWS_ECS_SECRETKEY
     description: |
       Secret Key for Machine_AWS_ECS
 
-  tag_repo:
+  tag-repo:
     type: string
     description: |
-    The semantic version of the project to be deployed
+      The semantic version of the project to be deployed
 
-  mentions:
+  slack-mentions:
     type: env_var_name
     default: MENTIONS
     description: |
@@ -40,17 +40,17 @@ executor: node/default
 
 steps:
   - aws-cli/setup:
-      aws-access-key-id: <<parameters.aws_access_key_id>>
-      aws-region: <<parameters.aws_region>>
-      aws-secret-access-key: <<parameters.aws_secret_access_key_id>>
-  - tag-repo: <<parameters.tag>>
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-region: <<parameters.aws-region>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key-id>>
+  - tag-repo: <<parameters.tag-repo>>
   - run: 
       name: Update Lambda Function code
       command: >
         aws lambda update-function-code --function-name <<parameters.lambda-function-name>>
   - slack/notify:
       event: fail
-      mentions: "@<<parameters.mentions>>"
+      mentions: "@<<parameters.slack-mentions>>"
       template: basic_fail_1
   - slack/notify:
       event: pass
