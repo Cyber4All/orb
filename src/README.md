@@ -8,7 +8,7 @@ A starter template for orb projects. Build, test, and publish orbs automatically
 
 Additional READMEs are available in each directory.
 
-**Meta**: This repository is open for contributions! Feel free to open a pull request with your changes. Due to the nature of this repository, it is not built on CircleCI. The Resources and How to Contribute sections relate to an orb created with this template, rather than the template itself.
+**Note**: This repository is open for contributions! Feel free to open a pull request with your changes. Due to the nature of this repository, it is not built on CircleCI. The Resources and How to Contribute sections relate to an orb created with this template, rather than the template itself.
 
 ## Resources
 
@@ -20,6 +20,7 @@ Additional READMEs are available in each directory.
 We welcome [issues](https://github.com/<organization>/<project-name>/issues) and [pull requests](https://github.com/<organization>/<project-name>/pulls) against this repository!
 
 ### How to Publish
+
 * Create and push a branch with your new features.
 * When ready to publish a new production version, create a Pull Request from _feature branch_ to `master`.
 * The title of the pull request must contain a special semver tag: `[semver:<segment>]` where `<segment>` is replaced by one of the following values.
@@ -36,6 +37,4 @@ Example: `[semver:major]`
 * Squash and merge. Ensure the semver tag is preserved and entered as a part of the commit message.
 * On merge, after manual approval, the orb will automatically be published to the Orb Registry.
 
-
 For further questions/comments about this or other orbs, visit the Orb Category of [CircleCI Discuss](https://discuss.circleci.com/c/orbs).
-
