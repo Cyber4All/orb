@@ -87,4 +87,4 @@ steps:
             command: >
               pip3 install flake8
 
-              flake8 <<parameters.python-directory>>   
+              flake8 <<parameters.python-directory>>
