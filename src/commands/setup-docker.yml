@@ -17,6 +17,11 @@ parameters:
 steps:
   - setup_remote_docker
   - docker/install-docker
+<<<<<<< HEAD
   - docker/check:
       docker-username: <<parameters.docker-username>>
       docker-password: <<parameters.docker-password>>
+=======
+  - run: |
+      docker login -u << parameters.docker-username >> -p << parameters.docker-password >>
+>>>>>>> 58d31ec (Add message template and fix trailing spaces for several files)

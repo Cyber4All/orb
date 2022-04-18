@@ -1,0 +1,22 @@
+description: >
+  This command will install v2 of the aws-cli and add IAM programmatic keys to the credentials file.
+  This command should be used prior to working with aws orbs or cli commands.
+
+parameters:
+  AWS_REGION:
+    type: env_var_name
+    default: AWS_REGION_N_VA
+    description: >
+      Specify the region for aws
+
+  AWS_ACCESS_KEY_ID:
+    type: env_var_name
+    default: MACHINE_AWS_ECS_AccessKey
+    description: TODO
+
+  AWS_SECRET_ACCESS_KEY_ID:
+    type: env_var_name
+    default: MACHINE_AWS_ECS_SecretKey
+    description: TODO
+
+steps:
