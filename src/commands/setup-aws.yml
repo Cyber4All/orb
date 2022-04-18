@@ -35,7 +35,7 @@ steps:
         fi
 
         if [[ -z "$aws-access-key-id" ]]; then
-          echo '"aws-secret-access-key" not set'
+          echo '"aws-access-key-id" not set'
           exit 1
         fi
   - aws-cli/setup:
