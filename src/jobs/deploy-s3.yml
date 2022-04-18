@@ -4,22 +4,24 @@ description: |
 executor: node/default
 
 parameters:
-  source:
-    type: string
-    default: ./dist
-    description: |
-      a local directory path to sync with s3
-
-  s3-bucket:
-    type: string
-    description: |
-      AWS S3 Bucket URI used to identify the resource
-
+#required parameters
   tag:
     type: string
     description: |
       The semantic version of the project trying to be deployed
       https://semver.org/spec/v2.0.0.html
+#optional parameters with defaults
+  s3-bucket:
+    type: string
+    default: S3_BUCKET
+    description: |
+      AWS S3 Bucket URI used to identify the resource
+
+  source:
+    type: string
+    default: "./dist"
+    description: |
+      a local directory path to sync with s3
 
   aws-region:
     type: env_var_name
@@ -29,21 +31,21 @@ parameters:
 
   aws-access-key-id:
     type: env_var_name
-    default: AWS_ACCESS_KEY_ID
+    default: MACHINE_AWS_CF_AccessKey
     description: |
       AWS access key id for IAM role. Set this to the name of
       the environment variable you will use to hold this
-      value, i.e. AWS_ACCESS_KEY_ID.
+      value, i.e. MACHINE_AWS_CF_AccessKey.
 
   aws-secret-access-key:
     type: env_var_name
-    default: AWS_SECRET_ACCESS_KEY
+    default: MACHINE_AWS_CF_SecretKey
     description: |
       AWS secret key for IAM role. Set this to the name of
       the environment variable you will use to hold this
-      value, i.e. AWS_SECRET_ACCESS_KEY.
+      value, i.e. MACHINE_AWS_CF_SecretKey.
 
-  mentions:
+  slack-mentions:
     type: env_var_name
     default: MENTIONS
     description: |
@@ -58,7 +60,7 @@ steps:
       command: npm install
   - run:
       name: Build Application
-      command: npm run ng build --aot --build-optimizer=true --optimization=true --configuration=production
+      command: npm run build --aot --build-optimizer=true --optimization=true --configuration=production
   - aws-s3/sync:
       aws-region: <<parameters.aws-region>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
@@ -68,10 +70,10 @@ steps:
   - run:
       name: Invalidate index.html in CloudFront
       command: >
-        aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_ID} --paths /index.html
+        aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths /index.html
   - slack/notify:
       event: fail
-      mentions: "@<<parameters.mentions>>"
+      mentions: "@<<parameters.slack-mentions>>"
       template: basic_fail_1
   - slack/notify:
       event: pass
