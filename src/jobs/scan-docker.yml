@@ -106,7 +106,7 @@ steps:
 
         apk add jq
 
-        if jq -e '.[0].vulnerabilities == []' "cards-link-check:1.0.0.json" > /dev/null; then
+        if jq -e '.[0].vulnerabilities == []' "/tmp/$OUTPUT_FILENAME.json" > /dev/null; then
           rm /tmp/$OUTPUT_FILENAME.json
           circleci-agent step halt
         fi
