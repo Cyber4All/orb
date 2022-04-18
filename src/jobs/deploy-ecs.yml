@@ -49,6 +49,7 @@ parameters:
       value, i.e. $MACHINE_AWS_ECS_SecretKey.
     type: env_var_name
   aws-region:
+    type: env_var_name
     default: AWS_DEFAULT_REGION
     description: |
       Env var of AWS region to operate in
