@@ -39,6 +39,7 @@ parameters:
 executor: node/default
 
 steps:
+  - checkout
   - aws-cli/setup:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-region: <<parameters.aws-region>>

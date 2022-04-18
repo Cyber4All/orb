@@ -1,7 +1,6 @@
 description: >
   This command will setup the remote docker environment and login to the docker cli.
   This command should be used prior to running any docker commands that interact with the remote repository.
-
 parameters:
   docker-password:
     default: DOCKER_PASSWORD
@@ -17,11 +16,6 @@ parameters:
 steps:
   - setup_remote_docker
   - docker/install-docker
-<<<<<<< HEAD
   - docker/check:
       docker-username: <<parameters.docker-username>>
       docker-password: <<parameters.docker-password>>
-=======
-  - run: |
-      docker login -u << parameters.docker-username >> -p << parameters.docker-password >>
->>>>>>> 58d31ec (Add message template and fix trailing spaces for several files)
