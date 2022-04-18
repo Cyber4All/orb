@@ -22,7 +22,7 @@ parameters:
     description: The short name or full ARN of the cluster that hosts the service.
     type: string
   service-name:
-    description: >-
+    description: |
       The name of the service to update. If undefined, we assume `family` is the
       name of both the service and task definition.
     type: string
