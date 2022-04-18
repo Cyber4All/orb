@@ -25,6 +25,12 @@ parameters:
     description: |
     The semantic version of the project to be deployed
 
+  mentions:
+    type: env_var_name
+    default: MENTIONS
+    description: |
+      MENTIONS stores the environment variable name for the Slack context.
+
 executor: node/default
 
 steps:
@@ -33,3 +39,10 @@ steps:
       aws-access-key-id: <<parameters.aws_access_key_id>>
       aws-region: <<parameters.aws_region>>
       aws-secret-access-key: <<parameters.aws_secret_access_key_id>>
+  - slack/notify:
+      event: fail
+      mentions: "@<<parameters.mentions>>"
+      template: basic_fail_1
+  - slack/notify:
+      event: pass
+      custom: "<<include(message_templates/deploy_aws_success.json)>>"
