@@ -20,7 +20,7 @@ parameters:
     description: |
       Secret Key for Machine_AWS_ECS
 
-  tag-repo:
+  tag:
     type: string
     description: |
       The semantic version of the project to be deployed
@@ -44,7 +44,8 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-region: <<parameters.aws-region>>
       aws-secret-access-key: <<parameters.aws-secret-access-key-id>>
-  - tag-repo: <<parameters.tag-repo>>
+  - tag-repo:
+      tag: <<parameters.tag>>
   - run:
       name: Update Lambda Function code
       command: >
