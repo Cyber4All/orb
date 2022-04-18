@@ -10,10 +10,6 @@ jobs:
       - image: 'cimg/base:current'
     steps:
       - checkout
-      - orb/check-docker-semver
-      - orb/setup-aws
-      - orb/setup-docker
-      - orb/tag-repo
 
 workflows:
   test-deploy:
