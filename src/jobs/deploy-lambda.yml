@@ -31,14 +31,23 @@ parameters:
     description: |
       MENTIONS stores the environment variable name for the Slack context.
 
+  lambda-function-name:
+    type: string
+    description: |
+      The name of the lambda function to be updated.
+
 executor: node/default
 
 steps:
-  - tag-repo: <<parameters.tag>>
-  - setup-aws:
+  - aws-cli/setup:
       aws-access-key-id: <<parameters.aws_access_key_id>>
       aws-region: <<parameters.aws_region>>
       aws-secret-access-key: <<parameters.aws_secret_access_key_id>>
+  - tag-repo: <<parameters.tag>>
+  - run: 
+      name: Update Lambda Function code
+      command: >
+        aws lambda update-function-code --function-name <<parameters.lambda-function-name>>
   - slack/notify:
       event: fail
       mentions: "@<<parameters.mentions>>"
