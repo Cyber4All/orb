@@ -2,6 +2,7 @@ description: >
   This job deploys an application to aws elastic container service.
 
 parameters:
+  # Required Parameters
   container-name:
     type: string
     description: |
