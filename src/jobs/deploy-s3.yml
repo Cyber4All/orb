@@ -16,19 +16,16 @@ parameters:
     default: S3_BUCKET
     description: |
       AWS S3 Bucket URI used to identify the resource
-
   source:
     type: env_var_name
     default: SOURCE
     description: |
       a local directory path to sync with s3
-
   aws-region:
     type: env_var_name
     default: AWS_REGION_N_VA
     description: |
       Name of environment variable storing the AWS region
-
   aws-access-key-id:
     type: env_var_name
     default: MACHINE_AWS_CF_AccessKey
@@ -36,7 +33,6 @@ parameters:
       AWS access key id for IAM role. Set this to the name of
       the environment variable you will use to hold this
       value, i.e. MACHINE_AWS_CF_AccessKey.
-
   aws-secret-access-key:
     type: env_var_name
     default: MACHINE_AWS_CF_SecretKey
@@ -44,7 +40,6 @@ parameters:
       AWS secret key for IAM role. Set this to the name of
       the environment variable you will use to hold this
       value, i.e. MACHINE_AWS_CF_SecretKey.
-
   slack-mentions:
     type: env_var_name
     default: MENTIONS
