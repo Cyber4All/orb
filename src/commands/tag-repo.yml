@@ -3,19 +3,12 @@ description: >
   This command should be used prior to deploying the project.
 
 parameters:
-<<<<<<< HEAD
-  tag:
-    type: string
-  gh_pat:
-    type: env_var_name
-=======
   # Required
   tag:
     type: string
     description: |
       The semantic version of the project trying to be deployed
       https://semver.org/spec/v2.0.0.html
->>>>>>> e0e1366c2bcd3cc698edf951d276b7def361e48e
 
 steps:
   - run:
