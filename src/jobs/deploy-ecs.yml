@@ -45,7 +45,7 @@ parameters:
       the environment variable you will use to hold this
       value, i.e. $MACHINE_AWS_ECS_SecretKey.
     type: env_var_name
-  mentions:
+  slack-mentions:
     default: MENTIONS
     type: env_var_name
     description: |
