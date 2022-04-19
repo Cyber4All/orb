@@ -2,6 +2,28 @@ description: >
   This job deploys an application to aws lambda.
 
 parameters:
+  # Required Parameters
+  tag:
+    type: string
+    description: |
+      The semantic version of the project to be deployed
+
+  lambda-function-name:
+    type: string
+    description: |
+      The name of the lambda function to be updated.
+
+  lambda-package-value:
+    type: string
+    description: |
+      The name of the lambda package to be updated.
+
+  lambda-package-type:
+    type: string
+    description: |
+      The type of the lambda package to be updated.
+
+  # Optional Parameters with Defaults
   aws-region:
     type: env_var_name
     default: AWS_REGION_N_VA
@@ -20,31 +42,11 @@ parameters:
     description: |
       Secret Key for Machine_AWS_ECS
 
-  tag:
-    type: string
-    description: |
-      The semantic version of the project to be deployed
-
   slack-mentions:
     type: env_var_name
     default: MENTIONS
     description: |
       MENTIONS stores the environment variable name for the Slack context.
-
-  lambda-function-name:
-    type: string
-    description: |
-      The name of the lambda function to be updated.
-
-  lambda-package-value:
-    type: string
-    description: |
-      The name of the lambda package to be updated.
-
-  lambda-package-type:
-    type: string
-    description: |
-      The type of the lambda package to be updated.
 
 executor: node/default
 
