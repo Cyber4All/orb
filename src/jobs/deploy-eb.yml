@@ -75,13 +75,13 @@ steps:
   - tag-repo:
       - tag: <<parameters.version>>
   - when: <<parameters.is-docker>>
-    - run:
-        name: Deploy to Elastic Beanstalk with docker platform
-        command: >
-          eb init "<<parameters.application-name>>" --region "<<parameters.aws-region>>" -p docker
-          eb deploy "<<parameters.environment-name>>" --verbose --label "<<parameters.repo-name>>"-v"<<parameters.version>>"
+    run:
+      name: Deploy to Elastic Beanstalk with docker platform
+      command: >
+        eb init "<<parameters.application-name>>" --region "<<parameters.aws-region>>" -p docker
+        eb deploy "<<parameters.environment-name>>" --verbose --label "<<parameters.repo-name>>"-v"<<parameters.version>>"
   - when: <<parameters.is-node>>
-    - run:
+    run:
       name: Deploy to Elastic Beanstalk with node platform
       command: >
           eb init "<<parameters.application-name>>" --region "<<parameters.aws-region>>" -p node
