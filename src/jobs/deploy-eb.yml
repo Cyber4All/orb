@@ -53,7 +53,7 @@ steps:
   - checkout
   - eb/setup
   - run:
-    name: Verify Parameters
+    name: "Verify Parameters"
     command: >
       if [[ -z "<<parameters.application-name>>"" ]]; then
         echo "application-name is missing"
@@ -76,13 +76,13 @@ steps:
       - tag: <<parameters.version>>
   - when: <<parameters.is-docker>>
     run:
-      name: Deploy to Elastic Beanstalk with docker platform
+      name: "Deploy to Elastic Beanstalk with docker platform"
       command: >
         eb init "<<parameters.application-name>>" --region "<<parameters.aws-region>>" -p docker
         eb deploy "<<parameters.environment-name>>" --verbose --label "<<parameters.repo-name>>"-v"<<parameters.version>>"
   - when: <<parameters.is-node>>
     run:
-      name: Deploy to Elastic Beanstalk with node platform
+      name: "Deploy to Elastic Beanstalk with node platform"
       command: >
           eb init "<<parameters.application-name>>" --region "<<parameters.aws-region>>" -p node
           eb deploy "<<parameters.environment-name>>" --verbose --label "<<parameters.repo-name>>"-v"<<parameters.version>>"
