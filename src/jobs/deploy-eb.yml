@@ -5,57 +5,85 @@ executor: node/default
 
 parameters:
   # Required Parameters
-  aws-region:
-    type: env_var_type
-    default: AWS_REGION
+  application-name:
+    type: string
     description: |
-      The region where the elasticbeanstalk instance is located
-
+      The name of the elastic beanstalk instance that will be updated in this job
+  environment-name:
+      type: string
+      description: |
+        The name of the elastic beanstalk instance that was given during eb init
+  repo-name:
+    type: string
+    description: |
+      The Github repository name of the elasticbeanstalk instance. 
+      This will be used for tagging
+  version:
+    type: string
+    description: |
+      The semantic version of the eb instance
+      
+  # Not Required Parameters
   aws-secret-access-key-id:
     type: env_var_type
     default: AWS_SECRET_ACCESS_KEY_ID
     description: |
       The secret key for the aws user
-  
   aws-access-key-id:
     type: env_var_type
     default: AWS_ACCESS_KEY_ID
     description: |
       The access key for the aws user
-
-  application-name:
-    type: string
+  aws-region:
+    type: env_var_type
+    default: AWS_REGION
     description: |
-      The name of the elastic beanstalk instance that will be updated in this job
-    
-  environment-name:
-    type: string
-
-  version:
-    type: string
-    description: |
-      The updated version of the eb instance
-
+      The region where the elasticbeanstalk instance is located
   is-docker:
     type: boolean
     default: true
-    description: 
+    description: |
+      The platform of the elastic beanstalk instance will be deployed with docker
+  is-node:
+    type: boolean
+    default: false
+    description: |
+      The platform of the elastic beanstalk instance will be deployed with nodejs
 
 steps:
   - checkout
   - eb/setup
-
+  - run:
+    name: Verify Parameters
+    command: >
+      if [[ -z "<<parameters.application-name>>"" ]]; then
+        echo "application-name is missing"
+        exit 1
+      fi
+      if [[ -z "<<parameters.environment-name>>" ]]; then
+        echo "environment-name is missing"
+        exit 1
+      fi
+      if [[ -z "<<parameters.repo-name>>" ]]; then
+        echo "repo-name is missing"
+        exit 1
+      fi
+      if [[ -z "<<parameters.version>>" ]]; then
+        echo "Version is missing"
+        exit 1
+      fi
   # Tag after build success and version is unique
   - tag-repo:
       - tag: <<parameters.version>>
-  # Ensure 
-  - run:
-    name: Install and init eb cli
-    command: |
-      pip install awsebcli
-      
-  - run:
-      name: Deploy to Elastic Beanstalk
+  - when: <<parameters.is-docker>>
+    - run:
+        name: Deploy to Elastic Beanstalk with docker platform
+        command: |
+          eb init "<<parameters.application-name>>" --region "<<parameters.aws-region>>" -p docker
+          eb deploy "<<parameters.environment-name>>" --verbose --label "<<parameters.repo-name>>"-v"<<parameters.version>>"
+  - when: <<parameters.is-node>>
+    - run:
+      name: Deploy to Elastic Beanstalk with node platform
       command: |
-        eb init --region "<<parameters.aws-region>>" "<<parameters.application-name>>" -p docker
-        eb deploy production --verbose --label "<<parameters.service_name>>"-v"<<parameters.version>>"
+          eb init "<<parameters.application-name>>" --region "<<parameters.aws-region>>" -p node
+          eb deploy "<<parameters.environment-name>>" --verbose --label "<<parameters.repo-name>>"-v"<<parameters.version>>"
