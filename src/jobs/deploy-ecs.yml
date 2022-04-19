@@ -117,7 +117,7 @@ steps:
             verify-revision-is-deployed: true
   - slack/notify:
       event: fail
-      mentions: "@$SLACK_MENTIONS"
+      mentions: "@$<<parameters.slack-mentions>>"
       template: basic_fail_1
   - slack/notify:
       event: pass
@@ -125,4 +125,3 @@ steps:
 
 environment:
   ECS_PARAM_SERVICE_NAME: <<parameters.service-name>>
-  SLACK_MENTIONS: <<parameters.slack-mentions>>

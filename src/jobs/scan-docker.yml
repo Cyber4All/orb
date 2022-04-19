@@ -54,6 +54,12 @@ parameters:
     default: SNYK_TOKEN
     description: |
       Name of environment variable storing the SNYK authentication token
+  slack-channel:
+    type: env_var_name
+    default: DOCKER_VULN_SCANS
+    description: |
+      Name of environment variable storing the channel id
+      (defaults to DOCKER_VULN_SCANS)
   dockerfile-path:
     default: "./Dockerfile"
     description: |
@@ -139,6 +145,8 @@ steps:
       event: fail
       mentions: "@$SLACK_MENTIONS"
       template: basic_fail_1
+      channel: "$<<parameters.slack-channel>>"
   - slack/notify:
       event: pass
       custom: "<<include(message_templates/docker_scan_success.json)>>"
+      channel: "$<<parameters.slack-channel>>"
