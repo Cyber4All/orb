@@ -5,13 +5,16 @@ executor: node/default
 
 parameters:
   # Required Parameters
-
+  current-directory:
+    type: string
+    description: |
+      The current working directory
 
 steps:
   - checkout
   - node/install
   - attach_workspace:
-      at: ~/<<parameters.temp>>
+      at: ~/<<parameters.current-directory>>
   - run:
       name: Install dependencies
       command: npm install
