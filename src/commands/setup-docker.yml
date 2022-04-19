@@ -18,5 +18,5 @@ steps:
   - setup_remote_docker
   - docker/install-docker
   - docker/check:
-      docker-password: <<parameters.docker-password>>
       docker-username: <<parameters.docker-username>>
+      docker-password: <<parameters.docker-password>>

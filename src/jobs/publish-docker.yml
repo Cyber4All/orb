@@ -11,7 +11,10 @@ parameters:
     type: string
     description: |
       Semantic Version of the application
-
+  executor:
+    type: executor
+    description: |
+      Name of the executor to run the job as
   # Not Required Parameters
   docker-password:
     type: env_var_name
@@ -32,7 +35,8 @@ parameters:
     type: boolean
     default: false
     description: |
-      Push the image to a registry?
+      Set to True is pushing the docker image to dockerhub and tag git repository.
+      (defaults to false)
 
 docker:
   - image: cimg/go:1.18

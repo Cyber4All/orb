@@ -4,18 +4,15 @@ description: >
 
 parameters:
   # Required Parameters
-  image:
-    type: string
-    default: ""
-    description: |
-      The name of the repository on dockerhub
   tag:
     type: string
-    default: ""
     description: |
       The semantic version of the project trying to be deployed
       https://semver.org/spec/v2.0.0.html
-
+  image:
+    type: string
+    description: |
+      The name of the repository on dockerhub
   # Not Required Parameters
   organization:
     type: string

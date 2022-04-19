@@ -3,10 +3,23 @@ description: >
   This command should be used prior to deploying the project.
 
 parameters:
+  # Required
   tag:
     type: string
+    description: |
+      The semantic version of the project trying to be deployed
+      https://semver.org/spec/v2.0.0.html
 
 steps:
   - run:
-      name: "Not Yet Implemented"
-      command: echo "Not Yet Implemented"
+      name: Validate params
+      command: >
+        if [[ -z "<<parameters.tag>>"]]; then
+          echo "tag parameter must be defined"
+          exit 1
+        fi
+  - run:
+      name: "Tag $CIRCLE_PROJECT_REPONAME Repository"
+      command: >
+        git tag "<<parameters.tag>>"
+        git push origin --tags
