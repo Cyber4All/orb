@@ -46,6 +46,7 @@ docker:
   - image: <<parameters.docker-image>>
 
 steps:
+  - checkout
   - run:
       name: "Job Overview"
       command: >
