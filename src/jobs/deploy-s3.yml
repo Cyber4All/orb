@@ -10,7 +10,7 @@ parameters:
     description: |
       The semantic version of the project trying to be deployed
       https://semver.org/spec/v2.0.0.html
-#optional parameters with defaults
+ # Not Required Parameters
   s3-bucket:
     type: env_var_name
     default: S3_BUCKET
