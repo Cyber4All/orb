@@ -60,7 +60,7 @@ steps:
       command: npm install
   - run:
       name: Build Application
-      command: npm run build --aot --build-optimizer=true --optimization=true --configuration=production
+      command: ng build --aot --build-optimizer=true --optimization=true --configuration=production
   - aws-s3/sync:
       aws-region: <<parameters.aws-region>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
