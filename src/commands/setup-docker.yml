@@ -6,17 +6,17 @@ parameters:
   docker-username:
     type: env_var_name
     default: DOCKER_USERNAME
-    description: >
+    description: |
       Username for the docker acccount
   docker-password:
     type: env_var_name
     default: DOCKER_PASSWORD
-    description: >
+    description: |
       Password for the docker account
 steps:
   - setup_remote_docker
   - docker/install-docker
-  - run: 
-    name: "Log in to docker"
+  - run:
+    name: Log in to docker
     command: >
       docker login -u <<parameters.docker-username>> -p <<parameters.docker-password>>
