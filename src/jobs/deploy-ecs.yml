@@ -17,16 +17,16 @@ parameters:
       The semantic version of the project trying to be deployed
       https://semver.org/spec/v2.0.0.html
   family:
+    type: string
     description: Name of the task definition's family.
-    type: string
   cluster-name:
-    description: The short name or full ARN of the cluster that hosts the service.
     type: string
+    description: The short name or full ARN of the cluster that hosts the service.
   service-name:
+    type: string
     description: |
       The name of the service to update. If undefined, we assume `family` is the
       name of both the service and task definition.
-    type: string
   # Not Required Parameters
   isService:
     type: boolean
@@ -34,22 +34,22 @@ parameters:
     description: |
       True if the task-definition is deployed as a service on ECS. (Default is false)
   aws-access-key-id:
+    type: env_var_name
     default: MACHINE_AWS_ECS_AccessKey
     description: |
       AWS access key id for IAM role. Set this to the name of
       the environment variable you will use to hold this
       value, i.e. MACHINE_AWS_ECS_AccessKey.
-    type: env_var_name
   aws-secret-access-key:
+    type: env_var_name
     default: MACHINE_AWS_ECS_SecretKey
     description: |
       AWS secret key for IAM role. Set this to the name of
       the environment variable you will use to hold this
       value, i.e. $MACHINE_AWS_ECS_SecretKey.
-    type: env_var_name
   slack-mentions:
-    default: MENTIONS
     type: env_var_name
+    default: MENTIONS
     description: |
       MENTIONS is a the environment variable name for the slack context.
 
@@ -118,4 +118,4 @@ steps:
 
 environment:
   ECS_PARAM_SERVICE_NAME: <<parameters.service-name>>
-  SLACK_MENTIONS: <<parameters.mentions>>
+  SLACK_MENTIONS: <<parameters.slack-mentions>>
