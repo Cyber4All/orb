@@ -17,7 +17,7 @@ workflows:
           filters:
             tags:
               only: /.*/
-  
+
       - orb-tools/review:
           exclude: "RC009"
           filters:
@@ -52,5 +52,10 @@ workflows:
           vcs-type: << pipeline.project.type >>
           pipeline-number: << pipeline.number >>
           filters:
+            branches:
+              only:
+                - main
+                - hotfix
+                - releases
             tags:
               only: /.*/
