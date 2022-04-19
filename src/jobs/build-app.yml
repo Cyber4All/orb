@@ -24,7 +24,7 @@ steps:
   - persist_to_workspace:
       root: ./
       paths:
-          - ./build
-          - ./package.json
-          - ./.elasticbeanstalk
-          - ./.git
+        - ./build
+        - ./package.json
+        - ./.elasticbeanstalk
+        - ./.git

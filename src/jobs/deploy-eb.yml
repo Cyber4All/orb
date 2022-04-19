@@ -10,19 +10,18 @@ parameters:
     description: |
       The name of the elastic beanstalk instance that will be updated in this job
   environment-name:
-      type: string
-      description: |
-        The name of the elastic beanstalk instance that was given during eb init
+    type: string
+    description: |
+      The name of the elastic beanstalk instance that was given during eb init
   repo-name:
     type: string
     description: |
-      The Github repository name of the elasticbeanstalk instance. 
+      The Github repository name of the elasticbeanstalk instance
       This will be used for tagging
   version:
     type: string
     description: |
       The semantic version of the eb instance
-      
   # Not Required Parameters
   aws-secret-access-key-id:
     type: env_var_type
@@ -78,12 +77,12 @@ steps:
   - when: <<parameters.is-docker>>
     - run:
         name: Deploy to Elastic Beanstalk with docker platform
-        command: |
+        command: >
           eb init "<<parameters.application-name>>" --region "<<parameters.aws-region>>" -p docker
           eb deploy "<<parameters.environment-name>>" --verbose --label "<<parameters.repo-name>>"-v"<<parameters.version>>"
   - when: <<parameters.is-node>>
     - run:
       name: Deploy to Elastic Beanstalk with node platform
-      command: |
+      command: >
           eb init "<<parameters.application-name>>" --region "<<parameters.aws-region>>" -p node
           eb deploy "<<parameters.environment-name>>" --verbose --label "<<parameters.repo-name>>"-v"<<parameters.version>>"
