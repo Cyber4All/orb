@@ -1,0 +1,40 @@
+description: >
+  This job will automate running a set of backend tests.
+
+parameters:
+  # Not Required Parameters
+  docker-image:
+    type: string
+    default: "cimg/base:stable"
+    description: |
+      The docker image that will be used as an executor
+      if isNode is true, node/default is recommended
+  isNode:
+    type: boolean
+    default: false
+    description: |
+      Set `true` if wanting to lint a node.js application
+      Will use the script `npm run test` with all the test suites.
+
+docker:
+  - image: <<parameters.docker-image>>
+
+steps:
+  - checkout
+  - run:
+      name: "Job Overview"
+      command: >
+        echo "
+         Testing Job Overview
+        ----------------------
+        Node: <<parameters.isNode>>"
+  - when:
+      condition: <<parameters.isNode>>
+      steps:
+        - node/install
+        - node/install-packages
+        - run:
+            name: Run Tests
+            command: >
+              npm run test
+
