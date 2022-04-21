@@ -22,6 +22,18 @@ parameters:
 
 steps:
   - run:
+      name: "Verify Parameters"
+      command: |
+        if [ -z "<<parameters.tag>>" ]; then
+          echo '"tag" is missing.'
+          exit 1
+        fi
+
+        if [ -z "<<parameters.image>>" ]; then
+          echo '"image" is missing.'
+          exit 1
+        fi
+  - run:
       name: "Check that semantic version is unique on Dockerhub"
       command: <<include(scripts/check-docker-semver.sh)>>
       environment:

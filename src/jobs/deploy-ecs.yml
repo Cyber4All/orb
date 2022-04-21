@@ -57,9 +57,9 @@ parameters:
     type: env_var_name
     default: MENTIONS
     description: |
-      MENTIONS is a the environment variable name for the slack context.
+      MENTIONS is the environment variable storing the name for the slack context.
 
-executor: node/default
+executor: aws-cli/default
 
 steps:
   - checkout
@@ -67,7 +67,7 @@ steps:
       name: "Verify Parameters"
       command: >
         if [ -z "$SLACK_MENTIONS" ]; then
-          echo '"mentions" is missing'
+          echo '"mentions" is not set in the project env or context'
           exit 1
         fi
 
@@ -103,6 +103,8 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       aws-region: <<parameters.aws-region>>
+  - tag-repo:
+      tag: <<parameters.tag>>
   - aws-ecs/update-task-definition:
       container-image-name-updates: "container=<<parameters.container-name>>,image-and-tag=<<parameters.image-name>>:<<parameters.tag>>"
       family: <<parameters.family>>
@@ -117,7 +119,7 @@ steps:
             verify-revision-is-deployed: true
   - slack/notify:
       event: fail
-      mentions: "@$SLACK_MENTIONS"
+      mentions: "@$<<parameters.slack-mentions>>"
       template: basic_fail_1
   - slack/notify:
       event: pass
@@ -125,4 +127,3 @@ steps:
 
 environment:
   ECS_PARAM_SERVICE_NAME: <<parameters.service-name>>
-  SLACK_MENTIONS: <<parameters.slack-mentions>>
