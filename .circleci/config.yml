@@ -52,10 +52,5 @@ workflows:
           vcs-type: << pipeline.project.type >>
           pipeline-number: << pipeline.number >>
           filters:
-            branches:
-              only:
-                - main
-                - hotfix
-                - releases
             tags:
               only: /.*/
