@@ -11,11 +11,12 @@ parameters:
     type: string
     description: |
       The name of the lambda function to be updated.
-  zip-file:
+  # Optional Parameters with Defaults
+  zip-file: # change name to build-location?
     type: string
+    default: ./dist/*
     description: |
       The location of the zip-file where the lambda function is to be updated.
-  # Optional Parameters with Defaults
   aws-region:
     type: env_var_name
     default: AWS_REGION_N_VA
@@ -47,6 +48,14 @@ steps:
       aws-secret-access-key: <<parameters.aws-secret-access-key-id>>
   - tag-repo:
       tag: <<parameters.tag>>
+  - run:
+      name: Build Application
+      command: >
+        ng build --optimization=true
+  - run:
+      name: Zip Application
+      command: >
+        zip build.zip <<parameters.zip-file>>
   - run:
       name: Update Lambda Function code based on package type (Zip or Image)
       command: >
