@@ -37,4 +37,3 @@ steps:
             name: Run Tests
             command: >
               npm run test
-
