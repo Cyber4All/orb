@@ -7,18 +7,14 @@ parameters:
     type: string
     description: |
       The semantic version of the project trying to be deployed
-  lambda-function-name:
+  function-name:
     type: string
     description: |
       The name of the lambda function to be updated.
-  lambda-package-value:
+  zip-file:
     type: string
     description: |
-      The name of the lambda package to be updated.
-  lambda-package-type:
-    type: string
-    description: |
-      The type of the lambda package to be updated.
+      The location of the zip-file where the lambda function is to be updated.
   # Optional Parameters with Defaults
   aws-region:
     type: env_var_name
@@ -54,13 +50,7 @@ steps:
   - run:
       name: Update Lambda Function code based on package type (Zip or Image)
       command: >
-        if [[ <<parameters.lambda-package-type>> == "Zip" ]]
-        then
-          aws lambda update-function-code --function-name <<parameters.lambda-function-name>> --zip-file <<parameters.lambda-package-value>>
-        elif [[ <<parameters.lambda-package-type>> == "Image" ]]
-        then
-          aws lambda update-function-code --function-name <<parameters.lambda-function-name>> --image-uri <<parameters.lambda-package-value>>
-        fi
+        aws lambda update-function-code --function-name <<parameters.function-name>> --zip-file <<parameters.zip-file>>
   - slack/notify:
       event: fail
       mentions: "@<<parameters.slack-mentions>>"
