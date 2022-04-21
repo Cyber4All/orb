@@ -1,5 +1,5 @@
 description: >
-  This job will automate running a set of backend tests.
+  This job will automate running a set of backend/frontend tests.
 
 parameters:
   # Not Required Parameters
