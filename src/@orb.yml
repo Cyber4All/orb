@@ -13,3 +13,4 @@ orbs:
   docker: circleci/docker@2.0.3 # https://circleci.com/developer/orbs/orb/circleci/docker?version=2.0.3
   node: circleci/node@5.0.2 # https://circleci.com/developer/orbs/orb/circleci/node?version=5.0.2
   slack: circleci/slack@4.9.3 # https://circleci.com/developer/orbs/orb/circleci/slack?version=4.9.3
+  aws-s3: circleci/aws-s3@3.0.0 # https://circleci.com/developer/orbs/orb/circleci/aws-s3?version=3.0.0
