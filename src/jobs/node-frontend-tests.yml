@@ -1,9 +1,0 @@
-description: >
-  This job will automate running a set of frontend tests.
-
-executor: node/default
-
-steps:
-  - run:
-      name: "Not Yet Implemented"
-      command: echo "Not Yet Implemented"
