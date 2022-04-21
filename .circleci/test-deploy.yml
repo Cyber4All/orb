@@ -25,7 +25,7 @@ workflows:
       # publish orb to production
       - orb-tools/publish:
           requires:
-            [command-tests, orb/deploy-eb, orb/deploy-ecs, orb/deploy-ecs, orb/deploy-lambda, orb/deploy-s3, orb/lint-app, orb/node-backend-tests, orb/node-frontend-tests]
+            [command-tests]
           context: orb-publishing
           orb-name: cyber4all/orb
           enable-pr-comment: false
