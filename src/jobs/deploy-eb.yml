@@ -51,7 +51,7 @@ parameters:
 
 steps:
   - checkout
-  - eb/setup
+  - aws-eb/setup
   - run:
     name: Verify Parameters
     command: >
