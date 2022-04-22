@@ -23,14 +23,14 @@ parameters:
     description: |
       The semantic version of the eb instance
   # Not Required Parameters
-  aws-secret-access-key-id:
+  aws-secret-access-key:
     type: env_var_type
-    default: MACHINE_AWS_EB_SECRETKEY
+    default: MACHINE_AWS_EB_SecretKey
     description: |
       The secret key for the aws user
   aws-access-key-id:
     type: env_var_type
-    default: AWS_ACCESS_KEY_ID
+    default: MACHINE_AWS_EB_AccessKey
     description: |
       The access key for the aws user
   aws-region:
@@ -38,12 +38,12 @@ parameters:
     default: AWS_REGION
     description: |
       The region where the elasticbeanstalk instance is located
-  is-docker:
+  isDocker:
     type: boolean
     default: true
     description: |
       The platform of the elastic beanstalk instance will be deployed with docker
-  is-node:
+  isNode:
     type: boolean
     default: false
     description: |
@@ -51,38 +51,44 @@ parameters:
 
 steps:
   - checkout
-  - aws-eb/setup
+  - aws-cli/setup:
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
   - run:
-    name: Verify Parameters
-    command: >
-      if [[ -z "<<parameters.application-name>>"" ]]; then
-        echo "application-name is missing"
-        exit 1
-      fi
-      if [[ -z "<<parameters.environment-name>>" ]]; then
-        echo "environment-name is missing"
-        exit 1
-      fi
-      if [[ -z "<<parameters.repo-name>>" ]]; then
-        echo "repo-name is missing"
-        exit 1
-      fi
-      if [[ -z "<<parameters.version>>" ]]; then
-        echo "Version is missing"
-        exit 1
-      fi
-  # Tag after build success and version is unique
+      name: Verify Parameters
+      command: >
+        if [[ -z "<<parameters.application-name>>"" ]]; then
+          echo "application-name is missing"
+          exit 1
+        fi
+
+        if [[ -z "<<parameters.environment-name>>" ]]; then
+          echo "environment-name is missing"
+          exit 1
+        fi
+
+        if [[ -z "<<parameters.repo-name>>" ]]; then
+          echo "repo-name is missing"
+          exit 1
+        fi
+
+        if [[ -z "<<parameters.version>>" ]]; then
+          echo "Version is missing"
+          exit 1
+        fi
+
+        if [[ <<parameters.isNode>> ]]; then
+          echo 'export EB_PARAM_PLATFORM=node.js' >> $BASH_ENV
+        elif [[ <<parameters.isDocker>> ]]; then
+          echo 'export EB_PARAM_PLATFORM=docker' >> $BASH_ENV
+        else
+          echo 'Either "isNode" or "isDocker" must be true.'
+          exit 1
+        fi
   - tag-repo:
       - tag: <<parameters.version>>
-  - when: <<parameters.is-docker>>
-    run:
+  - run:
       name: Deploy to Elastic Beanstalk with docker platform
       command: >
-        eb init "<<parameters.application-name>>" --region "<<parameters.aws-region>>" -p docker
+        eb init "<<parameters.application-name>>" --region "<<parameters.aws-region>>" -p $EB_PARAM_PLATFORM
         eb deploy "<<parameters.environment-name>>" --verbose --label "<<parameters.repo-name>>"-v"<<parameters.version>>"
-  - when: <<parameters.is-node>>
-    run:
-      name: Deploy to Elastic Beanstalk with node platform
-      command: >
-          eb init "<<parameters.application-name>>" --region "<<parameters.aws-region>>" -p node
-          eb deploy "<<parameters.environment-name>>" --verbose --label "<<parameters.repo-name>>"-v"<<parameters.version>>"
