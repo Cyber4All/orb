@@ -9,6 +9,12 @@ parameters:
     description: |
       The docker image that will be used as an executor
       if isNode is true, node/default is recommended
+  node-test:
+    type: string
+    default: test
+    description: |
+      The pacakge.json script to run the tests of the application.
+      (defaults to test)
   isNode:
     type: boolean
     default: false
@@ -36,4 +42,4 @@ steps:
         - run:
             name: Run Tests
             command: >
-              npm run test
+              npm run <<parameters.node-test>>
