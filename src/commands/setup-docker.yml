@@ -3,20 +3,20 @@ description: >
   This command should be used prior to running any docker commands that interact with the remote repository.
 
 parameters:
-  docker-username:
-    type: env_var_name
-    default: DOCKER_USERNAME
-    description: |
-      Username for the docker acccount
   docker-password:
-    type: env_var_name
     default: DOCKER_PASSWORD
     description: |
-      Password for the docker account
+      Name of environment variable storing your Docker password
+    type: env_var_name
+  docker-username:
+    default: DOCKER_USERNAME
+    description: |
+      Name of environment variable storing your Docker username
+    type: env_var_name
+
 steps:
   - setup_remote_docker
   - docker/install-docker
-  - run:
-    name: Log in to docker
-    command: >
-      docker login -u <<parameters.docker-username>> -p <<parameters.docker-password>>
+  - docker/check:
+      docker-password: <<parameters.docker-password>>
+      docker-username: <<parameters.docker-username>>
