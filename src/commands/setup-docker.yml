@@ -3,20 +3,30 @@ description: >
   This command should be used prior to running any docker commands that interact with the remote repository.
 
 parameters:
+  # Not Required Parameters
   docker-password:
+    type: env_var_name
     default: DOCKER_PASSWORD
     description: |
       Name of environment variable storing your Docker password
-    type: env_var_name
   docker-username:
+    type: env_var_name
     default: DOCKER_USERNAME
     description: |
       Name of environment variable storing your Docker username
-    type: env_var_name
+  login:
+    type: boolean
+    default: false
+    description: |
+      Conditional whether docker should just be installed or whether
+      the cli should login. (default is false)
 
 steps:
   - setup_remote_docker
   - docker/install-docker
-  - docker/check:
-      docker-password: <<parameters.docker-password>>
-      docker-username: <<parameters.docker-username>>
+  - when:
+      condition: <<parameters.login>>
+      steps:
+        - docker/check:
+            docker-password: <<parameters.docker-password>>
+            docker-username: <<parameters.docker-username>>
