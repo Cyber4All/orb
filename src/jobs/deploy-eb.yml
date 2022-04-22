@@ -25,7 +25,7 @@ parameters:
   # Not Required Parameters
   aws-secret-access-key-id:
     type: env_var_type
-    default: AWS_SECRET_ACCESS_KEY_ID
+    default: MACHINE_AWS_EB_SECRETKEY
     description: |
       The secret key for the aws user
   aws-access-key-id:
