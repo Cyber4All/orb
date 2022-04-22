@@ -1,5 +1,5 @@
 description: >
-  This example shows how a node application being deployed to ECS with docker 
+  This example shows how a node application being deployed to ECS with docker
   can setup a CICD pipeline with this orb.
 
 usage:

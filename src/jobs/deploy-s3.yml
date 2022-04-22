@@ -4,13 +4,20 @@ description: |
 executor: node/default
 
 parameters:
- # Required Parameters
+  # Required Parameters
   tag:
     type: string
     description: |
       The semantic version of the project trying to be deployed
       https://semver.org/spec/v2.0.0.html
- # Not Required Parameters
+      (Required only when deploy == true)
+  # Not Required Parameters
+  deploy:
+    type: boolean
+    default: false
+    description: |
+      Set to True is build and sync changes with S3 and invalidate CF index.html.
+      (defaults to false)
   s3-bucket:
     type: env_var_name
     default: S3_BUCKET
@@ -48,28 +55,31 @@ parameters:
 
 steps:
   - checkout
-  - tag-repo:
-      tag: <<parameters.tag>>
   - run:
       name: Install dependencies
       command: npm install
   - run:
       name: Build Application
       command: ng build --aot --build-optimizer=true --optimization=true --configuration=production
-  - aws-s3/sync:
-      aws-region: <<parameters.aws-region>>
-      aws-access-key-id: <<parameters.aws-access-key-id>>
-      aws-secret-access-key: <<parameters.aws-secret-access-key>>
-      from: <<parameters.source>>
-      to: s3://<<parameters.s3-bucket>>
-  - run:
-      name: Invalidate index.html in CloudFront
-      command: >
-        aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths /index.html
-  - slack/notify:
-      event: fail
-      mentions: "@<<parameters.slack-mentions>>"
-      template: basic_fail_1
-  - slack/notify:
-      event: pass
-      custom: "<<include(message_templates/deploy_aws_success.json)>>"
+  - when:
+      condition: <<parameters.deploy>>
+      steps:
+        - tag-repo:
+            tag: <<parameters.tag>>
+        - aws-s3/sync:
+            aws-region: <<parameters.aws-region>>
+            aws-access-key-id: <<parameters.aws-access-key-id>>
+            aws-secret-access-key: <<parameters.aws-secret-access-key>>
+            from: <<parameters.source>>
+            to: s3://<<parameters.s3-bucket>>
+        - run:
+            name: Invalidate index.html in CloudFront
+            command: >
+              aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths /index.html
+        - slack/notify:
+            event: fail
+            mentions: "@<<parameters.slack-mentions>>"
+            template: basic_fail_1
+        - slack/notify:
+            event: pass
+            custom: "<<include(message_templates/deploy_aws_success.json)>>"
