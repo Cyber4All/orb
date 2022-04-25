@@ -34,6 +34,11 @@ parameters:
     description: |
       Env var of AWS region to operate in
       (defaults to AWS_REGION_N_VA)
+  slack-mentions:
+    type: env_var_name
+    default: MENTIONS
+    description: |
+      MENTIONS is the environment variable storing the name for the slack context.
   isDocker:
     type: boolean
     default: true
@@ -85,3 +90,10 @@ steps:
       command: >
         eb init "<<parameters.application-name>>" --region "<<parameters.aws-region>>" -p $EB_PARAM_PLATFORM
         eb deploy "<<parameters.environment-name>>" --verbose --label "$CIRCLE_PROJECT_REPONAME"-v"<<parameters.version>>"
+  - slack/notify:
+      event: fail
+      mentions: "@$<<parameters.slack-mentions>>"
+      template: basic_fail_1
+  - slack/notify:
+      event: pass
+      custom: "<<include(message_templates/deploy_aws_success.json)>>"
