@@ -12,9 +12,9 @@ parameters:
     description: |
       The name of the lambda function to be updated.
   # Optional Parameters with Defaults
-  zip-file: # change name to build-location?
+  build-path:
     type: string
-    default: ./dist/*
+    default: ./dist
     description: |
       The location of the zip-file where the lambda function is to be updated.
   aws-region:
@@ -55,11 +55,11 @@ steps:
   - run:
       name: Zip Application
       command: >
-        zip build.zip <<parameters.zip-file>>
+        zip build.zip <<parameters.build-path>>
   - run:
-      name: Update Lambda Function code based on package type (Zip or Image)
+      name: Update Lambda Function code
       command: >
-        aws lambda update-function-code --function-name <<parameters.function-name>> --zip-file <<parameters.zip-file>>
+        aws lambda update-function-code --function-name <<parameters.function-name>> --zip-file file://<<parameters.build-path>>
   - slack/notify:
       event: fail
       mentions: "@<<parameters.slack-mentions>>"
