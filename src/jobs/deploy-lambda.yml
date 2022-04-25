@@ -24,7 +24,7 @@ parameters:
       Specify the region for aws
   aws-access-key-id:
     type: env_var_name
-    default: MACHINE_AWS_ECS_ACCESSKEY
+    default: MACHINE_AWS_LAMBDA_ACCESSKEY
     description: |
       Access key for MACHINE_AWS_ECS
   aws-secret-access-key-id:
