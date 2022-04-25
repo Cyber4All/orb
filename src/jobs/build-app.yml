@@ -13,18 +13,18 @@ parameters:
 steps:
   - checkout
   - node/install
-  - attach_workspace:
-      at: ~/<<parameters.current-directory>>
-  - run:
-      name: Install dependencies
-      command: npm install
+  - node/install-packages
   - run:
       name: Build the app
-      command: npm run build
+      command: >
+        npm run build
+  - run:
+      name: Zip App
+      command: >
+        zip -r build.zip ./build/* ./package.json
   - persist_to_workspace:
-      root: ./
+      root: .
       paths:
-        - ./build
-        - ./package.json
+        - build.zip
         - ./.elasticbeanstalk
         - ./.git

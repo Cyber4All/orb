@@ -13,11 +13,6 @@ parameters:
     type: string
     description: |
       The name of the elastic beanstalk instance that was given during eb init
-  repo-name:
-    type: string
-    description: |
-      The Github repository name of the elasticbeanstalk instance
-      This will be used for tagging
   version:
     type: string
     description: |
@@ -34,10 +29,11 @@ parameters:
     description: |
       The access key for the aws user
   aws-region:
-    type: env_var_type
-    default: AWS_REGION
+    type: env_var_name
+    default: AWS_REGION_N_VA
     description: |
-      The region where the elasticbeanstalk instance is located
+      Env var of AWS region to operate in
+      (defaults to AWS_REGION_N_VA)
   isDocker:
     type: boolean
     default: true
@@ -50,10 +46,10 @@ parameters:
       The platform of the elastic beanstalk instance will be deployed with nodejs
 
 steps:
-  - checkout
   - aws-cli/setup:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
+  - aws-eb/setup
   - run:
       name: Verify Parameters
       command: >
@@ -64,11 +60,6 @@ steps:
 
         if [[ -z "<<parameters.environment-name>>" ]]; then
           echo "environment-name is missing"
-          exit 1
-        fi
-
-        if [[ -z "<<parameters.repo-name>>" ]]; then
-          echo "repo-name is missing"
           exit 1
         fi
 
@@ -85,10 +76,12 @@ steps:
           echo 'Either "isNode" or "isDocker" must be true.'
           exit 1
         fi
+  - attach_workspace:
+      at: .
   - tag-repo:
       - tag: <<parameters.version>>
   - run:
       name: Deploy to Elastic Beanstalk with docker platform
       command: >
         eb init "<<parameters.application-name>>" --region "<<parameters.aws-region>>" -p $EB_PARAM_PLATFORM
-        eb deploy "<<parameters.environment-name>>" --verbose --label "<<parameters.repo-name>>"-v"<<parameters.version>>"
+        eb deploy "<<parameters.environment-name>>" --verbose --label "$CIRCLE_PROJECT_REPONAME"-v"<<parameters.version>>"
