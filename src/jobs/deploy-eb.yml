@@ -19,12 +19,12 @@ parameters:
       The semantic version of the eb instance
   # Not Required Parameters
   aws-secret-access-key:
-    type: env_var_type
+    type: env_var_name
     default: MACHINE_AWS_EB_SecretKey
     description: |
       The secret key for the aws user
   aws-access-key-id:
-    type: env_var_type
+    type: env_var_name
     default: MACHINE_AWS_EB_AccessKey
     description: |
       The access key for the aws user
@@ -79,7 +79,7 @@ steps:
   - attach_workspace:
       at: .
   - tag-repo:
-      - tag: <<parameters.version>>
+      tag: <<parameters.version>>
   - run:
       name: Deploy to Elastic Beanstalk with docker platform
       command: >
