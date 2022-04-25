@@ -29,7 +29,7 @@ parameters:
       Access key for MACHINE_AWS_ECS
   aws-secret-access-key-id:
     type: env_var_name
-    default: MACHINE_AWS_ECS_SECRETKEY
+    default: MACHINE_AWS_LAMBDA_SECRETKEY
     description: |
       Secret Key for Machine_AWS_ECS
   slack-mentions:
