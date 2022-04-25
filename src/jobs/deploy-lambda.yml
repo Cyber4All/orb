@@ -26,7 +26,7 @@ parameters:
     type: env_var_name
     default: MACHINE_AWS_LAMBDA_ACCESSKEY
     description: |
-      Access key for MACHINE_AWS_ECS
+      Access key for MACHINE_AWS_LAMBDA
   aws-secret-access-key-id:
     type: env_var_name
     default: MACHINE_AWS_LAMBDA_SECRETKEY
