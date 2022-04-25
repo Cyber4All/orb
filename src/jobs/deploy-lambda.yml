@@ -46,12 +46,23 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-region: <<parameters.aws-region>>
       aws-secret-access-key: <<parameters.aws-secret-access-key-id>>
+  - run:
+      name: "Verify Required Parameters"
+      command: |
+        if [ -z <<parameters.tag>> ] then
+          echo 'Parameter "tag" is missing.'
+          exit 1
+        fi
+        if [ -z <<parameters.function-name>> ] then
+          echo 'Parameter "function-name" is missing.'
+          exit 1
+        fi
   - tag-repo:
       tag: <<parameters.tag>>
   - run:
       name: Build Application
       command: >
-        ng build --optimization=true
+        npm run build --optimization=true
   - run:
       name: Zip Application
       command: >
