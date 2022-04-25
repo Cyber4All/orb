@@ -17,6 +17,9 @@ usage:
 
         - cyber4all/deploy-s3:
             deploy: false # explicitly shows in develeopment
+            filters:
+              branches:
+                ignore: releases
 
         - cyber4all/test-app:
             docker-image: cimg/node

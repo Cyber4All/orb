@@ -24,6 +24,9 @@ usage:
             image: "$CIRCLE_PROJECT_REPONAME"
             tag: $(cat ./package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')
             deploy: false # explicitly shows in develeopment (won't login i.e doesn't need context)
+            filters:
+              branches:
+                ignore: releases
 
         - cyber4all/test-app:
             docker-image: cimg/node
