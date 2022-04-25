@@ -6,7 +6,8 @@ parameters:
   tag:
     type: string
     description: |
-      The semantic version of the project trying to be deployed
+      The semantic version of the project trying to be deployed.
+      https://semver.org/spec/v2.0.0.html
   function-name:
     type: string
     description: |
@@ -17,25 +18,32 @@ parameters:
     default: ./dist
     description: |
       The location of the zip-file where the lambda function is to be updated.
+      (defaults to ./dist)
   aws-region:
     type: env_var_name
     default: AWS_REGION_N_VA
     description: |
-      Specify the region for aws
+      Environment variable of AWS region to operate in
+      (defaults to AWS_REGION_N_VA)
   aws-access-key-id:
     type: env_var_name
-    default: MACHINE_AWS_LAMBDA_ACCESSKEY
+    default: MACHINE_AWS_LAMBDA_AccessKey
     description: |
-      Access key for MACHINE_AWS_LAMBDA
-  aws-secret-access-key-id:
+      AWS access key id for the IAM role. Set this to the name of
+      the environment variable you will use to hold this
+      value, i.e. MACHINE_AWS_LAMBDA_AccessKey
+  aws-secret-access-key:
     type: env_var_name
-    default: MACHINE_AWS_LAMBDA_SECRETKEY
+    default: MACHINE_AWS_LAMBDA_SecretKey
     description: |
-      Secret Key for Machine_AWS_LAMBDA
+      AWS secret key for IAM role. Set this to the name of
+      the environment variable you will use to hold this
+      value, i.e. MACHINE_AWS_LAMBDA_SecretKey.
   slack-mentions:
     type: env_var_name
     default: MENTIONS
     description: |
+      Env var name for notifying specific users in the Slack context.
       MENTIONS stores the environment variable name for the Slack context.
 
 executor: node/default
@@ -45,7 +53,7 @@ steps:
   - aws-cli/setup:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-region: <<parameters.aws-region>>
-      aws-secret-access-key: <<parameters.aws-secret-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
   - run:
       name: "Verify Required Parameters"
       command: |
