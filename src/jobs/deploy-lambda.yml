@@ -31,7 +31,7 @@ parameters:
     type: env_var_name
     default: MACHINE_AWS_LAMBDA_SECRETKEY
     description: |
-      Secret Key for Machine_AWS_ECS
+      Secret Key for Machine_AWS_LAMBDA
   slack-mentions:
     type: env_var_name
     default: MENTIONS
