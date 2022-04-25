@@ -15,10 +15,10 @@ parameters:
   # Optional Parameters with Defaults
   build-path:
     type: string
-    default: ./dist
+    default: ./lib
     description: |
       The location of the zip-file where the lambda function is to be updated.
-      (defaults to ./dist)
+      (defaults to ./lib)
   aws-region:
     type: env_var_name
     default: AWS_REGION_N_VA
@@ -74,7 +74,7 @@ steps:
   - run:
       name: Zip Application
       command: >
-        zip build.zip <<parameters.build-path>>
+        zip -r build.zip <<parameters.build-path>>
   - run:
       name: Update Lambda Function code
       command: >
