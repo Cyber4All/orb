@@ -1,7 +1,5 @@
-description: >
+description: |
   This job will build an app
-
-executor: node/default
 
 parameters:
   # Required Parameters
@@ -9,6 +7,8 @@ parameters:
     type: string
     description: |
       The current working directory
+
+executor: node/default
 
 steps:
   - checkout

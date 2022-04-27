@@ -1,4 +1,4 @@
-description: >
+description: |
   This command checks in the semantic version for a repository has been published already in docker.
   This command is used a validation step prior to publishing the new docker image version.
 
@@ -23,7 +23,7 @@ parameters:
 steps:
   - run:
       name: "Verify Parameters"
-      command: |
+      command: >
         if [ -z "<<parameters.tag>>" ]; then
           echo '"tag" is missing.'
           exit 1

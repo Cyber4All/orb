@@ -1,4 +1,4 @@
-description: >
+description: |
   This job will lint the application based on what language the application is written in.
 
 parameters:

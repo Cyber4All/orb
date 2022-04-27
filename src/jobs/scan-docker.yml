@@ -1,4 +1,4 @@
-description: >
+description: |
   This job scans an application and will output the digest to an S3 bucket and notify a slack channel of any vulnerabilities.
 
 parameters:
@@ -11,7 +11,6 @@ parameters:
     type: string
     description: |
       Semantic Version of the application
-
   # Not Required Parameters
   aws-access-key-id:
     type: env_var_name

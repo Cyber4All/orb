@@ -1,4 +1,4 @@
-description: >
+description: |
   This example shows how a frontend application being deployed to S3 and CF
   can be setup with a CICD pipeline using this orb.
 

@@ -1,13 +1,15 @@
-description: >
+description: |
   This command will tag the github repository with the semantic version of the project.
   This command should be used prior to deploying the project.
+
 parameters:
-  # Required
+  # Required Parameters
   tag:
     type: string
     description: |
       The semantic version of the project trying to be deployed
       https://semver.org/spec/v2.0.0.html
+
 steps:
   - run:
       name: Validate params

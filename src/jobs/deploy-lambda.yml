@@ -1,4 +1,4 @@
-description: >
+description: |
   This job deploys an application to aws lambda.
 
 parameters:

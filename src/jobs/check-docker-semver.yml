@@ -1,4 +1,4 @@
-description: >
+description: |
   This Job checks in the semantic version for a repository has been published already in docker.
   This Job is used a validation step prior to publishing the new docker image version.
 

@@ -1,6 +1,7 @@
-description: >
+description: |
   This example shows how a service node application being deployed to Elasticbeanstalk with docker
   can setup a CICD pipeline with this orb.
+
 usage:
   version: 2.1
 

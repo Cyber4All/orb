@@ -1,7 +1,5 @@
-description: >
+description: |
   This job deploys an application to aws elasticbeanstalk. Deploy-Eb requires publish-docker
-
-executor: node/default
 
 parameters:
   # Required Parameters
@@ -49,6 +47,8 @@ parameters:
     default: false
     description: |
       The platform of the elastic beanstalk instance will be deployed with nodejs
+
+executor: node/default
 
 steps:
   - aws-cli/setup:

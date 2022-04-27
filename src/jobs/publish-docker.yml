@@ -1,4 +1,4 @@
-description: >
+description: |
   This job publishes a new version of the application to DockerHub and versions the Github image.
 
 parameters:
