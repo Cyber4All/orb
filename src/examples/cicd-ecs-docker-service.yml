@@ -1,0 +1,67 @@
+description: >
+  This example shows how a node application being deployed to ECS with docker
+  can setup a CICD pipeline with this orb.
+
+usage:
+  version: 2.1
+
+  orbs:
+    cyber4all: cyber4all/orb:1.0.0
+    docker: circleci/docker@2.0.3
+
+  workflows:
+    integration-testing:
+      jobs:
+        - docker/hadolint:
+            dockerfiles: "Dockerfile:Dockerfile.dev"
+            executor-class: medium
+
+        - cyber4all/lint-app:
+            docker-image: cimg/node
+            isNode: true
+
+        - cyber4all/publish-docker:
+            image: "$CIRCLE_PROJECT_REPONAME"
+            tag: $(cat ./package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')
+            deploy: false # explicitly shows in develeopment (won't login i.e doesn't need context)
+            filters:
+              branches:
+                ignore: releases
+
+        - cyber4all/test-app:
+            docker-image: cimg/node
+            isNode: true
+
+    production-deployment:
+      jobs:
+        - cyber4all/scan-docker:
+            context:
+              [DockerHub, AWS, Slack, Synk]
+            image: "$CIRCLE_PROJECT_REPONAME"
+            tag: $(cat ./package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')
+            filters:
+              branches:
+                only: releases
+
+        - cyber4all/publish-docker:
+            context:
+              - DockerHub
+            image: "$CIRCLE_PROJECT_REPONAME"
+            tag: $(cat ./package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')
+            deploy: true
+            filters:
+              branches:
+                only: releases
+
+        - cyber4all/deploy-ecs:
+            requires:
+              - cyber4all/publish-docker
+            context:
+              [AWS, Slack]
+            image-name: "$CIRCLE_PROJECT_REPONAME" # used to define container-name, service-name, family
+            tag: $(cat ./package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')
+            cluster-name: "$CLARK_CLUSTER" # env variable that stores Clark cluster name
+            isService: true
+            filters:
+              branches:
+                only: releases

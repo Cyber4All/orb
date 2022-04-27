@@ -3,10 +3,6 @@ description: >
 
 parameters:
   # Required Parameters
-  container-name:
-    type: string
-    description: |
-      Name of the container name defined in the ecs task-definition
   image-name:
     type: string
     description: |
@@ -16,18 +12,26 @@ parameters:
     description: |
       The semantic version of the project trying to be deployed
       https://semver.org/spec/v2.0.0.html
-  family:
-    type: string
-    description: Name of the task definition's family.
   cluster-name:
     type: string
     description: The short name or full ARN of the cluster that hosts the service.
+
+  # Not Required Parameters
+  container-name:
+    type: string
+    description: |
+      Name of the container name defined in the ecs task-definition
+      (defaults to image-name)
   service-name:
     type: string
     description: |
-      The name of the service to update. If undefined, we assume `family` is the
-      name of both the service and task definition.
-  # Not Required Parameters
+      The name of the service to update.
+      (defaults to image-name)
+  family:
+    type: string
+    description: |
+      Name of the task definition's family.
+      (defaults to image-name)
   isService:
     type: boolean
     default: false
@@ -71,11 +75,6 @@ steps:
           exit 1
         fi
 
-        if [ -z "<<parameters.container-name>>" ]; then
-          echo '"container-name" is missing.'
-          exit 1
-        fi
-
         if [ -z "<<parameters.image-name>>" ]; then
           echo '"image-name" is missing.'
           exit 1
@@ -86,18 +85,21 @@ steps:
           exit 1
         fi
 
-        if [ -z "<<parameters.family>>" ]; then
-          echo '"family" is missing.'
-          exit 1
-        fi
-
         if [ -z "<<parameters.cluster-name>>" ]; then
           echo '"cluster-name" is missing.'
           exit 1
         fi
 
+        if [ -z "$ECS_PARAM_FAMILY" ]; then
+          echo 'export ECS_PARAM_FAMILY=<<parameters.image-name>>' >> $BASH_ENV
+        fi
+
+        if [ -z "$ECS_PARAM_CONTAINER_NAME" ]; then
+          echo 'export ECS_PARAM_CONTAINER_NAME=<<parameters.image-name>>' >> $BASH_ENV
+        fi
+
         if [ -z "$ECS_PARAM_SERVICE_NAME"]; then
-          ECS_PARAM_SERVICE_NAME="<<parameters.family>>"
+          echo 'export ECS_PARAM_SERVICE_NAME=<<parameters.image-name>>' >> $BASH_ENV
         fi
   - aws-cli/setup:
       aws-access-key-id: <<parameters.aws-access-key-id>>
@@ -127,3 +129,5 @@ steps:
 
 environment:
   ECS_PARAM_SERVICE_NAME: <<parameters.service-name>>
+  ECS_PARAM_CONTAINER_NAME: <<parameters.container-name>>
+  ECS_PARAM_FAMILY: <<parameters.family>>
