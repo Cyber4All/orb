@@ -14,7 +14,8 @@ parameters:
       https://semver.org/spec/v2.0.0.html
   cluster-name:
     type: string
-    description: The short name or full ARN of the cluster that hosts the service.
+    description: |
+      The short name or full ARN of the cluster that hosts the service.
 
   # Not Required Parameters
   container-name:

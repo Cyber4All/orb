@@ -15,18 +15,18 @@ parameters:
   # Not Required Parameters
   aws-access-key-id:
     type: env_var_name
-    default: AWS_ACCESS_KEY_ID
+    default: MACHINE_AWS_CF_AccessKey
     description: |
       AWS access key id for IAM role. Set this to the name of
       the environment variable you will use to hold this
-      value, i.e. AWS_ACCESS_KEY.
+      value, i.e. MACHINE_AWS_CF_AccessKey.
   aws-secret-access-key:
     type: env_var_name
-    default: AWS_SECRET_ACCESS_KEY
+    default: MACHINE_AWS_CF_SecretKey
     description: |
       AWS secret key for IAM role. Set this to the name of
       the environment variable you will use to hold this
-      value, i.e. $AWS_SECRET_ACCESS_KEY.
+      value, i.e. MACHINE_AWS_CF_SecretKey.
   aws-region:
     type: env_var_name
     default: AWS_REGION_N_VA
