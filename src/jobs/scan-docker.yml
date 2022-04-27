@@ -29,16 +29,16 @@ parameters:
       value, i.e. $AWS_SECRET_ACCESS_KEY.
   aws-region:
     type: env_var_name
-    default: AWS_DEFAULT_REGION
+    default: AWS_REGION_N_VA
     description: |
       Env var of AWS region to operate in
-      (defaults to AWS_DEFAULT_REGION)
+      (defaults to AWS_REGION_N_VA)
   aws-s3-bucket:
     type: env_var_name
-    default: AWS_S3_BUCKET
+    default: AWS_S3_DOCKER_SCAN_BUCKET
     description: |
       Env var of AWS s3 bucket to put object to
-      (defaults to AWS_S3_BUCKET)
+      (defaults to AWS_S3_DOCKER_SCAN_BUCKET)
   docker-password:
     type: env_var_name
     default: DOCKER_PASSWORD
@@ -46,7 +46,7 @@ parameters:
       Name of environment variable storing your Docker password
   docker-username:
     type: env_var_name
-    default: DOCKER_USERNAME
+    default: DOCKER_LOGIN
     description: |
       Name of environment variable storing your Docker username
   snyk-token:

@@ -1,9 +1,10 @@
 description: >
-  This example shows how a service node application being deployed to Elasticbeanstalk with docker
+  This example shows how a scheduled node application being deployed to ECS with docker
   can setup a CICD pipeline with this orb.
+
 usage:
   version: 2.1
-  
+
   orbs:
     cyber4all: cyber4all/orb:1.0.0
     docker: circleci/docker@2.0.3
@@ -30,8 +31,8 @@ usage:
         - cyber4all/test-app:
             docker-image: cimg/node
             isNode: true
-    
-    deploy-production:
+
+    production-deployment:
       jobs:
         - cyber4all/scan-docker:
             context:
@@ -41,7 +42,7 @@ usage:
             filters:
               branches:
                 only: releases
-        
+
         - cyber4all/publish-docker:
             context:
               - DockerHub
@@ -52,26 +53,15 @@ usage:
               branches:
                 only: releases
 
-        - cyber4all/publish-docker:
-            context:
-              - DockerHub
-            image: "$CIRCLE_PROJECT_REPONAME"
-            tag: lastest
-            check-version: false
-            deploy: true
-            filters:
-              branches:
-                only: releases
-
-        - cyber4all/deploy-eb:
+        - cyber4all/deploy-ecs:
             requires:
               - cyber4all/publish-docker
             context:
               [AWS, Slack]
-            application-name: CLARK-Gateway
-            environment-name: clark-gateway-production
-            version: $(cat ./package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')
-            isDocker: true # deploy to eb as a docker image
+            image-name: "$CIRCLE_PROJECT_REPONAME" # used to define container-name, service-name, family
+            tag: $(cat ./package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')
+            cluster-name: "$CLARK_CLUSTER" # env variable that stores Clark cluster name
+            isService: false
             filters:
               branches:
                 only: releases
