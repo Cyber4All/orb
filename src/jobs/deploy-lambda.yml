@@ -78,7 +78,7 @@ steps:
   - run:
       name: Update Lambda Function code
       command: >
-        aws lambda update-function-code --function-name <<parameters.function-name>> --zip-file file://<<parameters.build-path>>
+        aws lambda update-function-code --function-name <<parameters.function-name>> --zip-file file://./build.zip
   - slack/notify:
       event: fail
       mentions: "@<<parameters.slack-mentions>>"
