@@ -31,23 +31,18 @@ parameters:
     default: 'cyber4all'
     description: |
       Name of your docker organization
+  deploy:
+    type: boolean
+    default: false
+    description: |
+      Set to True is pushing the docker image to dockerhub and tag git repository.
+      (defaults to false)
 
-executor: <<parameters.executor>>
+docker:
+  - image: cimg/go:1.18
 
 steps:
   - checkout
-  - run:
-      name: "Verify Parameters"
-      command: |
-        if [ -z "<<parameters.tag>>" ]; then
-          echo '"tag" is missing.'
-          exit 1
-        fi
-
-        if [ -z "<<parameters.image>>" ]; then
-          echo '"image" is missing.'
-          exit 1
-        fi
   - setup-docker:
       docker-password: <<parameters.docker-password>>
       docker-username: <<parameters.docker-username>>
@@ -60,13 +55,14 @@ steps:
       image: "<<parameters.organization>>/<<parameters.image>>"
       lint-dockerfile: true
       tag: <<parameters.tag>>
-  - tag-repo:
-      tag: <<parameters.tag>>
-  - docker/push:
-      digest-path: /tmp/digest.txt
-      image: "<<parameters.organization>>/<<parameters.image>>"
-      tag: <<parameters.tag>>
-  - run:
-      name: Output Docker digest
-      command: |
-        echo "Digest is: $(</tmp/digest.txt)"
+  - when:
+      condition: <<parameters.deploy>>
+      steps:
+        - docker/push:
+            digest-path: /tmp/digest.txt
+            image: "<<parameters.organization>>/<<parameters.image>>"
+            tag: <<parameters.tag>>
+        - run:
+            name: Output Docker digest
+            command: |
+              echo "Digest is: $(</tmp/digest.txt)"

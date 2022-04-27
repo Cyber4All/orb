@@ -19,7 +19,6 @@ workflows:
           filters:
             tags:
               only: /.*/
-
       # test our jobs
 
       # publish orb to production

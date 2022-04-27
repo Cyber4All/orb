@@ -1,0 +1,152 @@
+description: >
+  This job scans an application and will output the digest to an S3 bucket and notify a slack channel of any vulnerabilities.
+
+parameters:
+  # Required Parameters
+  image:
+    type: string
+    description: |
+      Name of the image associated with your organization
+  tag:
+    type: string
+    description: |
+      Semantic Version of the application
+
+  # Not Required Parameters
+  aws-access-key-id:
+    type: env_var_name
+    default: AWS_ACCESS_KEY_ID
+    description: |
+      AWS access key id for IAM role. Set this to the name of
+      the environment variable you will use to hold this
+      value, i.e. AWS_ACCESS_KEY.
+  aws-secret-access-key:
+    type: env_var_name
+    default: AWS_SECRET_ACCESS_KEY
+    description: |
+      AWS secret key for IAM role. Set this to the name of
+      the environment variable you will use to hold this
+      value, i.e. $AWS_SECRET_ACCESS_KEY.
+  aws-region:
+    type: env_var_name
+    default: AWS_DEFAULT_REGION
+    description: |
+      Env var of AWS region to operate in
+      (defaults to AWS_DEFAULT_REGION)
+  aws-s3-bucket:
+    type: env_var_name
+    default: AWS_S3_BUCKET
+    description: |
+      Env var of AWS s3 bucket to put object to
+      (defaults to AWS_S3_BUCKET)
+  docker-password:
+    type: env_var_name
+    default: DOCKER_PASSWORD
+    description: |
+      Name of environment variable storing your Docker password
+  docker-username:
+    type: env_var_name
+    default: DOCKER_USERNAME
+    description: |
+      Name of environment variable storing your Docker username
+  snyk-token:
+    type: env_var_name
+    default: SNYK_TOKEN
+    description: |
+      Name of environment variable storing the SNYK authentication token
+  slack-channel:
+    type: env_var_name
+    default: DOCKER_VULN_SCANS
+    description: |
+      Name of environment variable storing the channel id
+      (defaults to DOCKER_VULN_SCANS)
+  dockerfile-path:
+    default: "./Dockerfile"
+    description: |
+      Path of the dockerfile to be scanned
+    type: string
+
+docker:
+  - image: cimg/go:1.18
+
+steps:
+  - checkout
+  - run:
+      name: Verify Parameters
+      command: >
+        if [[ -z "<<parameters.tag>>" ]]; then
+          echo '"tag" is missing.'
+          exit 1
+        fi
+
+        if [[ -z "<<parameters.image>>" ]]; then
+          echo '"image" is missing.'
+          exit 1
+        fi
+
+        if [[ ! -f <<parameters.dockerfile-path>> ]]; then
+          echo 'Docker file does not exist at <<parameters.dockerfile-path>> path.'
+          circleci-agent step halt
+        fi
+  - setup-docker:
+      docker-password: <<parameters.docker-password>>
+      docker-username: <<parameters.docker-username>>
+  - aws-cli/setup:
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
+      aws-region: <<parameters.aws-region>>
+  - run:
+      name: Login to Snyk
+      command: >
+        docker --login --token "<<parameters.snyk-token>>"
+  - run:
+      name: Scan Image
+      command: >
+        echo 'export OUTPUT_FILENAME=$(date +%s)-<<parameters.image>>:<<parameters.tag>>' >> $BASH_ENV
+
+        docker scan --json \
+          --accept-license \
+          --severity high \
+          --file <<parameters.dockerfile-path>> \
+          <<parameters.image>>:<<parameters.tag>> > "/tmp/${OUTPUT_FILENAME}.json"
+
+        apk add jq
+
+        if jq -e '.[0].vulnerabilities == []' "/tmp/$OUTPUT_FILENAME.json" > /dev/null; then
+          rm /tmp/$OUTPUT_FILENAME.json
+          circleci-agent step halt
+        fi
+
+        docker scan \
+          --accept-license \
+          --severity high \
+          --file <<parameters.dockerfile-path>> \
+          <<parameters.image>>:<<parameters.tag>> > "/tmp/${OUTPUT_FILENAME}.txt"
+  - run:
+      name: Upload Files to S3
+      command: >
+        if [[ -f <<parameters.image>>/${OUTPUT_FILENAME}.txt && -f <<parameters.image>>/${OUTPUT_FILENAME}.json ]]; then
+          echo <<parameters.image>>/${OUTPUT_FILENAME}.txt
+
+          aws s3api put-object \
+            --body "/tmp/${OUTPUT_FILENAME}.txt" \
+            --bucket <<parameters.aws-s3-bucket>> \
+            --key "<<parameters.image>>/${OUTPUT_FILENAME}.txt"
+
+          aws s3api put-object \
+            --body "/tmp/${OUTPUT_FILENAME}.json" \
+            --bucket <<parameters.aws-s3-bucket>> \
+            --key "<<parameters.image>>/${OUTPUT_FILENAME}.json"
+
+          S3_URL="https://s3.console.aws.amazon.com/s3/object/"
+          echo 'export S3_OBJECT_URL=${S3_URL}<<parameters.aws-s3-bucket>>?region=<<parameters.aws-region>>&prefix=<<parameters.image>>/${OUTPUT_FILENAME}.txt' >> $BASH_ENV
+        fi
+  - slack/notify:
+      event: fail
+      mentions: "@$SLACK_MENTIONS"
+      template: basic_fail_1
+      channel: "$<<parameters.slack-channel>>"
+  - slack/notify:
+      event: pass
+      custom: "<<include(message_templates/docker_scan_success.json)>>"
+      channel: "$<<parameters.slack-channel>>"
