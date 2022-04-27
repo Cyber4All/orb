@@ -2,7 +2,7 @@ description: >
   This job deploys an application to aws lambda.
 
 parameters:
-  # Required Parameters
+  # Required Parameters when deploy is true
   tag:
     type: string
     description: |
@@ -19,6 +19,12 @@ parameters:
     description: |
       The location of the zip-file where the lambda function is to be updated.
       (defaults to ./lib)
+  deploy:
+    type: boolean
+    default: false
+    description: |
+      Set to True is build and sync changes with S3 and invalidate CF index.html.
+      (defaults to false)
   aws-region:
     type: env_var_name
     default: AWS_REGION_N_VA
@@ -50,23 +56,6 @@ executor: node/default
 
 steps:
   - checkout
-  - aws-cli/setup:
-      aws-access-key-id: <<parameters.aws-access-key-id>>
-      aws-region: <<parameters.aws-region>>
-      aws-secret-access-key: <<parameters.aws-secret-access-key>>
-  - run:
-      name: "Verify Required Parameters"
-      command: |
-        if [ -z <<parameters.tag>> ] then
-          echo 'Parameter "tag" is missing.'
-          exit 1
-        fi
-        if [ -z <<parameters.function-name>> ] then
-          echo 'Parameter "function-name" is missing.'
-          exit 1
-        fi
-  - tag-repo:
-      tag: <<parameters.tag>>
   - run:
       name: Build Application
       command: >
@@ -75,14 +64,34 @@ steps:
       name: Zip Application
       command: >
         zip -r build.zip <<parameters.build-path>>
-  - run:
-      name: Update Lambda Function code
-      command: >
-        aws lambda update-function-code --function-name <<parameters.function-name>> --zip-file file://./build.zip
-  - slack/notify:
-      event: fail
-      mentions: "@<<parameters.slack-mentions>>"
-      template: basic_fail_1
-  - slack/notify:
-      event: pass
-      custom: "<<include(message_templates/deploy_aws_success.json)>>"
+  - when:
+      condition: <<parameters.deploy>>
+      steps:
+        - run:
+            name: "Verify Required Parameters"
+            command: |
+              if [ -z <<parameters.tag>> ] then
+                echo 'Parameter "tag" is missing.'
+                exit 1
+              fi
+              if [ -z <<parameters.function-name>> ] then
+                echo 'Parameter "function-name" is missing.'
+                exit 1
+              fi
+        - aws-cli/setup:
+            aws-access-key-id: <<parameters.aws-access-key-id>>
+            aws-region: <<parameters.aws-region>>
+            aws-secret-access-key: <<parameters.aws-secret-access-key>>
+        - tag-repo:
+            tag: <<parameters.tag>>
+        - run:
+            name: Update Lambda Function code
+            command: >
+              aws lambda update-function-code --function-name <<parameters.function-name>> --zip-file file://./build.zip
+        - slack/notify:
+            event: fail
+            mentions: "@<<parameters.slack-mentions>>"
+            template: basic_fail_1
+        - slack/notify:
+            event: pass
+            custom: "<<include(message_templates/deploy_aws_success.json)>>"
