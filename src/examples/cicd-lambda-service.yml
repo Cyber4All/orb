@@ -7,12 +7,12 @@ usage:
 
   orbs:
     cyber4all: cyber4all/orb:1.0.0
-  
+
   workflows:
     integration-testing:
       - cyber4all/lint-app:
-            docker-image: cimg/node
-            isNode: true
+          docker-image: cimg/node
+          isNode: true
 
       - cyber4all/test-app:
           docker-image: cimg/node

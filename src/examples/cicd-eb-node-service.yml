@@ -3,7 +3,7 @@ description: >
   can setup a CICD pipeline with this orb.
 usage:
   version: 2.1
-  
+
   orbs:
     cyber4all: cyber4all/orb:1.0.0
     docker: circleci/docker@2.0.3
