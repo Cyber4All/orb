@@ -1,0 +1,74 @@
+description: |
+  This job publishes a new version of the application to DockerHub and versions the Github image.
+
+parameters:
+  # Required Parameters
+  image:
+    type: string
+    description: |
+      Name of the image associated with your organization
+  tag:
+    type: string
+    description: |
+      Semantic Version of the application
+  # Not Required Parameters
+  docker-password:
+    type: env_var_name
+    default: DOCKER_PASSWORD
+    description: |
+      Name of environment variable storing your Docker password
+  docker-username:
+    type: env_var_name
+    default: DOCKER_LOGIN
+    description: |
+      Name of environment variable storing your Docker username
+  organization:
+    type: string
+    default: 'cyber4all'
+    description: |
+      Name of your docker organization
+  check-version:
+    type: boolean
+    default: true
+    description: |
+      Specify whether to check the semantic version existance on dockerhub. Job will fail if it exsits.
+      (defaults to true).
+  deploy:
+    type: boolean
+    default: false
+    description: |
+      Set to True is pushing the docker image to dockerhub and tag git repository.
+      (defaults to false)
+
+docker:
+  - image: cimg/go:1.18
+
+steps:
+  - checkout
+  - setup-docker:
+      docker-password: <<parameters.docker-password>>
+      docker-username: <<parameters.docker-username>>
+      login: <<parameters.deploy>>
+  - when:
+      condition: <<parameters.check-version>>
+      steps:
+        - check-docker-semver:
+            tag: <<parameters.tag>>
+            organization: <<parameters.organization>>
+            image: <<parameters.image>>
+  - docker/build:
+      debug: true
+      image: "<<parameters.organization>>/<<parameters.image>>"
+      lint-dockerfile: true
+      tag: <<parameters.tag>>
+  - when:
+      condition: <<parameters.deploy>>
+      steps:
+        - docker/push:
+            digest-path: /tmp/digest.txt
+            image: "<<parameters.organization>>/<<parameters.image>>"
+            tag: <<parameters.tag>>
+        - run:
+            name: Output Docker digest
+            command: |
+              echo "Digest is: $(</tmp/digest.txt)"

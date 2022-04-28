@@ -1,4 +1,4 @@
-description: >
+description: |
   This job will lint the application based on what language the application is written in.
 
 parameters:
@@ -60,6 +60,7 @@ steps:
   - when:
       condition: <<parameters.isNode>>
       steps:
+        - node/install
         - node/install-packages
         - run:
             name: Run Linting

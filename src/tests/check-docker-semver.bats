@@ -15,6 +15,7 @@ print_output() {
 }
 
 @test 'Check Semantic Version on Dockerhub' {
+    export DOCKER_ORGANIZATION="cyber4all"
     export DOCKER_REPOSITORY="bundling-monitor-service"
     export DOCKER_SEMVER="0.0.0"
 
@@ -28,6 +29,7 @@ print_output() {
 }
 
 @test 'Check Semantic Version Passes' {
+    export DOCKER_ORGANIZATION="cyber4all"
     export DOCKER_REPOSITORY="bundling-monitor-service"
     export DOCKER_SEMVER="latest"
 
@@ -41,6 +43,7 @@ print_output() {
 }
 
 @test 'Unset Variable DOCKER_SEMVER Fail Case' {
+    export DOCKER_ORGANIZATION="cyber4all"
     export DOCKER_REPOSITORY="bundling-monitor-service"
 
     run check_version
@@ -53,6 +56,7 @@ print_output() {
 }
 
 @test 'Unset Variable DOCKER_REPOSITORY Fail Case' {
+    export DOCKER_ORGANIZATION="cyber4all"
     export DOCKER_SEMVER="latest"
 
     run check_version

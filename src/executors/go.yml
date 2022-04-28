@@ -1,11 +1,12 @@
-description: >
+description: |
   This executor will be the default golang executor to be used by the jobs in cyber4all/orb
 
 parameters:
+  # Not Required Parameters
   tag:
     type: string
     default: 'lts'
-    description: >
+    description: |
       Pick a specific cimg/go image version tag:
       https://hub.docker.com/r/cimg/go
 

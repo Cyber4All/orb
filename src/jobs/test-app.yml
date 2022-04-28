@@ -1,4 +1,4 @@
-description: >
+description: |
   This job will automate running a set of backend/frontend tests.
 
 parameters:
