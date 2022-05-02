@@ -1,9 +1,91 @@
-description: >
+description: |
   This job will lint the application based on what language the application is written in.
 
-executor: node/default
+parameters:
+  # Not Required Parameters
+  docker-image:
+    type: string
+    default: "cimg/base:stable"
+    description: |
+      The docker image that will be used as an executor
+      if isNode is true, node/default is recommended
+      if isGolang is true, golangci/golangci-lint:latest-alpine is recommended
+      if isPython is true, cimg/python:3.10 is recommended
+  isNode:
+    type: boolean
+    default: false
+    description: |
+      Set `true` if wanting to lint a node.js application
+      Will use the script `npm run lint`
+  isGolang:
+    type: boolean
+    default: false
+    description: |
+      Set `true` if wanting to lint a Golang application
+      Will use the golangci-lint project
+  isPython:
+    type: boolean
+    default: false
+    description: |
+      Set `true` if wanting to lint a Python application
+      Will use flake8 and pylint
+  golang-directory:
+    type: string
+    default: ./
+    description: |
+      Set the directory where the linter should run.
+      (This only applies if isGolang is true)
+  python-directory:
+    type: string
+    default: src
+    description: |
+      Set the directory where the linter should run.
+      (This only applies if isPython is true)
+
+docker:
+  - image: <<parameters.docker-image>>
 
 steps:
+  - checkout
   - run:
-      name: "Not Yet Implemented"
-      command: echo "Not Yet Implemented"
+      name: "Job Overview"
+      command: >
+        echo "
+         Linting Job Overview
+        ----------------------
+        Node: <<parameters.isNode>>
+        Golang: <<parameters.isGolang>>
+        Python: <<parameters.isPython>>"
+  - when:
+      condition: <<parameters.isNode>>
+      steps:
+        - node/install
+        - node/install-packages
+        - run:
+            name: Run Linting
+            command: >
+              npm run lint
+  - when:
+      condition: <<parameters.isGolang>>
+      steps:
+        - run:
+            name: Lint Golang Application
+            command: >
+              golangci-lint version
+
+              golangci-lint run <<parameters.golang-directory>>
+  - when:
+      condition: <<parameters.isPython>>
+      steps:
+        - run:
+            name: Lint Python Application with pylint
+            command: >
+              pip3 install pylint
+
+              pylint <<parameters.python-directory>>
+        - run:
+            name: Lint Python Application with flake8
+            command: >
+              pip3 install flake8
+
+              flake8 <<parameters.python-directory>>
