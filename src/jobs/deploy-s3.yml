@@ -50,6 +50,16 @@ parameters:
     default: MENTIONS
     description: |
       MENTIONS is the environment variable storing the name for the slack context.
+  isAngular:
+    type: boolean
+    default: false
+    description: |
+      isAngular is a boolean whether the application should be built using angular cli.
+  isVue:
+    type: boolean
+    default: false
+    description: |
+      isVue is a boolean whether the application should be built using vue.
 
 executor: node/default
 
@@ -58,9 +68,18 @@ steps:
   - run:
       name: Install dependencies
       command: npm install
-  - run:
-      name: Build Application
-      command: ng build --aot --build-optimizer=true --optimization=true --configuration=production
+  - when:
+      condition: <<parameters.isAngular>>
+      steps:
+        - run:
+            name: Build Application
+            command: ng build --aot --build-optimizer=true --optimization=true --configuration=production
+  - when:
+      condition: <<parameters.isVue>>
+      steps:
+        - run:
+            name: Build Application
+            command: npm run build
   - when:
       condition: <<parameters.deploy>>
       steps:
