@@ -56,7 +56,6 @@ steps:
         Node: <<parameters.isNode>>
         Golang: <<parameters.isGolang>>
         Python: <<parameters.isPython>>"
-  - checkout
   - when:
       condition: <<parameters.isNode>>
       steps:
