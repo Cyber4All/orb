@@ -22,12 +22,19 @@ workflows:
       # test our jobs
 
       # publish orb to production
+      - orb-tools/pack:
+          filters:
+            branches:
+              ignore: /.*/
+              only: releases
+            tags:
+              only: '/^v[0-9]+\.[0-9]+\.[0-9]+$/'
+ 
       - orb-tools/publish:
           requires:
-            [command-tests]
+            [orb-tools/pack]
           context: orb-publishing
           orb-name: cyber4all/orb
-          orb-dir: ./dist
           enable-pr-comment: false
           pub-type: production
           vcs-type: <<pipeline.project.type>>
