@@ -27,6 +27,7 @@ workflows:
             [command-tests]
           context: orb-publishing
           orb-name: cyber4all/orb
+          orb-dir: ./dist
           enable-pr-comment: false
           pub-type: production
           vcs-type: <<pipeline.project.type>>
