@@ -70,7 +70,7 @@ steps:
   - run:
       name: "Verify Parameters"
       command: >
-        if [ -z "$SLACK_MENTIONS" ]; then
+        if [ -z "$MENTIONS" ]; then
           echo '"mentions" is not set in the project env or context'
           exit 1
         fi
