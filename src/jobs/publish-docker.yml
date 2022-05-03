@@ -63,7 +63,6 @@ steps:
   - docker/build:
       debug: true
       image: "<<parameters.organization>>/<<parameters.image>>"
-      lint-dockerfile: true
       tag: <<parameters.tag>>
   - when:
       condition: <<parameters.deploy>>
