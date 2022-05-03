@@ -1,9 +1,133 @@
-description: >
+description: |
   This job deploys an application to aws elastic container service.
 
-executor: node/default
+parameters:
+  # Required Parameters
+  image-name:
+    type: string
+    description: |
+      Name of the docker image in the docker.io repository
+  tag:
+    type: string
+    description: |
+      The semantic version of the project trying to be deployed
+      https://semver.org/spec/v2.0.0.html
+  cluster-name:
+    type: string
+    description: |
+      The short name or full ARN of the cluster that hosts the service.
+  # Not Required Parameters
+  container-name:
+    type: string
+    description: |
+      Name of the container name defined in the ecs task-definition
+      (defaults to image-name)
+  service-name:
+    type: string
+    description: |
+      The name of the service to update.
+      (defaults to image-name)
+  family:
+    type: string
+    description: |
+      Name of the task definition's family.
+      (defaults to image-name)
+  isService:
+    type: boolean
+    default: false
+    description: |
+      True if the task-definition is deployed as a service on ECS. (Default is false)
+  aws-access-key-id:
+    type: env_var_name
+    default: MACHINE_AWS_ECS_AccessKey
+    description: |
+      AWS access key id for IAM role. Set this to the name of
+      the environment variable you will use to hold this
+      value, i.e. MACHINE_AWS_ECS_AccessKey.
+  aws-secret-access-key:
+    type: env_var_name
+    default: MACHINE_AWS_ECS_SecretKey
+    description: |
+      AWS secret key for IAM role. Set this to the name of
+      the environment variable you will use to hold this
+      value, i.e. $MACHINE_AWS_ECS_SecretKey.
+  aws-region:
+    type: env_var_name
+    default: AWS_REGION_N_VA
+    description: |
+      Env var of AWS region to operate in
+      (defaults to AWS_REGION_N_VA)
+  slack-mentions:
+    type: env_var_name
+    default: MENTIONS
+    description: |
+      MENTIONS is the environment variable storing the name for the slack context.
+
+executor: aws-cli/default
 
 steps:
+  - checkout
   - run:
-      name: "Not Yet Implemented"
-      command: echo "Not Yet Implemented"
+      name: "Verify Parameters"
+      command: >
+        if [ -z "$MENTIONS" ]; then
+          echo '"mentions" is not set in the project env or context'
+          exit 1
+        fi
+
+        if [ -z "<<parameters.image-name>>" ]; then
+          echo '"image-name" is missing.'
+          exit 1
+        fi
+
+        if [ -z "<<parameters.tag>>" ]; then
+          echo '"tag" is missing.'
+          exit 1
+        fi
+
+        if [ -z "<<parameters.cluster-name>>" ]; then
+          echo '"cluster-name" is missing.'
+          exit 1
+        fi
+
+        if [ -z "$ECS_PARAM_FAMILY" ]; then
+          echo 'export ECS_PARAM_FAMILY=<<parameters.image-name>>' >> $BASH_ENV
+        fi
+
+        if [ -z "$ECS_PARAM_CONTAINER_NAME" ]; then
+          echo 'export ECS_PARAM_CONTAINER_NAME=<<parameters.image-name>>' >> $BASH_ENV
+        fi
+
+        if [ -z "$ECS_PARAM_SERVICE_NAME"]; then
+          echo 'export ECS_PARAM_SERVICE_NAME=<<parameters.image-name>>' >> $BASH_ENV
+        fi
+  - aws-cli/setup:
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
+      aws-region: <<parameters.aws-region>>
+  - tag-repo:
+      tag: <<parameters.tag>>
+  - aws-ecs/update-task-definition:
+      container-image-name-updates: "container=<<parameters.container-name>>,image-and-tag=<<parameters.image-name>>:<<parameters.tag>>"
+      family: <<parameters.family>>
+  - when:
+      condition: <<parameters.isService>>
+      steps:
+        - aws-ecs/update-service:
+            cluster-name: <<parameters.cluster-name>>
+            family: <<parameters.family>>
+            service-name: "$ECS_PARAM_SERVICE_NAME"
+            skip-task-definition-registration: true
+            verify-revision-is-deployed: true
+  - slack/notify:
+      event: fail
+      mentions: "@$<<parameters.slack-mentions>>"
+      template: basic_fail_1
+  - slack/notify:
+      event: pass
+      custom: "<<include(message_templates/deploy_aws_success.json)>>"
+
+environment:
+  ECS_PARAM_SERVICE_NAME: <<parameters.service-name>>
+  ECS_PARAM_CONTAINER_NAME: <<parameters.container-name>>
+  ECS_PARAM_FAMILY: <<parameters.family>>

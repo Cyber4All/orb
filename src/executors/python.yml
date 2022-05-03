@@ -1,2 +1,14 @@
-description: >
+description: |
   This executor will be the default python executor to be used by the jobs in cyber4all/orb
+
+parameters:
+  # Not Required Parameters
+  tag:
+    type: string
+    default: 'lts'
+    description: |
+      Pick a specific cimg/python image version tag:
+      https://hub.docker.com/r/cimg/python
+
+docker:
+  - image: cimg/python:<< parameters.tag >>

@@ -1,0 +1,39 @@
+description: |
+  This example shows how a frontend application being deployed to S3 and CF
+  can be setup with a CICD pipeline using this orb.
+
+usage:
+  version: 2.1
+
+  orbs:
+    cyber4all: cyber4all/orb@1.0.0
+
+  workflows:
+    integration-testing:
+      jobs:
+        - cyber4all/lint-app:
+            docker-image: cimg/node
+            isNode: true
+
+        - cyber4all/deploy-s3:
+            deploy: false # explicitly shows in develeopment
+            filters:
+              branches:
+                ignore: releases
+
+        - cyber4all/test-app:
+            docker-image: cimg/node
+            node-test: test:lighthouse
+            isNode: true
+
+    production-deployment:
+      jobs:
+        - cyber4all/deploy-s3:
+            context:
+              [AWS, Slack]
+            tag: $(cat ./package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')
+            deploy: true
+            filters:
+              branches:
+                only:
+                  - releases

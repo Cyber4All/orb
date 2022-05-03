@@ -1,0 +1,30 @@
+description: |
+  This job will build an app
+
+parameters:
+  # Required Parameters
+  current-directory:
+    type: string
+    description: |
+      The current working directory
+
+executor: node/default
+
+steps:
+  - checkout
+  - node/install
+  - node/install-packages
+  - run:
+      name: Build the app
+      command: >
+        npm run build
+  - run:
+      name: Zip App
+      command: >
+        zip -r build.zip ./build/* ./package.json
+  - persist_to_workspace:
+      root: .
+      paths:
+        - build.zip
+        - ./.elasticbeanstalk
+        - ./.git
