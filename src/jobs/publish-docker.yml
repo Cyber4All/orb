@@ -39,9 +39,13 @@ parameters:
     description: |
       Set to True is pushing the docker image to dockerhub and tag git repository.
       (defaults to false)
+  executor:
+    type: executor
+    default: node/default
+    description: |
+      The executor that the job will run on.
 
-docker:
-  - image: cimg/go:1.18
+executor: <<parameters.executor>>
 
 steps:
   - checkout
