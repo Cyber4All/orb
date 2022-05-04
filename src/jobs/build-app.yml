@@ -1,13 +1,6 @@
 description: |
   This job will build an app
 
-parameters:
-  # Required Parameters
-  current-directory:
-    type: string
-    description: |
-      The current working directory
-
 executor: node/default
 
 steps:
