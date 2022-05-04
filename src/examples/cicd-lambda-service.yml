@@ -12,11 +12,11 @@ usage:
     integration-testing:
       jobs:
         - cyber4all/lint-app:
-            docker-image: cimg/node
+            docker-image: cimg/node:18.0.0
             isNode: true
 
         - cyber4all/test-app:
-            docker-image: cimg/node
+            docker-image: cimg/node:18.0.0
             isNode: true
 
         - cyber4all/deploy-lambda:
