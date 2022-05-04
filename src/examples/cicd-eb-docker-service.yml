@@ -44,7 +44,7 @@ usage:
                 only: releases
 
         - cyber4all/publish-docker:
-            name: 
+            name:
               - cyber4all/publish-docker:semver
             context:
               - DockerHub
