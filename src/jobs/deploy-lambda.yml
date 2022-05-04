@@ -58,6 +58,8 @@ executor: node/default
 
 steps:
   - checkout
+  - node/install
+  - node/install-packages
   - run:
       name: Build Application
       command: >
