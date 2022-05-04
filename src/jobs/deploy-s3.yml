@@ -2,9 +2,10 @@ description: |
   This job deploys an application to aws s3.
 
 parameters:
-  # Required Parameters
+  # Required Parameters when deploy is true
   tag:
     type: string
+    default: ''
     description: |
       The semantic version of the project trying to be deployed
       https://semver.org/spec/v2.0.0.html

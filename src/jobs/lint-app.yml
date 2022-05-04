@@ -31,7 +31,7 @@ parameters:
       Will use flake8 and pylint
   golang-directory:
     type: string
-    default: ./
+    default: ./src
     description: |
       Set the directory where the linter should run.
       (This only applies if isGolang is true)
@@ -41,6 +41,12 @@ parameters:
     description: |
       Set the directory where the linter should run.
       (This only applies if isPython is true)
+  lint-command:
+    type: string
+    default: lint
+    description: |
+      The command to run the lint command
+      Default is npm run lint for node apps
 
 docker:
   - image: <<parameters.docker-image>>
@@ -64,7 +70,7 @@ steps:
         - run:
             name: Run Linting
             command: >
-              npm run lint
+              npm run <<parameters.lint-command>>
   - when:
       condition: <<parameters.isGolang>>
       steps:

@@ -6,7 +6,7 @@ usage:
   version: 2.1
 
   orbs:
-    cyber4all: cyber4all/orb@1.0.0
+    cyber4all: cyber4all/orb@1.0.3
     docker: circleci/docker@2.0.3
 
   workflows:
@@ -44,6 +44,8 @@ usage:
                 only: releases
 
         - cyber4all/publish-docker:
+            name:
+              - cyber4all/publish-docker:semver
             context:
               - DockerHub
             image: "$CIRCLE_PROJECT_REPONAME"
@@ -54,6 +56,8 @@ usage:
                 only: releases
 
         - cyber4all/publish-docker:
+            name:
+              - cyber4all/publish-docker:latest
             context:
               - DockerHub
             image: "$CIRCLE_PROJECT_REPONAME"
@@ -66,7 +70,7 @@ usage:
 
         - cyber4all/deploy-eb:
             requires:
-              - cyber4all/publish-docker
+              - cyber4all/publish-docker:semver
             context:
               [AWS, Slack]
             application-name: CLARK-Gateway

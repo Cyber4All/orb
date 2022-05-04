@@ -58,7 +58,7 @@ steps:
   - run:
       name: Verify Parameters
       command: >
-        if [[ -z "<<parameters.application-name>>"" ]]; then
+        if [[ -z "<<parameters.application-name>>" ]]; then
           echo "application-name is missing"
           exit 1
         fi
