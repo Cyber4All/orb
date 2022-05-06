@@ -62,13 +62,12 @@ parameters:
     description: |
       isVue is a boolean whether the application should be built using vue.
 
-executor: node/default
+executor: python/default
 
 steps:
   - checkout
-  - run:
-      name: Install dependencies
-      command: npm install
+  - node/install
+  - node/install-packages
   - when:
       condition: <<parameters.isAngular>>
       steps:

@@ -88,10 +88,10 @@ steps:
             command: >
               pip3 install pylint
 
-              pylint <<parameters.python-directory>>
+              pylint --rcfile=./.pylintrc <<parameters.python-directory>>
         - run:
             name: Lint Python Application with flake8
             command: >
               pip3 install flake8
 
-              flake8 <<parameters.python-directory>>
+              flake8 --config ./.flake8 <<parameters.python-directory>>
