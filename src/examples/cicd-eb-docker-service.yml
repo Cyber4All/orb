@@ -44,8 +44,7 @@ usage:
                 only: releases
 
         - cyber4all/publish-docker:
-            name:
-              - cyber4all/publish-docker:semver
+            name: cyber4all/publish-docker:semver
             context:
               - DockerHub
             image: "$CIRCLE_PROJECT_REPONAME"
@@ -56,8 +55,7 @@ usage:
                 only: releases
 
         - cyber4all/publish-docker:
-            name:
-              - cyber4all/publish-docker:latest
+            name: cyber4all/publish-docker:latest
             context:
               - DockerHub
             image: "$CIRCLE_PROJECT_REPONAME"
