@@ -17,7 +17,7 @@ usage:
             executor-class: medium
 
         - cyber4all/lint-app:
-            docker-image: cimg/node
+            docker-image: cimg/node:18.0.0
             isNode: true
 
         - cyber4all/publish-docker:
@@ -29,7 +29,7 @@ usage:
                 ignore: releases
 
         - cyber4all/test-app:
-            docker-image: cimg/node
+            docker-image: cimg/node:18.0.0
             isNode: true
 
     deploy-production:
@@ -44,6 +44,8 @@ usage:
                 only: releases
 
         - cyber4all/publish-docker:
+            name:
+              - cyber4all/publish-docker:semver
             context:
               - DockerHub
             image: "$CIRCLE_PROJECT_REPONAME"
@@ -54,6 +56,8 @@ usage:
                 only: releases
 
         - cyber4all/publish-docker:
+            name:
+              - cyber4all/publish-docker:latest
             context:
               - DockerHub
             image: "$CIRCLE_PROJECT_REPONAME"
@@ -66,7 +70,7 @@ usage:
 
         - cyber4all/deploy-eb:
             requires:
-              - cyber4all/publish-docker
+              - cyber4all/publish-docker:semver
             context:
               [AWS, Slack]
             application-name: CLARK-Gateway

@@ -88,7 +88,7 @@ steps:
             command: >
               pip3 install pylint
 
-              pylint <<parameters.python-directory>>
+              pylint --rcfile=./.pylintrc <<parameters.python-directory>>
         - run:
             name: Lint Python Application with flake8
             command: >
