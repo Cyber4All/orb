@@ -6,7 +6,7 @@ usage:
   version: 2.1
 
   orbs:
-    cyber4all: cyber4all/orb@1.0.3
+    cyber4all: cyber4all/orb@1.0.4
     docker: circleci/docker@2.0.3
 
   workflows:
@@ -17,7 +17,7 @@ usage:
             executor-class: medium
 
         - cyber4all/lint-app:
-            docker-image: cimg/node:18.0.0
+            docker-image: cimg/node:16.15.0
             isNode: true
 
         - cyber4all/publish-docker:
@@ -29,7 +29,7 @@ usage:
                 ignore: releases
 
         - cyber4all/test-app:
-            docker-image: cimg/node:18.0.0
+            docker-image: cimg/node:16.15.0
             isNode: true
 
     production-deployment:
