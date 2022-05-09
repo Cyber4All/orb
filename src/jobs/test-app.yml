@@ -3,6 +3,13 @@ description: |
 
 parameters:
   # Not Required Parameters
+  resource-class:
+    type: string
+    default: "medium"
+    description: |
+      The resource class that should be used to run tests. Defaults
+      to medium 2 vCPU's and 4GB of RAM. See link for valid inputs:
+      https://circleci.com/docs/2.0/configuration-reference/#docker-executor
   docker-image:
     type: string
     default: "cimg/base:stable"
@@ -24,6 +31,7 @@ parameters:
 
 docker:
   - image: <<parameters.docker-image>>
+resource_class: <<parameters.resource-class>>
 
 steps:
   - checkout
