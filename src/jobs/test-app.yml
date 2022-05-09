@@ -3,6 +3,12 @@ description: |
 
 parameters:
   # Not Required Parameters
+  executor-class:
+    type: string
+    default: "medium"
+    description: |
+      The executor class that should be used to run tests. Defaults
+      to medium 2 vCPU's and 4GB of RAM.
   docker-image:
     type: string
     default: "cimg/base:stable"
