@@ -3,11 +3,11 @@ description: |
 
 parameters:
   # Not Required Parameters
-  executor-class:
+  resource-class:
     type: string
     default: "medium"
     description: |
-      The executor class that should be used to run tests. Defaults
+      The resource class that should be used to run tests. Defaults
       to medium 2 vCPU's and 4GB of RAM.
   docker-image:
     type: string
@@ -30,6 +30,7 @@ parameters:
 
 docker:
   - image: <<parameters.docker-image>>
+resource_class: <<parameters.executor-class>>
 
 steps:
   - checkout
