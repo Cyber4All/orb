@@ -97,7 +97,7 @@ steps:
   - run:
       name: Login to Snyk
       command: >
-        docker login --token "<<parameters.snyk-token>>"
+        docker scan --login --token "<<parameters.snyk-token>>"
   - run:
       name: Scan Image
       command: >
