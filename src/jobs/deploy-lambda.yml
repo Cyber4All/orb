@@ -5,11 +5,13 @@ parameters:
   # Required Parameters when deploy is true
   tag:
     type: string
+    default: ''
     description: |
       The semantic version of the project trying to be deployed.
       https://semver.org/spec/v2.0.0.html
   function-name:
     type: string
+    default: ''
     description: |
       The name of the lambda function to be updated.
   # Optional Parameters with Defaults
@@ -56,6 +58,8 @@ executor: node/default
 
 steps:
   - checkout
+  - node/install
+  - node/install-packages
   - run:
       name: Build Application
       command: >
@@ -70,11 +74,11 @@ steps:
         - run:
             name: "Verify Required Parameters"
             command: |
-              if [ -z <<parameters.tag>> ] then
+              if [ -z "<<parameters.tag>>" ] then
                 echo 'Parameter "tag" is missing.'
                 exit 1
               fi
-              if [ -z <<parameters.function-name>> ] then
+              if [ -z "<<parameters.function-name>>" ] then
                 echo 'Parameter "function-name" is missing.'
                 exit 1
               fi

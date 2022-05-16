@@ -2,9 +2,10 @@ description: |
   This job deploys an application to aws s3.
 
 parameters:
-  # Required Parameters
+  # Required Parameters when deploy is true
   tag:
     type: string
+    default: ''
     description: |
       The semantic version of the project trying to be deployed
       https://semver.org/spec/v2.0.0.html
@@ -61,13 +62,12 @@ parameters:
     description: |
       isVue is a boolean whether the application should be built using vue.
 
-executor: node/default
+executor: python/default
 
 steps:
   - checkout
-  - run:
-      name: Install dependencies
-      command: npm install
+  - node/install
+  - node/install-packages
   - when:
       condition: <<parameters.isAngular>>
       steps:

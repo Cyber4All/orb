@@ -27,6 +27,12 @@ parameters:
     default: 'cyber4all'
     description: |
       Name of your docker organization
+  path:
+    type: string
+    default: .
+    description: |
+      The Patch to the directory containing the dockerfile
+      Defaults to . (working directory)
   check-version:
     type: boolean
     default: true
@@ -39,9 +45,13 @@ parameters:
     description: |
       Set to True is pushing the docker image to dockerhub and tag git repository.
       (defaults to false)
+  executor:
+    type: executor
+    default: node/default
+    description: |
+      The executor that the job will run on.
 
-docker:
-  - image: cimg/go:1.18
+executor: <<parameters.executor>>
 
 steps:
   - checkout
@@ -59,8 +69,8 @@ steps:
   - docker/build:
       debug: true
       image: "<<parameters.organization>>/<<parameters.image>>"
-      lint-dockerfile: true
       tag: <<parameters.tag>>
+      path: <<parameters.path>>
   - when:
       condition: <<parameters.deploy>>
       steps:
