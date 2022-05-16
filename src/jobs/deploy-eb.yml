@@ -77,6 +77,7 @@ steps:
           echo 'Either "isNode" or "isDocker" must be true.'
           exit 1
         fi
+  - checkout
   - aws-eb/setup
   - attach_workspace:
       at: .
