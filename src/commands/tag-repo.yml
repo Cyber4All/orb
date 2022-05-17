@@ -20,6 +20,6 @@ steps:
         fi
   - run:
       name: "Tag $CIRCLE_PROJECT_REPONAME Repository"
-      command: >
+      command: |
         git tag "<<parameters.tag>>"
         git push origin releases --follow-tags
