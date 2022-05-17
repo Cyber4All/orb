@@ -90,6 +90,7 @@ steps:
   - setup-docker:
       docker-password: <<parameters.docker-password>>
       docker-username: <<parameters.docker-username>>
+      login: True
   - aws-cli/setup:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
