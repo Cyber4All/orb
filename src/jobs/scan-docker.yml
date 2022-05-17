@@ -12,6 +12,11 @@ parameters:
     description: |
       Semantic Version of the application
   # Not Required Parameters
+  organization:
+    type: string
+    default: 'cyber4all'
+    description: |
+      Name of the docker organization that the repository is under
   aws-access-key-id:
     type: env_var_name
     default: MACHINE_AWS_CF_AccessKey
@@ -104,15 +109,18 @@ steps:
       command: >
         echo 'export OUTPUT_FILENAME=$(date +%s)-<<parameters.image>>:<<parameters.tag>>' >> $BASH_ENV
 
+        docker build -t <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> .
+
         docker scan --json \
           --accept-license \
           --severity high \
           --file <<parameters.dockerfile-path>> \
-          <<parameters.image>>:<<parameters.tag>> > "/tmp/${OUTPUT_FILENAME}.json"
+          <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > "/tmp/$OUTPUT_FILENAME.json"
 
         apk add jq
 
         if jq -e '.[0].vulnerabilities == []' "/tmp/$OUTPUT_FILENAME.json" > /dev/null; then
+          cat /tmp/$OUTPUT_FILENAME.json
           rm /tmp/$OUTPUT_FILENAME.json
           circleci-agent step halt
         fi
@@ -121,7 +129,7 @@ steps:
           --accept-license \
           --severity high \
           --file <<parameters.dockerfile-path>> \
-          <<parameters.image>>:<<parameters.tag>> > "/tmp/${OUTPUT_FILENAME}.txt"
+          <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > "/tmp/$OUTPUT_FILENAME.txt"
   - run:
       name: Upload Files to S3
       command: >

@@ -74,11 +74,11 @@ steps:
         - run:
             name: "Verify Required Parameters"
             command: |
-              if [ -z "<<parameters.tag>>" ] then
+              if [ -z "<<parameters.tag>>" ]; then
                 echo 'Parameter "tag" is missing.'
                 exit 1
               fi
-              if [ -z "<<parameters.function-name>>" ] then
+              if [ -z "<<parameters.function-name>>" ]; then
                 echo 'Parameter "function-name" is missing.'
                 exit 1
               fi
