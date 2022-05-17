@@ -109,7 +109,7 @@ steps:
       command: >
         echo 'export OUTPUT_FILENAME=$(date +%s)-<<parameters.image>>:<<parameters.tag>>' >> $BASH_ENV
 
-        docker pull <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>>
+        docker build -t <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> .
 
         docker scan --json \
           --accept-license \
