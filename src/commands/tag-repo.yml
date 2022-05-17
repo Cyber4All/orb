@@ -22,4 +22,4 @@ steps:
       name: "Tag $CIRCLE_PROJECT_REPONAME Repository"
       command: |
         git tag "<<parameters.tag>>"
-        git push origin --tags
+        git push origin releases --follow-tags
