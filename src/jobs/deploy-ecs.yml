@@ -19,16 +19,19 @@ parameters:
   # Not Required Parameters
   container-name:
     type: string
+    default: ''
     description: |
       Name of the container name defined in the ecs task-definition
       (defaults to image-name)
   service-name:
     type: string
+    default: ''
     description: |
       The name of the service to update.
       (defaults to image-name)
   family:
     type: string
+    default: ''
     description: |
       Name of the task definition's family.
       (defaults to image-name)

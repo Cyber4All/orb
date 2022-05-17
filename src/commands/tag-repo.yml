@@ -14,7 +14,7 @@ steps:
   - run:
       name: Validate params
       command: >
-        if [[ -z "<<parameters.tag>>"]]; then
+        if [ -z "<<parameters.tag>>"]; then
           echo "tag parameter must be defined"
           exit 1
         fi

@@ -51,14 +51,11 @@ parameters:
 executor: node/default
 
 steps:
-  - aws-cli/setup:
-      aws-access-key-id: <<parameters.aws-access-key-id>>
-      aws-secret-access-key: <<parameters.aws-secret-access-key>>
-  - aws-eb/setup
+  - checkout
   - run:
       name: Verify Parameters
       command: >
-        if [[ -z "<<parameters.application-name>>"" ]]; then
+        if [[ -z "<<parameters.application-name>>" ]]; then
           echo "application-name is missing"
           exit 1
         fi
@@ -81,6 +78,7 @@ steps:
           echo 'Either "isNode" or "isDocker" must be true.'
           exit 1
         fi
+  - aws-eb/setup
   - attach_workspace:
       at: .
   - tag-repo:
@@ -97,3 +95,8 @@ steps:
   - slack/notify:
       event: pass
       custom: "<<include(message_templates/deploy_aws_success.json)>>"
+
+environment:
+  AWS_ACCESS_KEY_ID: <<parameters.aws-access-key-id>>
+  AWS_SECRET_ACCESS_KEY: <<parameters.aws-secret-access-key>>
+  AWS_DEFAULT_REGION: <<parameters.aws-region>>
