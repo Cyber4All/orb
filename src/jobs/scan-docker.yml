@@ -113,7 +113,7 @@ steps:
 
         docker scan --json \
           --accept-license \
-          --severity high \
+          --severity=high \
           --file <<parameters.dockerfile-path>> \
           <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > "/tmp/$OUTPUT_FILENAME.json"
 
@@ -127,7 +127,7 @@ steps:
 
         docker scan \
           --accept-license \
-          --severity high \
+          --severity=high \
           --file <<parameters.dockerfile-path>> \
           <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > "/tmp/$OUTPUT_FILENAME.txt"
   - run:
