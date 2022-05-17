@@ -48,12 +48,6 @@ parameters:
     default: DOCKER_LOGIN
     description: |
       Name of environment variable storing your Docker username
-  deploy:
-    type: boolean
-    default: false
-    description: |
-      Set to True is pushing the docker image to dockerhub and tag git repository.
-      (defaults to false)
   snyk-token:
     type: env_var_name
     default: SNYK_TOKEN
@@ -96,7 +90,7 @@ steps:
   - setup-docker:
       docker-password: <<parameters.docker-password>>
       docker-username: <<parameters.docker-username>>
-      login: <<parameters.deploy>>
+      login: True
   - aws-cli/setup:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
