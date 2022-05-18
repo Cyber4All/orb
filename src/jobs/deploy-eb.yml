@@ -28,7 +28,7 @@ parameters:
       The access key for the aws user
   aws-region:
     type: env_var_name
-    default: $AWS_REGION_N_VA
+    default: '{$AWS_REGION_N_VA}'
     description: |
       Env var of AWS region to operate in
       (defaults to AWS_REGION_N_VA)
