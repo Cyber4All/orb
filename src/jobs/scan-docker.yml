@@ -103,7 +103,7 @@ steps:
   - run:
       name: Login to Snyk
       command: >
-        docker scan --login --token --accept-license "<<parameters.snyk-token>>"
+        docker scan --login --token "<<parameters.snyk-token>>" --accept-license
   - run:
       name: Scan Image
       command: >
