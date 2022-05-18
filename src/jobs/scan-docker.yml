@@ -77,18 +77,18 @@ steps:
   - checkout
   - run:
       name: Verify Parameters
-      command: >
-        if [[ -z "<<parameters.tag>>" ]]; then
+      command: |
+        if [ -z "<<parameters.tag>>" ]; then
           echo '"tag" is missing.'
           exit 1
         fi
 
-        if [[ -z "<<parameters.image>>" ]]; then
+        if [ -z "<<parameters.image>>" ]; then
           echo '"image" is missing.'
           exit 1
         fi
 
-        if [[ ! -f <<parameters.dockerfile-path>> ]]; then
+        if [ ! -f <<parameters.dockerfile-path>> ]; then
           echo 'Docker file does not exist at <<parameters.dockerfile-path>> path.'
           circleci-agent step halt
         fi
@@ -106,7 +106,7 @@ steps:
         docker scan --login --token "$<<parameters.snyk-token>>" --accept-license
   - run:
       name: Scan Image
-      command: >
+      command: |
         echo 'export OUTPUT_FILENAME=$(date +%s)-<<parameters.image>>:<<parameters.tag>>' >> $BASH_ENV
 
         docker build -t <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> .
@@ -132,8 +132,8 @@ steps:
           <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > "/tmp/$OUTPUT_FILENAME.txt"
   - run:
       name: Upload Files to S3
-      command: >
-        if [[ -f <<parameters.image>>/${OUTPUT_FILENAME}.txt && -f <<parameters.image>>/${OUTPUT_FILENAME}.json ]]; then
+      command: |
+        if [ -f <<parameters.image>>/${OUTPUT_FILENAME}.txt && -f <<parameters.image>>/${OUTPUT_FILENAME}.json ]; then
           echo <<parameters.image>>/${OUTPUT_FILENAME}.txt
 
           aws s3api put-object \
