@@ -92,7 +92,6 @@ steps:
               aws lambda update-function-code --function-name <<parameters.function-name>> --zip-file file://./build.zip
         - slack/notify:
             event: fail
-            mentions: "@<<parameters.slack-mentions>>"
             template: basic_fail_1
         - slack/notify:
             event: pass

@@ -88,7 +88,6 @@ steps:
         eb deploy "<<parameters.environment-name>>" --verbose --label "$CIRCLE_PROJECT_REPONAME"-v"<<parameters.version>>"
   - slack/notify:
       event: fail
-      mentions: "@$<<parameters.slack-mentions>>"
       template: basic_fail_1
   - slack/notify:
       event: pass

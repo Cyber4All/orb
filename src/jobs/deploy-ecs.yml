@@ -122,7 +122,6 @@ steps:
             verify-revision-is-deployed: true
   - slack/notify:
       event: fail
-      mentions: "@$<<parameters.slack-mentions>>"
       template: basic_fail_1
   - slack/notify:
       event: pass
