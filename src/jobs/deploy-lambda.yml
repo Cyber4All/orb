@@ -86,8 +86,6 @@ steps:
             aws-access-key-id: <<parameters.aws-access-key-id>>
             aws-region: <<parameters.aws-region>>
             aws-secret-access-key: <<parameters.aws-secret-access-key>>
-        - tag-repo:
-            tag: <<parameters.tag>>
         - run:
             name: Update Lambda Function code
             command: >

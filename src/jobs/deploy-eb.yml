@@ -81,8 +81,6 @@ steps:
   - aws-eb/setup
   - attach_workspace:
       at: .
-  - tag-repo:
-      tag: <<parameters.version>>
   - run:
       name: Deploy to Elastic Beanstalk with docker platform
       command: >
