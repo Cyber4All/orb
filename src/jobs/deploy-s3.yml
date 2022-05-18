@@ -83,8 +83,6 @@ steps:
   - when:
       condition: <<parameters.deploy>>
       steps:
-        - tag-repo:
-            tag: <<parameters.tag>>
         - aws-s3/sync:
             from: <<parameters.source>>
             to: s3://<<parameters.s3-bucket>>
