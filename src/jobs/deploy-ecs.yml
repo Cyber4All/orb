@@ -108,8 +108,6 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       aws-region: <<parameters.aws-region>>
-  - tag-repo:
-      tag: <<parameters.tag>>
   - aws-ecs/update-task-definition:
       container-image-name-updates: "container=<<parameters.container-name>>,image-and-tag=<<parameters.image-name>>:<<parameters.tag>>"
       family: <<parameters.family>>
@@ -124,7 +122,6 @@ steps:
             verify-revision-is-deployed: true
   - slack/notify:
       event: fail
-      mentions: "@$<<parameters.slack-mentions>>"
       template: basic_fail_1
   - slack/notify:
       event: pass

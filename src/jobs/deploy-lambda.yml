@@ -86,15 +86,12 @@ steps:
             aws-access-key-id: <<parameters.aws-access-key-id>>
             aws-region: <<parameters.aws-region>>
             aws-secret-access-key: <<parameters.aws-secret-access-key>>
-        - tag-repo:
-            tag: <<parameters.tag>>
         - run:
             name: Update Lambda Function code
             command: >
               aws lambda update-function-code --function-name <<parameters.function-name>> --zip-file file://./build.zip
         - slack/notify:
             event: fail
-            mentions: "@<<parameters.slack-mentions>>"
             template: basic_fail_1
         - slack/notify:
             event: pass

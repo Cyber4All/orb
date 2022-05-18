@@ -103,7 +103,7 @@ steps:
   - run:
       name: Login to Snyk
       command: >
-        docker scan --login --token "<<parameters.snyk-token>>" --accept-license
+        docker scan --login --token "$<<parameters.snyk-token>>" --accept-license
   - run:
       name: Scan Image
       command: >
@@ -151,7 +151,6 @@ steps:
         fi
   - slack/notify:
       event: fail
-      mentions: "@$SLACK_MENTIONS"
       template: basic_fail_1
       channel: "$<<parameters.slack-channel>>"
   - slack/notify:
