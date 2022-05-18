@@ -83,8 +83,6 @@ steps:
   - when:
       condition: <<parameters.deploy>>
       steps:
-        - tag-repo:
-            tag: <<parameters.tag>>
         - aws-s3/sync:
             aws-region: <<parameters.aws-region>>
             aws-access-key-id: <<parameters.aws-access-key-id>>
@@ -97,7 +95,6 @@ steps:
               aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths /index.html
         - slack/notify:
             event: fail
-            mentions: "@<<parameters.slack-mentions>>"
             template: basic_fail_1
         - slack/notify:
             event: pass
