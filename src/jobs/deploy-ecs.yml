@@ -72,7 +72,7 @@ steps:
   - checkout
   - run:
       name: "Verify Parameters"
-      command: >
+      command: |
         if [ -z "$MENTIONS" ]; then
           echo '"mentions" is not set in the project env or context'
           exit 1

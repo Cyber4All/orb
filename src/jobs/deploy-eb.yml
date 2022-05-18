@@ -54,25 +54,25 @@ steps:
   - checkout
   - run:
       name: Verify Parameters
-      command: >
-        if [[ -z "<<parameters.application-name>>" ]]; then
+      command: |
+        if [ -z "<<parameters.application-name>>" ]; then
           echo "application-name is missing"
           exit 1
         fi
 
-        if [[ -z "<<parameters.environment-name>>" ]]; then
+        if [ -z "<<parameters.environment-name>>" ]; then
           echo "environment-name is missing"
           exit 1
         fi
 
-        if [[ -z "<<parameters.version>>" ]]; then
+        if [ -z "<<parameters.version>>" ]; then
           echo "Version is missing"
           exit 1
         fi
 
-        if [[ <<parameters.isNode>> ]]; then
+        if [ <<parameters.isNode>> ]; then
           echo 'export EB_PARAM_PLATFORM=node.js' >> $BASH_ENV
-        elif [[ <<parameters.isDocker>> ]]; then
+        elif [ <<parameters.isDocker>> ]; then
           echo 'export EB_PARAM_PLATFORM=docker' >> $BASH_ENV
         else
           echo 'Either "isNode" or "isDocker" must be true.'
@@ -83,7 +83,7 @@ steps:
       at: .
   - run:
       name: Deploy to Elastic Beanstalk with docker platform
-      command: >
+      command: |
         eb init "<<parameters.application-name>>" --region "<<parameters.aws-region>>" -p $EB_PARAM_PLATFORM
         eb deploy "<<parameters.environment-name>>" --verbose --label "$CIRCLE_PROJECT_REPONAME"-v"<<parameters.version>>"
   - slack/notify:

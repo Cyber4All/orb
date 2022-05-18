@@ -76,7 +76,7 @@ steps:
       steps:
         - run:
             name: Lint Golang Application
-            command: >
+            command: |
               golangci-lint version
 
               golangci-lint run <<parameters.golang-directory>>
@@ -85,13 +85,13 @@ steps:
       steps:
         - run:
             name: Lint Python Application with pylint
-            command: >
+            command: |
               pip3 install pylint
 
               pylint --rcfile=./.pylintrc <<parameters.python-directory>>
         - run:
             name: Lint Python Application with flake8
-            command: >
+            command: |
               pip3 install flake8
 
               flake8 --config ./.flake8 <<parameters.python-directory>>
