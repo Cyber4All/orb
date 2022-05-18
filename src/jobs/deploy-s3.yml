@@ -99,4 +99,4 @@ steps:
 environment:
   AWS_ACCESS_KEY_ID: "$<<parameters.aws-access-key-id>>"
   AWS_SECRET_ACCESS_KEY: "$<<parameters.aws-secret-access-key>>"
-  AWS_REGION: "$<<parameters.aws-region>>"
+  AWS_REGION: <<parameters.aws-region>>
