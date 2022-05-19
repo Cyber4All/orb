@@ -85,7 +85,7 @@ steps:
       steps:
         - aws-s3/sync:
             from: <<parameters.source>>
-            to: s3://<<parameters.s3-bucket>>
+            to: "s3://${<<parameters.s3-bucket>>}"
         - run:
             name: Invalidate index.html in CloudFront
             command: >
