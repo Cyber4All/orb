@@ -92,10 +92,11 @@ steps:
           echo 'Docker file does not exist at <<parameters.dockerfile-path>> path.'
           circleci-agent step halt
         fi
-  - setup-docker:
+  - setup_remote_docker:
+      version: 20.10.14
+  - docker/check:
       docker-password: <<parameters.docker-password>>
       docker-username: <<parameters.docker-username>>
-      login: True
   - aws-cli/setup:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
