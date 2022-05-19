@@ -24,7 +24,6 @@ parameters:
 steps:
   - setup_remote_docker:
       version: 20.10.14
-  - docker/install-docker
   - when:
       condition: <<parameters.login>>
       steps:
