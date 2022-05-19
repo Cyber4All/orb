@@ -84,7 +84,7 @@ steps:
   - run:
       name: Deploy to Elastic Beanstalk with docker platform
       command: |
-        eb init "<<parameters.application-name>>" --region $(parameters.aws-region) -p $EB_PARAM_PLATFORM
+        eb init "<<parameters.application-name>>" --region "$<<parameters.aws-region>>" -p $EB_PARAM_PLATFORM
         eb deploy "<<parameters.environment-name>>" --verbose --label "$CIRCLE_PROJECT_REPONAME"-v"<<parameters.version>>"
   - slack/notify:
       event: fail
