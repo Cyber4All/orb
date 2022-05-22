@@ -22,8 +22,8 @@ parameters:
       the cli should login. (default is false)
 
 steps:
-  - setup_remote_docker
-  - docker/install-docker
+  - setup_remote_docker:
+      version: 20.10.14
   - when:
       condition: <<parameters.login>>
       steps:
