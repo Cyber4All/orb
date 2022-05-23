@@ -1,6 +1,5 @@
 description: |
   This job deploys an application to aws elasticbeanstalk. Deploy-Eb requires publish-docker
-  
 
 parameters:
   # Required Parameters
@@ -84,7 +83,7 @@ steps:
       at: .
   - run:
       name: Deploy to Elastic Beanstalk with docker platform
-      environment: 
+      environment:
         AWS_ACCESS_KEY_ID: <<parameters.aws-access-key-id>>
         AWS_SECRET_ACCESS_KEY: <<parameters.aws-secret-access-key>>
         AWS_REGION: <<parameters.aws-region>>
