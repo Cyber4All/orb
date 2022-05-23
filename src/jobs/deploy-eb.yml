@@ -99,3 +99,4 @@ environment:
   AWS_SECRET_ACCESS_KEY: <<parameters.aws-secret-access-key>>
   AWS_REGION: <<parameters.aws-region>>
   YEET: "BEARS"
+  
