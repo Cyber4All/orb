@@ -1,6 +1,5 @@
 description: |
   This job deploys an application to aws elasticbeanstalk. Deploy-Eb requires publish-docker
-  
 
 parameters:
   # Required Parameters
