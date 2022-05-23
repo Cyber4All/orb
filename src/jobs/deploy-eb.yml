@@ -40,7 +40,7 @@ parameters:
       (defaults to AWS_REGION_N_VA)
   slack-mentions:
     type: env_var_name
-    default: MENTIONS
+    default: ${MENTIONS}
     description: |
       MENTIONS is the environment variable storing the name for the slack context.
   isDocker:
