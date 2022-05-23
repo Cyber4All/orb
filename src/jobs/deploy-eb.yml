@@ -94,6 +94,7 @@ steps:
         echo $YEET
         echo "not parameters" $AWS_REGION_N_VA
         echo "parameters" <<parameters.aws-region>>
+        echo "slack params" <<parameters.slack-mentions>>
         eb init "<<parameters.application-name>>" --region <<parameters.aws-region>> -p $EB_PARAM_PLATFORM
         eb deploy "<<parameters.environment-name>>" --verbose --label "${CIRCLE_PROJECT_REPONAME}-v<<parameters.version>>"
   - slack/notify:
