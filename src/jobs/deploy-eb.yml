@@ -79,9 +79,9 @@ steps:
           exit 1
         fi
   - aws-eb/setup:
-      environment:
-        AWS_ACCESS_KEY_ID: $<<parameters.aws-access-key-id>>
-        AWS_SECRET_ACCESS_KEY: $<<parameters.aws-secret-access-key>>
+    environment:
+      AWS_ACCESS_KEY_ID: $<<parameters.aws-access-key-id>>
+      AWS_SECRET_ACCESS_KEY: $<<parameters.aws-secret-access-key>>
   - attach_workspace:
       at: .
   - run:
