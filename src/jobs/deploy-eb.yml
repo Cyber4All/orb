@@ -84,7 +84,7 @@ steps:
   - run:
       name: Deploy to Elastic Beanstalk with docker platform
       command: |
-        eb init "<<parameters.application-name>>" --region $AWS_DEFAULT_REGION -p $EB_PARAM_PLATFORM
+        eb init "<<parameters.application-name>>" --region $AWS_REGION -p $EB_PARAM_PLATFORM
         eb deploy "<<parameters.environment-name>>" --verbose --label "${CIRCLE_PROJECT_REPONAME}-v<<parameters.version>>"
   - slack/notify:
       event: fail
@@ -96,4 +96,4 @@ steps:
 environment:
   AWS_ACCESS_KEY_ID: <<parameters.aws-access-key-id>>
   AWS_SECRET_ACCESS_KEY: <<parameters.aws-secret-access-key>>
-  AWS_DEFAULT_REGION: <<parameters.aws-region>>
+  AWS_REGION: <<parameters.aws-region>>
