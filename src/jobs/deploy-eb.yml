@@ -1,11 +1,6 @@
 description: |
   This job deploys an application to aws elasticbeanstalk. Deploy-Eb requires publish-docker
-
-environment:
-  AWS_ACCESS_KEY_ID: <<parameters.aws-access-key-id>>
-  AWS_SECRET_ACCESS_KEY: <<parameters.aws-secret-access-key>>
-  AWS_REGION: <<parameters.aws-region>>
-  YEET: "BEARS"
+  
 
 parameters:
   # Required Parameters
@@ -40,7 +35,7 @@ parameters:
       (defaults to AWS_REGION_N_VA)
   slack-mentions:
     type: env_var_name
-    default: '${MENTIONS}'
+    default: MENTIONS
     description: |
       MENTIONS is the environment variable storing the name for the slack context.
   isDocker:
@@ -89,6 +84,11 @@ steps:
       at: .
   - run:
       name: Deploy to Elastic Beanstalk with docker platform
+      environment: 
+        AWS_ACCESS_KEY_ID: <<parameters.aws-access-key-id>>
+        AWS_SECRET_ACCESS_KEY: <<parameters.aws-secret-access-key>>
+        AWS_REGION: <<parameters.aws-region>>
+        YEET: "BEARS"
       command: |
         echo $AWS_REGION
         echo $YEET
