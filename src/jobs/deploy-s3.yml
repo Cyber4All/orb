@@ -97,7 +97,7 @@ steps:
             event: pass
             custom: "<<include(message_templates/deploy_aws_success.json)>>"
 environment:
-  AWS_ACCESS_KEY_ID: "$<<parameters.aws-access-key-id>>"
-  AWS_SECRET_ACCESS_KEY: "$<<parameters.aws-secret-access-key>>"
-  AWS_REGION: "${<<parameters.aws-region>>}"
-  AWS_S3_BUCKET: "${<<parameters.s3-bucket>>}"
+  AWS_ACCESS_KEY_ID: $<<parameters.aws-access-key-id>>
+  AWS_SECRET_ACCESS_KEY: $<<parameters.aws-secret-access-key>>
+  AWS_REGION: ${<<parameters.aws-region>>}
+  AWS_S3_BUCKET: ${<<parameters.s3-bucket>>}
