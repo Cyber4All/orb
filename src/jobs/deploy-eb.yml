@@ -92,8 +92,8 @@ steps:
       command: |
         echo $AWS_REGION
         echo $YEET
-        echo $AWS_REGION_N_VA
-        eb init "<<parameters.application-name>>" --region $AWS_REGION -p $EB_PARAM_PLATFORM
+        echo <<parameters.aws-region>>
+        eb init "<<parameters.application-name>>" --region <<parameters.aws-region>> -p $EB_PARAM_PLATFORM
         eb deploy "<<parameters.environment-name>>" --verbose --label "${CIRCLE_PROJECT_REPONAME}-v<<parameters.version>>"
   - slack/notify:
       event: fail
