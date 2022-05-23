@@ -18,23 +18,23 @@ parameters:
   # Not Required Parameters
   aws-secret-access-key:
     type: env_var_name
-    default: MACHINE_AWS_EB_SecretKey
+    default: $MACHINE_AWS_EB_SecretKey
     description: |
       The secret key for the aws user
   aws-access-key-id:
     type: env_var_name
-    default: MACHINE_AWS_EB_AccessKey
+    default: $MACHINE_AWS_EB_AccessKey
     description: |
       The access key for the aws user
   aws-region:
     type: env_var_name
-    default: AWS_REGION_N_VA
+    default: $AWS_REGION_N_VA
     description: |
       Env var of AWS region to operate in
       (defaults to AWS_REGION_N_VA)
   slack-mentions:
     type: env_var_name
-    default: MENTIONS
+    default: $MENTIONS
     description: |
       MENTIONS is the environment variable storing the name for the slack context.
   isDocker:
