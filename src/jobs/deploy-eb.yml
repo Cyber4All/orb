@@ -78,11 +78,7 @@ steps:
           echo 'Either "isNode" or "isDocker" must be true.'
           exit 1
         fi
-  - aws-eb/setup:
-    environment:
-      AWS_ACCESS_KEY_ID: $<<parameters.aws-access-key-id>>
-      AWS_SECRET_ACCESS_KEY: $<<parameters.aws-secret-access-key>>
-      AWS_DEFAULT_REGION: $<<parameters.aws-region>>
+  - aws-eb/setup
   - attach_workspace:
       at: .
   - run:
@@ -96,3 +92,8 @@ steps:
   - slack/notify:
       event: pass
       custom: "<<include(message_templates/deploy_aws_success.json)>>"
+
+environment:
+  AWS_ACCESS_KEY_ID: $<<parameters.aws-access-key-id>>
+  AWS_SECRET_ACCESS_KEY: $<<parameters.aws-secret-access-key>>
+  AWS_DEFAULT_REGION: $<<parameters.aws-region>>
