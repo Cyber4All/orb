@@ -11,7 +11,7 @@ parameters:
       https://semver.org/spec/v2.0.0.html
   function-name:
     type: string
-    default: ''
+    default: FUNCTION_NAME
     description: |
       The name of the lambda function to be updated.
   # Optional Parameters with Defaults
