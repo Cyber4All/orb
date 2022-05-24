@@ -32,6 +32,11 @@ parameters:
     default: AWS_REGION_N_VA
     description: |
       Name of environment variable storing the AWS region
+  cloudfront-id:
+    type: env_var_name
+    default: CLOUDFRONT_ID
+    description: |
+      Name of the environment variable for the cloudfront id
   aws-access-key-id:
     type: env_var_name
     default: MACHINE_AWS_CF_AccessKey
@@ -84,8 +89,11 @@ steps:
       condition: <<parameters.deploy>>
       steps:
         - aws-s3/sync:
+            aws-access-key-id: << parameters.aws-access-key-id >>
+            aws-region: << parameters.aws-region >>
+            aws-secret-access-key: << parameters.aws-secret-access-key >>
             from: <<parameters.source>>
-            to: "s3://$AWS_S3_BUCKET"
+            to: "s3://$<<parameters.s3-bucket>>"
         - run:
             name: Invalidate index.html in CloudFront
             command: >
@@ -96,8 +104,3 @@ steps:
         - slack/notify:
             event: pass
             custom: "<<include(message_templates/deploy_aws_success.json)>>"
-environment:
-  AWS_ACCESS_KEY_ID: "$<<parameters.aws-access-key-id>>"
-  AWS_SECRET_ACCESS_KEY: "$<<parameters.aws-secret-access-key>>"
-  AWS_REGION: "${<<parameters.aws-region>>}"
-  AWS_S3_BUCKET: "${<<parameters.s3-bucket>>}"
