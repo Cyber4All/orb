@@ -69,9 +69,14 @@ parameters:
     description: |
       Path of the dockerfile to be scanned
     type: string
+  docker-image:
+    default: "cimg/go:1.18"
+    description: |
+      Docker image name to use as executor
+    type: string
 
 docker:
-  - image: cimg/go:1.18
+  - image: <<parameters.docker-image>>
 
 steps:
   - checkout
