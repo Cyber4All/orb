@@ -23,8 +23,8 @@ parameters:
     description: |
       Name of the docker organization for the images
   container-name:
-    type: string
-    default: ''
+    type: env_var_name
+    default: ECS_CONTAINER_NAME
     description: |
       Name of the container name defined in the ecs task-definition
       (defaults to image-name)
@@ -121,7 +121,7 @@ steps:
       steps:
         - aws-ecs/update-service:
             cluster-name: <<parameters.cluster-name>>
-            family: <<parameters.family>>
+            family: <<parameters.image-name>>
             service-name: "$ECS_PARAM_SERVICE_NAME"
             skip-task-definition-registration: true
             verify-revision-is-deployed: true
