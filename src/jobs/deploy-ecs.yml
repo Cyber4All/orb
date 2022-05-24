@@ -110,13 +110,13 @@ steps:
       aws-region: <<parameters.aws-region>>
   - aws-ecs/update-task-definition:
       container-image-name-updates: "container=${<<parameters.container-name>>},image-and-tag=<<parameters.image-name>>:<<parameters.tag>>"
-      family: <<parameters.family>>
+      family: <<parameters.image-name>>
   - when:
       condition: <<parameters.isService>>
       steps:
         - aws-ecs/update-service:
             cluster-name: <<parameters.cluster-name>>
-            family: <<parameters.family>>
+            family: <<parameters.image-name>>
             service-name: "$ECS_PARAM_SERVICE_NAME"
             skip-task-definition-registration: true
             verify-revision-is-deployed: true
