@@ -27,6 +27,11 @@ parameters:
     description: |
       Set to True is build and sync changes with S3 and invalidate CF index.html.
       (defaults to false)
+  s3-bucket:
+    type: env_var_name
+    default: S3_BUCKET
+    description: |
+      S3 Bucket location for lamdba function
   aws-region:
     type: env_var_name
     default: AWS_REGION_N_VA
@@ -89,7 +94,7 @@ steps:
         - run:
             name: Update Lambda Function code
             command: >
-              aws lambda update-function-code --function-name <<parameters.function-name>> --zip-file fileb://./build.zip
+              aws lambda update-function-code --function-name <<parameters.function-name>> --zip-file fileb://./build.zip --s3-bucket <<parameters.s3-bucket>>
         - slack/notify:
             event: fail
             template: basic_fail_1
