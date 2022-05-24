@@ -19,7 +19,7 @@ parameters:
   # Not Required Parameters
   docker-user-org:
     type: string
-    defaut: 'cyber4all'
+    default: 'cyber4all'
     description: |
       Name of the docker organization for the images
   container-name:
