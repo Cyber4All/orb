@@ -114,7 +114,7 @@ steps:
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       aws-region: <<parameters.aws-region>>
   - aws-ecs/update-task-definition:
-      container-image-name-updates: "container=<<parameters.container-name>>,image-and-tag=<<parameters.docker-user-org>>/<<parameters.image-name>>:<<parameters.tag>>"
+      container-image-name-updates: "container=<<parameters.container-name>>,image-and-tag=<<parameters.image-name>>:<<parameters.tag>>"
       family: <<parameters.family>>
   - when:
       condition: <<parameters.isService>>
