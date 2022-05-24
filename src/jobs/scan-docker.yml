@@ -108,7 +108,7 @@ steps:
   - run:
       name: Scan Image
       command: |
-        echo 'export OUTPUT_FILENAME=$(date +%s)-<<parameters.image>>:<<parameters.tag>>' >> $BASH_ENV
+        OUTPUT_FILENAME=$(date +%s)-<<parameters.image>>:<<parameters.tag>>
 
         docker build -t <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> .
 
@@ -133,24 +133,22 @@ steps:
           --severity=high \
           --file <<parameters.dockerfile-path>> \
           <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > "/tmp/$OUTPUT_FILENAME.txt"
-  - run:
-      name: Upload Files to S3
-      command: |
-        if [ -f <<parameters.image>>/${OUTPUT_FILENAME}.txt && -f <<parameters.image>>/${OUTPUT_FILENAME}.json ]; then
-          echo <<parameters.image>>/${OUTPUT_FILENAME}.txt
+
+        if [ -f <<parameters.image>>/$OUTPUT_FILENAME.txt && -f <<parameters.image>>/$OUTPUT_FILENAME.json ]; then
+          echo <<parameters.image>>/$OUTPUT_FILENAME.txt
 
           aws s3api put-object \
-            --body "/tmp/${OUTPUT_FILENAME}.txt" \
+            --body "/tmp/$OUTPUT_FILENAME.txt" \
             --bucket <<parameters.aws-s3-bucket>> \
-            --key "<<parameters.image>>/${OUTPUT_FILENAME}.txt"
+            --key "<<parameters.image>>/$OUTPUT_FILENAME.txt"
 
           aws s3api put-object \
-            --body "/tmp/${OUTPUT_FILENAME}.json" \
+            --body "/tmp/$OUTPUT_FILENAME.json" \
             --bucket <<parameters.aws-s3-bucket>> \
-            --key "<<parameters.image>>/${OUTPUT_FILENAME}.json"
+            --key "<<parameters.image>>/$OUTPUT_FILENAME.json"
 
           S3_URL="https://s3.console.aws.amazon.com/s3/object/"
-          echo 'export S3_OBJECT_URL=${S3_URL}<<parameters.aws-s3-bucket>>?region=<<parameters.aws-region>>&prefix=<<parameters.image>>/${OUTPUT_FILENAME}.txt' >> $BASH_ENV
+          echo 'export S3_OBJECT_URL=${S3_URL}<<parameters.aws-s3-bucket>>?region=<<parameters.aws-region>>&prefix=<<parameters.image>>/$OUTPUT_FILENAME.txt' >> $BASH_ENV
         fi
   - slack/notify:
       event: fail
