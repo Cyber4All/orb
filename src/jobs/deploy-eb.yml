@@ -81,7 +81,7 @@ steps:
   - run:
       name: Install AWS EB Cli
       command: |
-        sudo apt update && sudo apt install -y python3-pip
+        sudo apt update && sudo apt install -y python3-pip && sudo pip3 install awsebcli
   - aws-cli/setup:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
