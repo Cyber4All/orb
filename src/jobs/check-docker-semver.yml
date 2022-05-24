@@ -19,9 +19,14 @@ parameters:
     default: "cyber4all"
     description: |
       The name of the docker organization
+  docker-image:
+    type: string
+    default: "cimg/go:1.18"
+    description: |
+      The docker image that will be used as an executor
 
 docker:
-  - image: cimg/go:1.18
+  - image: <<parameters.docker-image>>
 
 steps:
   - checkout
