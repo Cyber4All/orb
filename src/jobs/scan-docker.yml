@@ -112,24 +112,20 @@ steps:
 
         docker build -t <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> .
 
-        echo 'output' $OUTPUT_FILENAME
-
-        docker images
-
         docker scan --json \
           --accept-license \
           --version \
           --severity=high \
           --file <<parameters.dockerfile-path>> \
-          <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > "/tmp/$OUTPUT_FILENAME.json"
+          <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > "$OUTPUT_FILENAME.json"
 
-        cat /tmp/$OUTPUT_FILENAME.json
+        cat $OUTPUT_FILENAME.json
 
         sudo apt install jq
 
-        if jq -e '.[0].vulnerabilities == []' "/tmp/$OUTPUT_FILENAME.json" > /dev/null; then
-          cat /tmp/$OUTPUT_FILENAME.json
-          rm /tmp/$OUTPUT_FILENAME.json
+        if jq -e '.[0].vulnerabilities == []' "$OUTPUT_FILENAME.json" > /dev/null; then
+          cat $OUTPUT_FILENAME.json
+          rm $OUTPUT_FILENAME.json
           circleci-agent step halt
         fi
 
@@ -137,18 +133,18 @@ steps:
           --accept-license \
           --severity=high \
           --file <<parameters.dockerfile-path>> \
-          <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > "/tmp/$OUTPUT_FILENAME.txt"
+          <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > "$OUTPUT_FILENAME.txt"
 
         if [ -f <<parameters.image>>/$OUTPUT_FILENAME.txt && -f <<parameters.image>>/$OUTPUT_FILENAME.json ]; then
           echo <<parameters.image>>/$OUTPUT_FILENAME.txt
 
           aws s3api put-object \
-            --body "/tmp/$OUTPUT_FILENAME.txt" \
+            --body "$OUTPUT_FILENAME.txt" \
             --bucket <<parameters.aws-s3-bucket>> \
             --key "<<parameters.image>>/$OUTPUT_FILENAME.txt"
 
           aws s3api put-object \
-            --body "/tmp/$OUTPUT_FILENAME.json" \
+            --body "$OUTPUT_FILENAME.json" \
             --bucket <<parameters.aws-s3-bucket>> \
             --key "<<parameters.image>>/$OUTPUT_FILENAME.json"
 
