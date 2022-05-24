@@ -18,8 +18,8 @@ parameters:
       The short name or full ARN of the cluster that hosts the service.
   # Not Required Parameters
   container-name:
-    type: string
-    default: ''
+    type: env_var_name
+    default: ECS_CONTAINER_NAME
     description: |
       Name of the container name defined in the ecs task-definition
       (defaults to image-name)
