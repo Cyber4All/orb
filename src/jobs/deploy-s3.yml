@@ -36,7 +36,7 @@ parameters:
     type: env_var_name
     default: CLOUDFRONT_ID
     description: |
-      Name of the environment variable for the cloudfront id 
+      Name of the environment variable for the cloudfront id
   aws-access-key-id:
     type: env_var_name
     default: MACHINE_AWS_CF_AccessKey
