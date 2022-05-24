@@ -112,8 +112,13 @@ steps:
 
         docker build -t <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> .
 
+        echo 'output' $OUTPUT_FILENAME
+
+        docker images
+
         docker scan --json \
           --accept-license \
+          --version \
           --severity=high \
           --file <<parameters.dockerfile-path>> \
           <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > "/tmp/$OUTPUT_FILENAME.json"
