@@ -118,7 +118,9 @@ steps:
           --file <<parameters.dockerfile-path>> \
           <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > "/tmp/$OUTPUT_FILENAME.json"
 
-        apk add jq
+        cat /tmp/$OUTPUT_FILENAME.json
+
+        sudo apt install jq
 
         if jq -e '.[0].vulnerabilities == []' "/tmp/$OUTPUT_FILENAME.json" > /dev/null; then
           cat /tmp/$OUTPUT_FILENAME.json
