@@ -32,6 +32,11 @@ parameters:
     default: AWS_REGION_N_VA
     description: |
       Name of environment variable storing the AWS region
+  cloudfront-id:
+    type: env_var_name
+    default: CLOUDFRONT_ID
+    description: |
+      Name of the environment variable for the cloudfront id
   aws-access-key-id:
     type: env_var_name
     default: MACHINE_AWS_CF_AccessKey
