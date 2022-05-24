@@ -119,10 +119,11 @@ steps:
 
         docker scan --json \
           --accept-license \
-          --version \
           --severity=high \
           --file <<parameters.dockerfile-path>> \
           <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > $OUTPUT_FILENAME.json
+
+        ls -al
 
         cat $OUTPUT_FILENAME.json
 
