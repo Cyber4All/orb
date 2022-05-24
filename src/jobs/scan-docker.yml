@@ -122,7 +122,7 @@ steps:
           --version \
           --severity=high \
           --file <<parameters.dockerfile-path>> \
-          <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > "$OUTPUT_FILENAME.json"
+          <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > $OUTPUT_FILENAME.json
 
         cat $OUTPUT_FILENAME.json
 
@@ -138,7 +138,7 @@ steps:
           --accept-license \
           --severity=high \
           --file <<parameters.dockerfile-path>> \
-          <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > "$OUTPUT_FILENAME.txt"
+          <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> > $OUTPUT_FILENAME.txt
 
         if [ -f <<parameters.image>>/$OUTPUT_FILENAME.txt && -f <<parameters.image>>/$OUTPUT_FILENAME.json ]; then
           echo <<parameters.image>>/$OUTPUT_FILENAME.txt
