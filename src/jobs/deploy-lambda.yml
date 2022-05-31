@@ -11,7 +11,6 @@ parameters:
       https://semver.org/spec/v2.0.0.html
   function-name:
     type: string
-    default: FUNCTION_NAME
     description: |
       The name of the lambda function to be updated.
   # Optional Parameters with Defaults
@@ -94,7 +93,7 @@ steps:
         - run:
             name: Update Lambda Function code
             command: >
-              aws lambda update-function-code --function-name ${<<parameters.function-name>>} --zip-file fileb://./build.zip --s3-bucket ${<<parameters.s3-bucket>>}
+              aws lambda update-function-code --function-name <<parameters.function-name>> --zip-file fileb://./build.zip --s3-bucket ${<<parameters.s3-bucket>>}
         - slack/notify:
             event: fail
             template: basic_fail_1
