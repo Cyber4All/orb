@@ -4,7 +4,7 @@ description: |
 parameters:
   # Required Parameters
   image:
-    type: string
+    type: env_var_name
     description: |
       Name of the image associated with your organization
   tag:
