@@ -5,7 +5,6 @@ parameters:
   # Required Parameters when deploy is true
   tag:
     type: string
-    default: ''
     description: |
       The semantic version of the project trying to be deployed.
       https://semver.org/spec/v2.0.0.html
@@ -93,7 +92,7 @@ steps:
         - run:
             name: Update Lambda Function code
             command: >
-              aws lambda update-function-code --function-name <<parameters.function-name>> --zip-file fileb://./build.zip --s3-bucket ${<<parameters.s3-bucket>>}
+              aws lambda update-function-code --function-name <<parameters.function-name>> --zip-file fileb://./build.zip
         - slack/notify:
             event: fail
             template: basic_fail_1
