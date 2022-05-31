@@ -114,7 +114,7 @@ steps:
       name: Scan Image
       command: |
         OUTPUT_FILENAME=$(date +%s)-"<<parameters.image>>":"<<parameters.tag>>"
-       
+
         docker build -t "<<parameters.organization>>"/"<<parameters.image>>":"<<parameters.tag>>" .
 
         docker scan --json \
