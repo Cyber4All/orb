@@ -77,6 +77,9 @@ steps:
       condition: <<parameters.isAngular>>
       steps:
         - run:
+            name: Install Angular
+            command: npm install -g @angular/cli
+        - run:
             name: Build Application
             command: ng build --aot --build-optimizer=true --optimization=true --configuration=production
   - when:

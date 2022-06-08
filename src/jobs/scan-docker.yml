@@ -114,7 +114,7 @@ steps:
       name: Scan Image
       command: |
         OUTPUT_FILENAME=$(date +%s)-<<parameters.image>>:<<parameters.tag>>
-
+        echo "$OUTPUT_FILENAME"
         docker build -t <<parameters.organization>>/<<parameters.image>>:<<parameters.tag>> .
 
         docker scan --json \
@@ -129,7 +129,7 @@ steps:
 
         sudo apt install jq
 
-        if jq -e '.[0].vulnerabilities == []' "$OUTPUT_FILENAME.json" > /dev/null; then
+        if jq -e '.[0].vulnerabilities == []' "$OUTPUT_FILENAME".json > /dev/null; then
           cat $OUTPUT_FILENAME.json
           rm $OUTPUT_FILENAME.json
           circleci-agent step halt
@@ -145,14 +145,14 @@ steps:
           echo <<parameters.image>>/$OUTPUT_FILENAME.txt
 
           aws s3api put-object \
-            --body "$OUTPUT_FILENAME.txt" \
+            --body $OUTPUT_FILENAME.txt \
             --bucket <<parameters.aws-s3-bucket>> \
-            --key "<<parameters.image>>/$OUTPUT_FILENAME.txt"
+            --key <<parameters.image>>/$OUTPUT_FILENAME.txt
 
           aws s3api put-object \
-            --body "$OUTPUT_FILENAME.json" \
+            --body $OUTPUT_FILENAME.json \
             --bucket <<parameters.aws-s3-bucket>> \
-            --key "<<parameters.image>>/$OUTPUT_FILENAME.json"
+            --key <<parameters.image>>/$OUTPUT_FILENAME.txt
 
           S3_URL="https://s3.console.aws.amazon.com/s3/object/"
           echo 'export S3_OBJECT_URL=${S3_URL}<<parameters.aws-s3-bucket>>?region=<<parameters.aws-region>>&prefix=<<parameters.image>>/$OUTPUT_FILENAME.txt' >> $BASH_ENV
