@@ -82,7 +82,7 @@ steps:
         - run:
             name: Build Application
             no_output_timeout: 10s
-            command: ng build --aot --build-optimizer=true --optimization=true --configuration=production
+            command: ng build --configuration=production
   - when:
       condition: <<parameters.isVue>>
       steps:
