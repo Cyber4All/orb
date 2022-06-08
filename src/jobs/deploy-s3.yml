@@ -81,6 +81,7 @@ steps:
             command: npm install -g @angular/cli
         - run:
             name: Build Application
+            no_output_timeout: 10s
             command: ng build --aot --build-optimizer=true --optimization=true --configuration=production
   - when:
       condition: <<parameters.isVue>>
