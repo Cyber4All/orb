@@ -78,10 +78,10 @@ steps:
       steps:
         - run:
             name: Install Angular
-            command: npm install -g @angular/cli
+            command: npm install -g @angular/cli@13.3.7
         - run:
             name: Build Application
-            command: ng build --aot --build-optimizer=true --optimization=true --configuration=production
+            command: ng build --configuration=production
   - when:
       condition: <<parameters.isVue>>
       steps:
