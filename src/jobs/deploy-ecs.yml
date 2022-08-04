@@ -124,8 +124,10 @@ steps:
         - run:
             name: Echo file name
             command: echo <<parameters.json-file-path>>
-        - aws-ecs/update-task-definition-from-json:
-            task-definition-json: <<parameters.json-file-path>>
+        - run:
+            name: Register a new task definition using json file
+            command: |
+              aws ecs register-task-definition --cli-input-json file://"<<parameters.json-file-path>>"
   - when:
       condition:
         not: <<parameters.json-file-path>>
