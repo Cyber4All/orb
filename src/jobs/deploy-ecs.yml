@@ -125,7 +125,7 @@ steps:
             task-definition-json: <<parameters.json-file-path>>
   - when:
       condition:
-        not: <<parametes.json-file-path>>
+        not: <<parameters.json-file-path>>
       steps:
         - aws-ecs/update-task-definition:
             container-image-name-updates: "container=${<<parameters.container-name>>},image-and-tag=<<parameters.docker-user-org>>/<<parameters.image-name>>:<<parameters.tag>>"
