@@ -118,7 +118,7 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       aws-region: <<parameters.aws-region>>
-  - when: # Use Json file to deploye to ecs
+  - when: # Use Json file to deploy to ecs
       condition: <<parameters.json-file-path>> # Truthy value if not empty
       steps:
         - aws-ecs/update-task-definition-from-json:
