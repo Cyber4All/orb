@@ -121,15 +121,15 @@ steps:
   - when: # Use Json file to deploy to ecs
       condition: <<parameters.json-file-path>> # Truthy value if not empty
       steps:
+        - run:
+            name: Echo file name
+            command: echo <<parameters.json-file-path>>
         - aws-ecs/update-task-definition-from-json:
             task-definition-json: <<parameters.json-file-path>>
   - when:
       condition:
         not: <<parameters.json-file-path>>
       steps:
-        - run:
-            name: Echo file name
-            command: echo <<parameters.json-file-path>>
         - aws-ecs/update-task-definition:
             container-image-name-updates: "container=${<<parameters.container-name>>},image-and-tag=<<parameters.docker-user-org>>/<<parameters.image-name>>:<<parameters.tag>>"
             family: <<parameters.family>>
