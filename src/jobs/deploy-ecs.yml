@@ -120,10 +120,14 @@ steps:
       aws-region: <<parameters.aws-region>>
   - when: # Use Json file to deploy to ecs
       condition: <<parameters.json-file-path>> # Truthy value if not empty
-      run:
-        name: Register a new task definition using json file
-        command: |
-          aws ecs register-task-definition --cli-input-json file://"<<parameters.json-file-path>>"
+      steps:
+        - run:
+            name: Echo file name
+            command: echo <<parameters.json-file-path>>
+        - run:
+            name: Register a new task definition using json file
+            command: | 
+              aws ecs register-task-definition --cli-input-json file://"<<parameters.json-file-path>>"
   - when:
       condition:
         not: <<parameters.json-file-path>>
