@@ -122,10 +122,7 @@ steps:
       condition: <<parameters.json-file-path>> # Truthy value if not empty
       steps:
         - run:
-            name: Echo file name
-            command: echo <<parameters.json-file-path>>
-        - run:
-            name: Register a new task definition using json file
+            name: AWS CLI Register Task Definition
             command: |
               aws ecs register-task-definition --cli-input-json file://"<<parameters.json-file-path>>"
   - when:
