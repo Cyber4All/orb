@@ -17,6 +17,11 @@ parameters:
     description: |
       The short name or full ARN of the cluster that hosts the service.
   # Not Required Parameters
+  json-file-path:
+    type: string
+    default: ''
+    description: |
+      The file path to a json file that contains the information needed to deploy
   docker-user-org:
     type: string
     default: 'cyber4all'
@@ -113,9 +118,18 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       aws-region: <<parameters.aws-region>>
-  - aws-ecs/update-task-definition:
-      container-image-name-updates: "container=${<<parameters.container-name>>},image-and-tag=<<parameters.docker-user-org>>/<<parameters.image-name>>:<<parameters.tag>>"
-      family: <<parameters.family>>
+  - when: # Use Json file to deploy to ecs
+      condition: <<parameters.json-file-path>> # Truthy value if not empty
+      steps:
+        - aws-ecs/update-task-definition-from-json:
+            task-definition-json: <<parameters.json-file-path>>
+  - when:
+      condition:
+        not: <<parameters.json-file-path>>
+      steps:
+        - aws-ecs/update-task-definition:
+            container-image-name-updates: "container=${<<parameters.container-name>>},image-and-tag=<<parameters.docker-user-org>>/<<parameters.image-name>>:<<parameters.tag>>"
+            family: <<parameters.family>>
   - when:
       condition: <<parameters.isService>>
       steps:
