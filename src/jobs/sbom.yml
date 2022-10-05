@@ -1,0 +1,111 @@
+description: |
+  This job generates a CycloneDX Software Bill of Materials (SBOM), analyzes it using cve-bin-tool then generates a shortcut story to review the findings
+
+parameters:
+  # --------------------------------------------------------------------------------
+  # REQUIRED PARAMETERS
+  # You must provide a value for each of these parameters.
+  # ---------------------------------------------------------------------------------
+  language:
+    type: enum
+    enum: ["node", "python", "go"]
+    description: |
+      Language of the repository generating an SBOM for.
+      Options: (node, python, go)
+
+  version:
+    type: string
+    description: |
+      The semantic version of the project trying to be deployed
+      https://semver.org/spec/v2.0.0.html
+
+  # ---------------------------------------------------------------------------------
+  # OPTIONAL PARAMETERS
+  # These parameters have reasonable defaults.
+  # ---------------------------------------------------------------------------------
+  docker-image:
+    type: string
+    default: "cimg/node:lts"
+    description: |
+      Docker image to use as executor, use appropriate image for language (Node, Go, Python)
+
+  group-id:
+    type: string
+    default: 61ae65f8-ec5a-4f81-8b85-76516b014ed5
+    description: |
+      Id of the group to be assigned to the shortcut story [Default: Id of Operations]
+
+  project-id:
+    type: integer
+    default: 14743
+    description: |
+      Id of the project to be assigned to the shortcut story [Default: Id of SBOM]
+  
+  shortcut-token:
+    type: env_var_name
+    default: SHORTCUT_TOKEN
+    description: |
+      Environment variable name for API key to make Shortcut API request
+
+  workflow-state-id:
+    type: integer
+    default: 500005737
+    description: |
+      Id of the workflow state to assign the shortcut story to [Default: Id of Ready for Development]
+
+docker:
+  - image: << parameters.docker-image >>
+
+steps:
+      - checkout
+      - when:
+          condition: 
+            equal: [ "node", << parameters.language >> ]
+          steps:
+            - run:
+                name: Install CycloneDX Node
+                command: sudo npm i -g @cyclonedx/bom@3.10.6
+            - run:
+                name: Install Node Modules
+                command: npm ci
+            - run:
+                name: Generate CycloneDX SBOM
+                command: cyclonedx-node -d -o cyclonedx-sbom.json
+      - when:
+          condition: 
+            equal: [ "python", << parameters.language >> ]
+          steps:
+            - run:
+                name: Install CycloneDX v3.6.3
+                command: pip3 install cyclonedx-bom==3.6.3
+            - run:
+                name: Generate CycloneDX SBOM
+                command: cyclonedx-py -r --format json -o cyclonedx-sbom.json -F
+      - when:
+          condition: 
+            equal: [ "go", << parameters.language >> ]
+          steps:
+            - run:
+                name: Install CycloneDX-gomod
+                command: go install github.com/CycloneDX/cyclonedx-gomod/cmd/cyclonedx-gomod@v1.3.0
+            - run:
+                name: Run CycloneDX-gomod
+                command: cyclonedx-gomod mod -output cyclonedx-sbom.json -json=true -std=true
+      - store_artifacts:
+          path: cyclonedx-sbom.json
+      - run:
+          name: cve-bin-tool SBOM anlaysis
+          command: |
+            docker run --rm --env BOM_FILE=cyclonedx-sbom.json -v $(pwd):/home/alpine/src --name cve-bin-tool cyber4all/cve-bin-tool:latest
+      - store_artifacts:
+          path: output.cve-bin-tool.$(date "+%Y-%m-%d").html
+      - run:
+          name: Create Shortcut Story
+          command: |
+            export VERSION="<< parameters.version >>" >> $BASH_ENV
+            export LANGUAGE="<< parameters.language >>" >> $BASH_ENV
+            export GROUP_ID="<< parameters.group-id >>" >> $BASH_ENV
+            export PROJECT_ID="<< parameters.project-id >>" >> $BASH_ENV
+            export WORKFLOW_STATE_ID="<< parameters.workflow-state-id >>" >> $BASH_ENV
+
+            <<include(scripts/create-shortcut-story.py)>>
