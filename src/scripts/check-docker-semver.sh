@@ -10,6 +10,6 @@ check_version() {
 }
 
 ORB_TEST_ENV="bats-core"
-if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
+if [ "${0#*"$ORB_TEST_ENV"}" == "$0" ]; then
     check_version
 fi
