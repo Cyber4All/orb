@@ -103,11 +103,11 @@ steps:
       name: Create Shortcut Story
       command: |
         <<include(
-          export VERSION="<< parameters.version >>" >> $BASH_ENV
-          export LANGUAGE="<< parameters.language >>" >> $BASH_ENV
-          export GROUP_ID="<< parameters.group-id >>" >> $BASH_ENV
-          export PROJECT_ID="<< parameters.project-id >>" >> $BASH_ENV
-          export WORKFLOW_STATE_ID="<< parameters.workflow-state-id >>" >> $BASH_ENV
+          export VERSION="\<< parameters.version \>>" \>> $BASH_ENV
+          export LANGUAGE="\<< parameters.language \>>" \>> $BASH_ENV
+          export GROUP_ID="\<< parameters.group-id \>>" \>> $BASH_ENV
+          export PROJECT_ID="\<< parameters.project-id \>>" \>> $BASH_ENV
+          export WORKFLOW_STATE_ID="\<< parameters.workflow-state-id \>>" \>> $BASH_ENV
 
           scripts/create-shortcut-story.py
         )>>
