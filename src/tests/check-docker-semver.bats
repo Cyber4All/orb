@@ -14,34 +14,6 @@ print_output() {
     echo "$output"
 }
 
-@test 'Check Semantic Version on Dockerhub' {
-    export DOCKER_ORGANIZATION="cyber4all"
-    export DOCKER_REPOSITORY="bundling-monitor-service"
-    export DOCKER_SEMVER="0.0.0"
-
-    run check_version
-
-    [ "$status" -eq 0 ]
-    [ "$output" = "curl: (22) The requested URL returned error: 404 NOT FOUND" ]
-    [ "$BATS_RUN_COMMAND" = "check_version" ]
-
-    print_output
-}
-
-@test 'Check Semantic Version Passes' {
-    export DOCKER_ORGANIZATION="cyber4all"
-    export DOCKER_REPOSITORY="bundling-monitor-service"
-    export DOCKER_SEMVER="latest"
-
-    run check_version
-
-    [ "$status" -eq 1 ]
-    [ "$output" = "$DOCKER_SEMVER already exists in the $DOCKER_REPOSITORY on dockerhub" ]
-    [ "$BATS_RUN_COMMAND" = "check_version" ]
-
-    print_output
-}
-
 @test 'Unset Variable DOCKER_SEMVER Fail Case' {
     export DOCKER_ORGANIZATION="cyber4all"
     export DOCKER_REPOSITORY="bundling-monitor-service"
