@@ -23,12 +23,6 @@ parameters:
   # OPTIONAL PARAMETERS
   # These parameters have reasonable defaults.
   # ---------------------------------------------------------------------------------
-  docker-image:
-    type: string
-    default: "cimg/node:lts"
-    description: |
-      Docker image to use as executor, use appropriate image for language (Node, Go, Python)
-
   group-id:
     type: string
     default: 61ae65f8-ec5a-4f81-8b85-76516b014ed5
@@ -53,20 +47,21 @@ parameters:
     description: |
       Id of the workflow state to assign the shortcut story to [Default: Id of Ready for Development]
 
-docker:
-  - image: << parameters.docker-image >>
+machine:
+  image: ubuntu-2004:current
 
 steps:
   - checkout
-  - setup_remote_docker:
-      version: 20.10.14
   - when:
       condition:
         equal: [ "node", << parameters.language >> ]
       steps:
         - run:
             name: Install CycloneDX Node
-            command: sudo npm i -g @cyclonedx/bom@3.10.6
+            command: |
+              sudo apt install nodejs npm
+
+              sudo npm i -g @cyclonedx/bom@3.10.6
         - run:
             name: Install Node Modules
             command: npm ci
@@ -79,7 +74,10 @@ steps:
       steps:
         - run:
             name: Install CycloneDX v3.6.3
-            command: pip3 install cyclonedx-bom==3.6.3
+            command: |
+              sudo apt install python3-pip
+
+              pip3 install cyclonedx-bom==3.6.3
         - run:
             name: Generate CycloneDX SBOM
             command: cyclonedx-py -r --format json -o cyclonedx-sbom.json -F
@@ -89,7 +87,10 @@ steps:
       steps:
         - run:
             name: Install CycloneDX-gomod
-            command: go install github.com/CycloneDX/cyclonedx-gomod/cmd/cyclonedx-gomod@v1.3.0
+            command: |
+              sudo apt install golang-go
+
+              go install github.com/CycloneDX/cyclonedx-gomod/cmd/cyclonedx-gomod@v1.3.0
         - run:
             name: Run CycloneDX-gomod
             command: cyclonedx-gomod mod -output cyclonedx-sbom.json -json=true -std=true
