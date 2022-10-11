@@ -97,7 +97,9 @@ steps:
   - run:
       name: cve-bin-tool SBOM anlaysis
       command: |
-        docker run --rm --env BOM_FILE=cyclonedx-sbom.json -v $(pwd):/home/alpine/src --name cve-bin-tool cyber4all/cve-bin-tool:latest
+        docker run --env BOM_FILE=cyclonedx-sbom.json -v $(pwd)/cyclonedx-sbom.json:/home/alpine/src --name cve-bin-tool cyber4all/cve-bin-tool:latest
+
+        docker cp cve-bin-tool:/home/alpine/output.cve-bin-tool.$(date "+%Y-%m-%d").html .
   - store_artifacts:
       path: output.cve-bin-tool.$(date "+%Y-%m-%d").html
   - store_artifacts:
