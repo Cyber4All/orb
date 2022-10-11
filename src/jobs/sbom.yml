@@ -58,6 +58,8 @@ docker:
 
 steps:
   - checkout
+  - setup_remote_docker:
+      version: 20.10.14
   - when:
       condition:
         equal: [ "node", << parameters.language >> ]
