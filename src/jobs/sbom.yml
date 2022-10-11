@@ -58,6 +58,7 @@ docker:
 
 steps:
   - checkout
+  - setup_docker
   - when:
       condition:
         equal: [ "node", << parameters.language >> ]
