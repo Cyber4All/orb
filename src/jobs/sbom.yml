@@ -93,14 +93,14 @@ steps:
         - run:
             name: Run CycloneDX-gomod
             command: cyclonedx-gomod mod -output cyclonedx-sbom.json -json=true -std=true
-  - store_artifacts:
-      path: cyclonedx-sbom.json
   - run:
       name: cve-bin-tool SBOM anlaysis
       command: |
         docker run --rm --env BOM_FILE=cyclonedx-sbom.json -v $(pwd):/home/alpine/src --name cve-bin-tool cyber4all/cve-bin-tool:latest
   - store_artifacts:
       path: output.cve-bin-tool.$(date "+%Y-%m-%d").html
+  - store_artifacts:
+      path: cyclonedx-sbom.json
   - run:
       name: Create Shortcut Story
       command: |
