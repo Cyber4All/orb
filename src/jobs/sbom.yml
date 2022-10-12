@@ -13,45 +13,25 @@ parameters:
       Language of the repository generating an SBOM for.
       Options: (node, python, go)
 
-  version:
-    type: string
-    description: |
-      The semantic version of the project trying to be deployed
-      https://semver.org/spec/v2.0.0.html
-
   # ---------------------------------------------------------------------------------
   # OPTIONAL PARAMETERS
   # These parameters have reasonable defaults.
   # ---------------------------------------------------------------------------------
-  group-id:
-    type: string
-    default: 61ae65f8-ec5a-4f81-8b85-76516b014ed5
-    description: |
-      Id of the group to be assigned to the shortcut story [Default: Id of Operations]
-
-  project-id:
-    type: integer
-    default: 14743
-    description: |
-      Id of the project to be assigned to the shortcut story [Default: Id of SBOM]
-
   shortcut-token:
     type: env_var_name
     default: SHORTCUT_TOKEN
     description: |
       Environment variable name for API key to make Shortcut API request
 
-  workflow-state-id:
-    type: integer
-    default: 500005737
-    description: |
-      Id of the workflow state to assign the shortcut story to [Default: Id of Ready for Development]
-
 machine:
   image: ubuntu-2004:current
 
 steps:
   - checkout
+  - run:
+      name: Prepare Artifacts Directory
+      command: |
+        mkdir ./artifacts
   - when:
       condition:
         equal: [ "node", << parameters.language >> ]
@@ -95,22 +75,17 @@ steps:
             name: Run CycloneDX-gomod
             command: cyclonedx-gomod mod -output cyclonedx-sbom.json -json=true -std=true
   - run:
-      name: cve-bin-tool SBOM anlaysis
+      name: CVE-BIN-TOOL SBOM anlaysis
       command: |
-        docker run --env BOM_FILE=cyclonedx-sbom.json -v $(pwd):/home/alpine/src --name cve-bin-tool cyber4all/cve-bin-tool:latest || true
-
-        docker cp cve-bin-tool:/home/alpine/output.cve-bin-tool.$(date "+%Y-%m-%d").html .
+        docker run --env BOM_FILE=cyclonedx-sbom.json -v $(pwd)/artifacts:/home/alpine/src --name cve-bin-tool cyber4all/cve-bin-tool:latest || true
+  - run:
+      name: Copy Output from Container
+      command: |
+        docker cp cve-bin-tool:/home/alpine/output.cve-bin-tool.$(date "+%Y-%m-%d").html ./artifacts
   - store_artifacts:
-      path: output.cve-bin-tool.$(date "+%Y-%m-%d").html
-  - store_artifacts:
-      path: cyclonedx-sbom.json
+      path: ./artifacts
   - run:
       name: Create Shortcut Story
-      command: |
-        export VERSION="<< parameters.version >>" >> $BASH_ENV
-        export LANGUAGE="<< parameters.language >>" >> $BASH_ENV
-        export GROUP_ID="<< parameters.group-id >>" >> $BASH_ENV
-        export PROJECT_ID="<< parameters.project-id >>" >> $BASH_ENV
-        export WORKFLOW_STATE_ID="<< parameters.workflow-state-id >>" >> $BASH_ENV
-
-        scripts/create-shortcut-story.py
+      command: <<include(scripts/create-shortcut-story.py)>>
+      environment:
+        LANGUAGE: << parameters.language >>
