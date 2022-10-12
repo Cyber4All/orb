@@ -47,7 +47,7 @@ steps:
             command: npm ci
         - run:
             name: Generate CycloneDX SBOM
-            command: cyclonedx-node -d -o cyclonedx-sbom.json
+            command: cyclonedx-node -d -o ./artifacts/cyclonedx-sbom.json
   - when:
       condition:
         equal: [ "python", << parameters.language >> ]
@@ -60,7 +60,7 @@ steps:
               pip3 install cyclonedx-bom==3.6.3
         - run:
             name: Generate CycloneDX SBOM
-            command: cyclonedx-py -r --format json -o cyclonedx-sbom.json -F
+            command: cyclonedx-py -r --format json -o ./artifacts/cyclonedx-sbom.json -F
   - when:
       condition:
         equal: [ "go", << parameters.language >> ]
@@ -73,7 +73,7 @@ steps:
               go install github.com/CycloneDX/cyclonedx-gomod/cmd/cyclonedx-gomod@v1.3.0
         - run:
             name: Run CycloneDX-gomod
-            command: cyclonedx-gomod mod -output cyclonedx-sbom.json -json=true -std=true
+            command: cyclonedx-gomod mod -output ./artifacts/cyclonedx-sbom.json -json=true -std=true
   - run:
       name: CVE-BIN-TOOL SBOM anlaysis
       command: |
@@ -84,8 +84,5 @@ steps:
         docker cp cve-bin-tool:/home/alpine/output.cve-bin-tool.$(date "+%Y-%m-%d").html ./artifacts
   - store_artifacts:
       path: ./artifacts
-  - run:
-      name: Create Shortcut Story
-      command: <<include(scripts/create-shortcut-story.py)>>
-      environment:
-        LANGUAGE: << parameters.language >>
+  - create-sbom-story:
+      language: << parameters.language >>
