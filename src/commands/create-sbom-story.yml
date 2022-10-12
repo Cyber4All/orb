@@ -13,7 +13,7 @@ parameters:
       Language of the repository generating an SBOM for.
       Options: (node, python, go)
 
-steps: 
+steps:
   - run:
       name: Install Requests Module
       command: pip3 install requests
