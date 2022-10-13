@@ -19,6 +19,6 @@ steps:
       command: pip3 install requests
   - run:
       name: Create Shortcut Story
-      command: <<include(scripts/create-shortcut-story.py)>>
+      command: <<include(scripts/create-shortcut-story.sh)>>
       environment:
         LANGUAGE: << parameters.language >>
