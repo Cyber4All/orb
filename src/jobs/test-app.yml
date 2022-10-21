@@ -26,8 +26,14 @@ parameters:
     type: boolean
     default: false
     description: |
-      Set `true` if wanting to lint a node.js application
+      Set `true` if wanting to test a node.js application
       Will use the script `npm run test` with all the test suites.
+  isGolang:
+    type: boolean
+    default: false
+    description: |
+      Set `true` if wanting to test a golang application
+      Will use the script `go test -v ./...` with all the test suites.
 
 docker:
   - image: <<parameters.docker-image>>
@@ -51,3 +57,10 @@ steps:
             name: Run Tests
             command: >
               npm run <<parameters.node-test>>
+  - when:
+      condition: <<parameters.isGolang>>
+      steps:
+        - go/load-cache
+        - go/mod-download
+        - go/save-cache
+        - go/test
