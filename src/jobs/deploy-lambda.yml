@@ -74,20 +74,20 @@ machine:
 
 steps:
   - checkout
-  # - when:
-  #     condition:
-  #       - equal: ["node", << parameters.language >>]
-  #     steps:
-  #       - node/install
-  #       - node/install-packages
-  #       - run:
-  #           name: Build Application
-  #           command: >
-  #             npm run build --optimization=true
-  #       - run:
-  #           name: Zip Application
-  #           command: >
-  #             zip -r deployment-package.zip <<parameters.build-path>>
+  - when:
+      condition:
+        - equal: ["node", << parameters.language >>]
+      steps:
+        - node/install
+        - node/install-packages
+        - run:
+            name: Build Application
+            command: >
+              npm run build --optimization=true
+        - run:
+            name: Zip Application
+            command: >
+              zip -r deployment-package.zip <<parameters.build-path>>
   # - when:
   #     condition:
   #       - equal: ["rust", << parameters.language >>]
