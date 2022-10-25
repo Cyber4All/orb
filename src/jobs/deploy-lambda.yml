@@ -14,11 +14,10 @@ parameters:
       The name of the lambda function to be updated.
   # Optional Parameters with Defaults
   language:
-    type: enum
-    enum: ["python", "rust", "node"]
+    type: string
     default: "node"
     description: |
-      The language used in the project.
+      The language used in the project. Valid languages: rust, node, python
   requirements-path:
     type: string
     default: ./requirements.txt
