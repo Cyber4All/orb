@@ -74,58 +74,58 @@ machine:
 
 steps:
   - checkout
-  - when:
-      condition:
-        - equal: ["node", << parameters.language >>]
-      steps:
-        - node/install
-        - node/install-packages
-        - run:
-            name: Build Application
-            command: >
-              npm run build --optimization=true
-        - run:
-            name: Zip Application
-            command: >
-              zip -r deployment-package.zip <<parameters.build-path>>
-  - when:
-      condition:
-        - equal: ["rust", << parameters.language >>]
-      steps:
-        - rust/install
-        - run: 
-            name: Install Zig
-            command: >
-              sudo apt update && sudo apt install snapd && sudo snap install zig --beta --classic
-        - run:
-            name: Install Cargo-Lambda
-            command: >
-              cargo install cargo-lambda
-        - run:
-            # Zip file will be in {project-name}/bootstrap.zip
-            name: Build Project and Zip it
-            command: >
-              cargo lambda build --output-format Zip --release --lambda-dir . 
-        - run:
-            name: Move and Rename boostrap.zip
-            command: >
-              mv $CIRCLE_PROJECT_REPONAME/bootstrap.zip ./deployment-package.zip
-  - when:
-      condition:
-        - equal: ["python", << parameters.language >>]
-      steps:
-        - run:
-            name: Install Pip Dependencies
-            command: >
-              pip install --target ./package -r << parameters.requirements-path >> .
-        - run:
-            name: Zip Dependencies
-            command: >
-              cd package && zip -r ../deployment-package.zip && cd ..
-        - run:
-            name: Zip Source Code
-            command: >
-              zip -r -g deployment-package.zip << parameters.build-path >>
+  # - when:
+  #     condition:
+  #       - equal: ["node", << parameters.language >>]
+  #     steps:
+  #       - node/install
+  #       - node/install-packages
+  #       - run:
+  #           name: Build Application
+  #           command: >
+  #             npm run build --optimization=true
+  #       - run:
+  #           name: Zip Application
+  #           command: >
+  #             zip -r deployment-package.zip <<parameters.build-path>>
+  # - when:
+  #     condition:
+  #       - equal: ["rust", << parameters.language >>]
+  #     steps:
+  #       - rust/install
+  #       - run: 
+  #           name: Install Zig
+  #           command: >
+  #             sudo apt update && sudo apt install snapd && sudo snap install zig --beta --classic
+  #       - run:
+  #           name: Install Cargo-Lambda
+  #           command: >
+  #             cargo install cargo-lambda
+  #       - run:
+  #           # Zip file will be in {project-name}/bootstrap.zip
+  #           name: Build Project and Zip it
+  #           command: >
+  #             cargo lambda build --output-format Zip --release --lambda-dir . 
+  #       - run:
+  #           name: Move and Rename boostrap.zip
+  #           command: >
+  #             mv $CIRCLE_PROJECT_REPONAME/bootstrap.zip ./deployment-package.zip
+  # - when:
+  #     condition:
+  #       - equal: ["python", << parameters.language >>]
+  #     steps:
+  #       - run:
+  #           name: Install Pip Dependencies
+  #           command: >
+  #             pip install --target ./package -r << parameters.requirements-path >> .
+  #       - run:
+  #           name: Zip Dependencies
+  #           command: >
+  #             cd package && zip -r ../deployment-package.zip && cd ..
+  #       - run:
+  #           name: Zip Source Code
+  #           command: >
+  #             zip -r -g deployment-package.zip << parameters.build-path >>
 
   - when:
       condition: <<parameters.deploy>>
