@@ -76,7 +76,7 @@ steps:
   - checkout
   - when:
       condition:
-        - equal: ["node", << parameters.language >>]
+        equal: ["node", << parameters.language >>]
       steps:
         - node/install
         - node/install-packages
