@@ -2,6 +2,12 @@ description: |
   This job deploys an application to aws lambda.
 
 parameters:
+  # Required Parameters
+  language:
+    type: enum
+    enum: ["python", "rust", "node"]
+    description: |
+      The language used in the project.
   # Required Parameters when deploy is true
   tag:
     type: string
@@ -13,12 +19,18 @@ parameters:
     description: |
       The name of the lambda function to be updated.
   # Optional Parameters with Defaults
+  requirements-path:
+    type: string
+    default: ./requirements.txt
+    description: |
+      The location of the requirements.txt file in the project
+      (defaults to ./requirements.txt)
   build-path:
     type: string
-    default: ./lib
+    default: lib/
     description: |
       The location of the zip-file where the lambda function is to be updated.
-      (defaults to ./lib)
+      (defaults to lib/)
   deploy:
     type: boolean
     default: false
@@ -57,20 +69,65 @@ parameters:
       Env var name for notifying specific users in the Slack context.
       MENTIONS stores the environment variable name for the Slack context.
 
-executor: node/default
+machine:
+  image: ubuntu-2004:current
 
 steps:
   - checkout
-  - node/install
-  - node/install-packages
-  - run:
-      name: Build Application
-      command: >
-        npm run build --optimization=true
-  - run:
-      name: Zip Application
-      command: >
-        zip -r build.zip <<parameters.build-path>>
+  # Check if node
+  - when:
+    condition:
+      - equal: ["node", << parameters.language >>]
+    steps:
+      - node/install
+      - node/install-packages
+      - run:
+          name: Build Application
+          command: >
+            npm run build --optimization=true
+      - run:
+          name: Zip Application
+          command: >
+            zip -r deployment-package.zip <<parameters.build-path>>
+  - when:
+      condition:
+        - equal: ["rust", << parameters.language >>]
+      steps:
+        - rust/install
+        - run: 
+            name: Install Zig
+            command: >
+              sudo apt update && sudo apt install snapd && sudo snap install zig --beta --classic
+        - run:
+            name: Install Cargo-Lambda
+            command: >
+              cargo install cargo-lambda
+        - run:
+            # Zip file will be in {project-name}/bootstrap.zip
+            name: Build Project and Zip it
+            command: >
+              cargo lambda build --output-format Zip --release --lambda-dir . 
+        - run:
+            name: Move and Rename boostrap.zip
+            command: >
+              mv $CIRCLE_PROJECT_REPONAME/bootstrap.zip ./deployment-package.zip
+  - when:
+      condition:
+        - equal: ["python", << parameters.language >>]
+      steps:
+        - run:
+            name: Install Pip Dependencies
+            command: >
+              pip install --target ./package -r << parameters.requirements-path >> .
+        - run:
+            name: Zip Dependencies
+            command: >
+              cd package && zip -r ../deployment-package.zip && cd ..
+        - run:
+            name: Zip Source Code
+            command: >
+              zip -r -g deployment-package.zip << parameters.build-path >>
+
   - when:
       condition: <<parameters.deploy>>
       steps:
@@ -92,7 +149,7 @@ steps:
         - run:
             name: Update Lambda Function code
             command: >
-              aws lambda update-function-code --function-name <<parameters.function-name>> --zip-file fileb://./build.zip
+              aws lambda update-function-code --function-name <<parameters.function-name>> --publish --zip-file fileb://deployment-package.zip
         - slack/notify:
             event: fail
             template: basic_fail_1
