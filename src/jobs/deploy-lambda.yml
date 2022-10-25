@@ -77,7 +77,7 @@ steps:
   # Check if node
   - when:
       condition:
-        - equal: ["node", << parameters.language >>]
+        - equal: ["node", "<< parameters.language >>"]
       steps:
         - node/install
         - node/install-packages
@@ -91,7 +91,7 @@ steps:
               zip -r deployment-package.zip <<parameters.build-path>>
   - when:
       condition:
-        - equal: ["rust", << parameters.language >>]
+        - equal: ["rust", "<< parameters.language >>"]
       steps:
         - rust/install
         - run: 
@@ -113,7 +113,7 @@ steps:
               mv $CIRCLE_PROJECT_REPONAME/bootstrap.zip ./deployment-package.zip
   - when:
       condition:
-        - equal: ["python", << parameters.language >>]
+        - equal: ["python", "<< parameters.language >>"]
       steps:
         - run:
             name: Install Pip Dependencies
