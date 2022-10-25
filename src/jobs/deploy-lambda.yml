@@ -2,12 +2,6 @@ description: |
   This job deploys an application to aws lambda.
 
 parameters:
-  # Required Parameters
-  language:
-    type: enum
-    enum: ["python", "rust", "node"]
-    description: |
-      The language used in the project.
   # Required Parameters when deploy is true
   tag:
     type: string
@@ -19,6 +13,12 @@ parameters:
     description: |
       The name of the lambda function to be updated.
   # Optional Parameters with Defaults
+  language:
+    type: enum
+    enum: ["python", "rust", "node"]
+    default: "node"
+    description: |
+      The language used in the project.
   requirements-path:
     type: string
     default: ./requirements.txt
