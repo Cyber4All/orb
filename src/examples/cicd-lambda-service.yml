@@ -21,6 +21,7 @@ usage:
 
         - cyber4all/deploy-lambda:
             deploy: false # explicitly shows in develeopment (won't login i.e doesn't need context)
+            language: node
             filters:
               branches:
                 ignore: releases
@@ -31,6 +32,7 @@ usage:
             deploy: true
             tag: $(cat ./package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')
             function-name: "$FUNCTION_NAME"
+            language: node
             filters:
               branches:
                 only: releases
