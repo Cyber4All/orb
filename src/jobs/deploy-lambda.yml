@@ -117,11 +117,11 @@ steps:
         - run:
             name: Install Pip Dependencies
             command: >
-              pip install --target ./package -r << parameters.requirements-path >> .
+              pip install --target ./package -r << parameters.requirements-path >>
         - run:
             name: Zip Dependencies
             command: >
-              cd package && zip -r ../deployment-package.zip && cd ..
+              cd package && zip -r ../deployment-package.zip . && cd ..
         - run:
             name: Zip Source Code
             command: >
