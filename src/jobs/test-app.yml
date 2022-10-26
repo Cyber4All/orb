@@ -10,17 +10,6 @@ parameters:
       The resource class that should be used to run tests. Defaults
       to medium 2 vCPU's and 4GB of RAM. See link for valid inputs:
       https://circleci.com/docs/2.0/configuration-reference/#docker-executor
-  docker-image:
-    type: string
-    default: "cimg/base:stable"
-    description: |
-      The docker image that will be used as an executor
-      if isNode is true, node/default is recommended
-  node-version:
-    type: string
-    default: "16.13.2"
-    description: |
-      The version of node to use
   node-test:
     type: string
     default: test
@@ -42,6 +31,7 @@ parameters:
 
 docker:
   - image: <<parameters.docker-image>>
+
 resource_class: <<parameters.resource-class>>
 
 steps:
@@ -57,7 +47,7 @@ steps:
       condition: <<parameters.isNode>>
       steps:
         - node/install:
-            node-version: <<parameters.node-version>>
+            node-version: "16.13.2"
         - node/install-packages
         - run:
             name: Run Tests
