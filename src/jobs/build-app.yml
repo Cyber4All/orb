@@ -1,9 +1,10 @@
 description: |
   This job will build an app
 
-executor: node/default
-parameters:
-  tag: 16.13.2
+executor:
+  - node/default:
+      tag: 16.13.2
+
 
 steps:
   - checkout
