@@ -1,0 +1,21 @@
+description: |
+  Create a new GitHub Release for a repository.
+  (https://cli.github.com/manual/gh_release_create)
+
+parameters:
+  tag:
+    type: string
+    description: |
+      git tag ref to point to given commit SHA. --target is used to attach tag to the latest commit on $CIRCLE_BRANCH.
+
+machine:
+  image: ubuntu-2004:current
+
+steps:
+  - gh/setup:
+      version: 2.18.1
+  - checkout
+  - run:
+      name: Create GH Release
+      command: |
+        gh release create v<<parameters.tag>> --generate-notes --target $CIRCLE_BRANCH
