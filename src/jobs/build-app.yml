@@ -3,7 +3,7 @@ description: |
 
 executor: node/default
 parameters:
-  -tag: 16.13.2
+  tag: 16.13.2
 
 steps:
   - checkout
