@@ -16,6 +16,11 @@ parameters:
     description: |
       The docker image that will be used as an executor
       if isNode is true, node/default is recommended
+  node-version:
+    type: string
+    default: "16.13.2"
+    description: |
+      The version of node to use
   node-test:
     type: string
     default: test
@@ -51,7 +56,8 @@ steps:
   - when:
       condition: <<parameters.isNode>>
       steps:
-        - node/install
+        - node/install:
+            node-version: <<parameters.node-version>>
         - node/install-packages
         - run:
             name: Run Tests
