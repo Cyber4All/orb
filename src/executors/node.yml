@@ -5,7 +5,7 @@ parameters:
   # Not Required Parameters
   tag:
     type: string
-    default: 'lts'
+    default: '16.18.0'
     description: |
       Pick a specific cimg/node image version tag:
       https://hub.docker.com/r/cimg/node
