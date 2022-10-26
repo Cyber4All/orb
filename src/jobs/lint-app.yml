@@ -65,7 +65,8 @@ steps:
   - when:
       condition: <<parameters.isNode>>
       steps:
-        - node/install
+        - node/install:
+            node-version: "16.13.2"
         - node/install-packages
         - run:
             name: Run Linting

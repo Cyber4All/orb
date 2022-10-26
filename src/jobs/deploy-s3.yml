@@ -71,7 +71,8 @@ executor: python/default
 
 steps:
   - checkout
-  - node/install
+  - node/install:
+      node-version: "16.13.2"
   - node/install-packages
   - when:
       condition: <<parameters.isAngular>>
