@@ -18,3 +18,4 @@ orbs:
   python: circleci/python@2.0.3 # https://circleci.com/developer/orbs/orb/circleci/python
   go: circleci/go@1.7.1 # https://circleci.com/developer/orbs/orb/circleci/go
   rust: circleci/rust@1.6.0 # https://circleci.com/developer/orbs/orb/circleci/rust
+  gh: circleci/github-cli@2.0.0 # https://circleci.com/developer/orbs/orb/circleci/github-cli?version=2.0.0
