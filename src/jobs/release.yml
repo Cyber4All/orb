@@ -19,4 +19,3 @@ steps:
       name: Create GH Release
       command: |
         gh release create v<<parameters.tag>> --generate-notes --target $CIRCLE_BRANCH
-
