@@ -10,7 +10,8 @@ workflows:
   lint-pack:
     jobs:
       - orb-tools/lint
-      - orb-tools/pack
+      - orb-tools/pack:
+          name: pack-test
       - orb-tools/review:
           exclude: 'RC009'
       - shellcheck/check:
@@ -20,7 +21,7 @@ workflows:
           
       - cyber4all/release:
           requires:
-            [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check, bats/run]
+            [orb-tools/lint, orb-tools/review, pack-test, shellcheck/check, bats/run]
           context: [Github]
           tag: $(./version.sh -r)
           filters:
@@ -29,6 +30,7 @@ workflows:
 
       # publish orb to production
       - orb-tools/pack:
+          name: pack-prod
           filters:
             branches:
               ignore: /.*/
