@@ -13,7 +13,7 @@ FILE="VERSION"
 
 read_file() {
   if [ -f "$FILE" ]; then
-    echo "$(cat $FILE)"
+    cat $FILE
   else
     exit 1
   fi
@@ -23,7 +23,7 @@ write_version() {
   REGEX="[0-9].[0-9].[0-9]"
   if echo $1 | grep -Eq $REGEX; then
     echo "$1" > $FILE
-    if [ $(cat $FILE) = $1 ]; then
+    if [ "$(cat $FILE)" = $1 ]; then
       echo "Succesfully Updated Version to $1"
     else
       echo "Failed Updating Version to $1"

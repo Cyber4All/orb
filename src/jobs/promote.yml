@@ -17,7 +17,7 @@ parameters:
     default: latest
     description: Image tag. Multiple can be supplied using a comma delimiter i.e "latest,1.0.0", defaults to the value of latest
 
-executor: 
+executor:
   name: docker/machine
   dlc: true
 
@@ -42,7 +42,7 @@ steps:
         #!/usr/bin/env bash
 
         IFS="," read -ra DOCKER_TAGS \<<< "$PARAM_TAG"
-        
+
         image="$(eval echo "$PARAM_IMAGE")"
 
         for docker_tag in "${DOCKER_TAGS[@]}"; do

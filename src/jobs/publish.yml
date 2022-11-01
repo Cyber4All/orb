@@ -17,7 +17,7 @@ parameters:
     default: $CIRCLE_SHA1
     description: Image tag, defaults to the value of $CIRCLE_SHA1
 
-executor: 
+executor:
   name: docker/machine
   dlc: true
 
