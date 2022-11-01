@@ -1,0 +1,65 @@
+description: |
+  Pulls and tags an existing image on the docker.io registry. Multiple tags can be used when comma delimiting the tag parameter.
+  The sha256 digest persists to the workspace with the file name digest.txt and can be attached by another job in the same workflow.
+  See [Attach Workspace](https://circleci.com/docs/configuration-reference/#attachworkspace).
+
+parameters:
+  image:
+    type: string
+    default: cyber4all/$CIRCLE_PROJECT_REPONAME
+    description: Name of image to push
+  source-tag:
+    type: string
+    default: staging
+    description: Image tag that is being promoted, defaults to staging
+  tag:
+    type: string
+    default: latest
+    description: Image tag. Multiple can be supplied using a comma delimiter i.e "latest,1.0.0", defaults to the value of latest
+
+executor: 
+  name: docker/machine
+  dlc: true
+
+steps:
+  - checkout
+  - docker/check
+  - run:
+      name: Pull Docker Image
+      command: |-
+        #!/usr/bin/env bash
+
+        image="$(eval echo "$PARAM_IMAGE_W_TAG")"
+
+        set -x
+        docker pull $image
+        set +x
+      environment:
+        PARAM_IMAGE_W_TAG: <<parameters.image>>:<<parameters.source-tag>>
+  - run:
+      name: Tag Dockerfile
+      command: |-
+        #!/usr/bin/env bash
+
+        IFS="," read -ra DOCKER_TAGS \<<< "$PARAM_TAG"
+        
+        image="$(eval echo "$PARAM_IMAGE")"
+
+        for docker_tag in "${DOCKER_TAGS[@]}"; do
+          tag=$(eval echo "$docker_tag")
+
+          set -x
+          docker tag "$image":staging "$image":"$tag"
+          set +x
+        done
+      environment:
+        PARAM_IMAGE: <<parameters.image>>
+        PARAM_TAG: <<parameters.tag>>
+  - docker/push:
+      digest-path: "/tmp/digest.txt"
+      image: <<parameters.image>>
+      tag: <<parameters.tag>>
+  - persist_to_workspace:
+      root: /tmp
+      paths:
+        - digest.txt
