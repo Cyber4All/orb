@@ -1,0 +1,24 @@
+description: |
+  Adds a Github Comment to the PR with the output of `terraform plan`.
+  A Github context with the variable GITHUB_TOKEN is expected.
+
+docker:
+  - image: cloudposse/github-commenter:latest
+
+steps:
+  - attach_workspace:
+      at: .
+  - run:
+      name: Post plan to PR comment
+      command: |-
+        export CIRCLE_PR_NUMBER=${CIRCLE_PR_NUMBER:-${CIRCLE_PULL_REQUEST##*/}}
+
+        if [ -z $CIRCLE_PR_NUMBER ]; then echo "Not a pull request - aborting"; exit 0; fi
+
+        cat tfplan.txt | github-commenter \
+          -owner $CIRCLE_PROJECT_USERNAME \
+          -repo $CIRCLE_PROJECT_REPONAME \
+          -number $CIRCLE_PR_NUMBER \
+          -delete-comment-regex "Output from" \
+          -type pr \
+          -format_file "<<include(templates/comment.tpl)>>"
