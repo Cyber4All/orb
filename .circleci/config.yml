@@ -39,7 +39,7 @@ workflows:
  
       - orb-tools/publish:
           requires:
-            [orb-tools/pack]
+            [pack-prod]
           context: orb-publishing
           orb-name: cyber4all/orb
           enable-pr-comment: false
