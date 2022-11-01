@@ -1,5 +1,0 @@
-repos:
-  - repo: https://github.com/zahorniak/pre-commit-circleci.git
-    rev: v0.5
-    hooks:
-      - id: circleci_validate
