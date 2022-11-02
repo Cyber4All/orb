@@ -2,10 +2,6 @@ description: |
   Applies terraform plan and outputs to the stdout.
 
 parameters:
-  path:
-    type: string
-    default: .
-    description: Path to the terraform module
   role-arn:
     type: env_var_name
     default: CIRCLECI_OIDC_ROLE
@@ -21,5 +17,4 @@ steps:
   - attach_workspace:
       at: .
   - tf/apply:
-      path: terraform/staging
       plan: tfplan
