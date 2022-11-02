@@ -1,0 +1,23 @@
+description: |
+  Applies terraform plan and outputs to the stdout.
+
+parameters:
+  path:
+    type: string
+    default: .
+    description: Path to the terraform module
+  role-arn:
+    type: env_var_name
+    default: CIRCLECI_OIDC_ROLE
+    description: The Amazon Resource Name (ARN) of the role that the caller is assuming. Role ARN must be configured for web identity.
+
+executor:
+  name: tf/default
+  tag: 1.2.9
+
+steps:
+  - checkout
+  - aws-cli/setup:
+      role-arn: "$<<parameters.role-arn>>"
+  - tf/destroy:
+      path: <<parameters.path>>
