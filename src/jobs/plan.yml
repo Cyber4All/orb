@@ -19,7 +19,7 @@ executor:
 steps:
   - checkout
   - aws-cli/setup:
-      role-arn: $"<<parameters.role-arn>>"
+      role-arn: "$<<parameters.role-arn>>"
   - tf/init:
       path: <<parameters.path>>
   - run:
