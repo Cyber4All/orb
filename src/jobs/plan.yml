@@ -26,9 +26,9 @@ steps:
       name: Plan
       command: |
         terraform -chdir=<<parameters.path>> plan -input=false -no-color -out=tfplan && \
-        terraform -chdir=<<parameters.path>> show -no-color tfplan | sed -E 's/^([[:space:]]+)([-+])/\2\1/g' > tfplan.txt
+        terraform -chdir=<<parameters.path>> show -no-color tfplan | sed -E 's/^([[:space:]]+)([-+])/\2\1/g' > <<parameters.path>>/tfplan.txt
   - persist_to_workspace:
-      root: ~/project
+      root: ~/project/<<parameters.path>>
       paths:
         - tfplan
         - tfplan.txt
