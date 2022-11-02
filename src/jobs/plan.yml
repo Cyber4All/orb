@@ -1,0 +1,34 @@
+description: |
+  Creates a terraform plan and outputs to the stdout. Additonally, the machine and human readable plans are persisted to the workspace to use in future jobs.
+  Use cyber4all/comment after plan to add a comment to the github PR with the plan.
+
+parameters:
+  path:
+    type: string
+    default: .
+    description: Path to the terraform module
+  role-arn:
+    type: env_var_name
+    default: CIRCLECI_OIDC_ROLE
+    description: The Amazon Resource Name (ARN) of the role that the caller is assuming. Role ARN must be configured for web identity.
+
+executor:
+  name: tf/default
+  tag: 1.2.9
+
+steps:
+  - checkout
+  - aws-cli/setup:
+      role-arn: $"<<parameters.role-arn>>"
+  - tf/init:
+      path: <<parameters.path>>
+  - run:
+      name: Plan
+      command: |
+        terraform -chdir=<<parameters.path>> plan -input=false -no-color -out=tfplan && \
+        terraform -chdir=<<parameters.path>> show -no-color tfplan | sed -E 's/^([[:space:]]+)([-+])/\2\1/g' > tfplan.txt
+  - persist_to_workspace:
+      root: ~/project
+      paths:
+        - tfplan
+        - tfplan.txt
