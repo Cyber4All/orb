@@ -30,5 +30,4 @@ steps:
   - persist_to_workspace:
       root: ~/project/<<parameters.path>>
       paths:
-        - tfplan
-        - tfplan.txt
+        - .
