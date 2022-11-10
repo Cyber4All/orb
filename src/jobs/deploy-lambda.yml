@@ -31,6 +31,11 @@ parameters:
     description: |
       The location of the zip-file where the lambda function is to be updated.
       (defaults to lib/)
+  src-path:
+    type: string
+    default: src/
+    description: |
+      The location of the code that is to be zipped and uploaded to lambda. Defaults to src/
   deploy:
     type: boolean
     default: false
@@ -116,17 +121,21 @@ steps:
         equal: ["python", << parameters.language >>]
       steps:
         - run:
+            name: Update pip
+            command: >
+              pip install --upgrade pip
+        - run:
             name: Install Pip Dependencies
             command: >
-              pip install --target ./package -r << parameters.requirements-path >>
+              pip install --target ./package -r <<parameters.requirements-path>>
         - run:
             name: Zip Dependencies
             command: >
-              cd package && zip -r ../deployment-package.zip . && cd ..
+              cd package && zip -r ../deployment-package.zip . && cd ../<<parameters.src-path>>
         - run:
             name: Zip Source Code
             command: >
-              zip -r -g deployment-package.zip << parameters.build-path >>
+              zip -r -g ../deployment-package.zip . && cd ..
 
   - when:
       condition: <<parameters.deploy>>
