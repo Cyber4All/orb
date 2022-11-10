@@ -121,6 +121,10 @@ steps:
         equal: ["python", << parameters.language >>]
       steps:
         - run:
+            name: Update pip
+            command: >
+              pip install --upgrade pip
+        - run:
             name: Install Pip Dependencies
             command: >
               pip install --target ./package -r <<parameters.requirements-path>>
