@@ -2,11 +2,14 @@ description: |
   This job will build an app
 
 docker:
-  - image: cimg/node:16.13.2@sha256:0704990b98acbe821fafda00cd605a625598ac737e9b52df41713e2829cc5f78
+  - image: cimg/node@sha256:9e7dff70aee20446a146e374367c3fddc58df1e39cca318dbd4993e625892880
 
 steps:
   - checkout
-  - node/install
+  - run:
+      name: Set NVM Default
+      command: >
+        nvm use system
   - node/install-packages
   - run:
       name: Build the app
