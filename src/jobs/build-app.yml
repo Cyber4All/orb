@@ -2,7 +2,7 @@ description: |
   This job will build an app
 
 docker:
-  - image: cimg/node@sha256:9e7dff70aee20446a146e374367c3fddc58df1e39cca318dbd4993e625892880
+  - image: cimg/node:16.13.2
 
 steps:
   - checkout
