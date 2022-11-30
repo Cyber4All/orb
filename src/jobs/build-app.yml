@@ -6,6 +6,7 @@ docker:
 
 steps:
   - checkout
+  - run: node --version
   - node/install-packages
   - run:
       name: Build the app
