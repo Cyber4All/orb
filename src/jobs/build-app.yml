@@ -6,8 +6,10 @@ docker:
 
 steps:
   - checkout
-  - command: >
-      nvm use system
+  - run:
+      name: Set NVM Default
+      command: >
+        nvm use system
   - node/install-packages
   - run:
       name: Build the app
