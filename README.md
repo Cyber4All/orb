@@ -1,40 +1,38 @@
-# Orb Project Template
-<!---
-[![CircleCI Build Status](https://circleci.com/gh/<organization>/<project-name>.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/<organization>/<project-name>) [![CircleCI Orb Version](https://badges.circleci.com/orbs/<namespace>/<orb-name>.svg)](https://circleci.com/orbs/registry/orb/<namespace>/<orb-name>) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/<organization>/<project-name>/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
+# Cyber4All Orb
 
---->
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/Cyber4All/orb/tree/releases.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/Cyber4All/orb/tree/releases) [![CircleCI Orb Version](https://badges.circleci.com/orbs/cyber4all/orb.svg)](https://circleci.com/orbs/registry/orb/cyber4all/orb) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/cyber4all/orb/master/LICENSE)
 
-A starter template for orb projects. Build, test, and publish orbs automatically on CircleCI with [Orb-Tools](https://circleci.com/orbs/registry/orb/circleci/orb-tools).
-
-Additional READMEs are available in each directory.
-
-**Meta**: This repository is open for contributions! Feel free to open a pull request with your changes. Due to the nature of this repository, it is not built on CircleCI. The Resources and How to Contribute sections relate to an orb created with this template, rather than the template itself.
+---
 
 ## Resources
 
-[CircleCI Orb Registry Page](https://circleci.com/orbs/registry/orb/<namespace>/<project-name>) - The official registry page of this orb for all versions, executors, commands, and jobs described.
+[CircleCI Orb Registry Page](https://circleci.com/orbs/registry/orb/cyber4all/orb) - The official registry page of this orb for all versions, executors, commands, and jobs described.
 [CircleCI Orb Docs](https://circleci.com/docs/2.0/orb-intro/#section=configuration) - Docs for using and creating CircleCI Orbs.
 
-### How to Contribute
+### Contributing
 
-We welcome [issues](https://github.com/<organization>/<project-name>/issues) to and [pull requests](https://github.com/<organization>/<project-name>/pulls) against this repository!
+* Pick up a story on shortcut
 
-### How to Publish
+* Create a branch based on shortcut story (links shortcut and github)
 
-* Create and push a branch with your new features.
-* When ready to publish a new production version, create a Pull Request from _feature branch_ to `master`.
-* The title of the pull request must contain a special semver tag: `[semver:<segment>]` where `<segment>` is replaced by one of the following values.
+* Open a pull request when ready for review
 
-| Increment | Description|
-| ----------| -----------|
-| major     | Issue a 1.0.0 incremented release|
-| minor     | Issue a x.1.0 incremented release|
-| patch     | Issue a x.x.1 incremented release|
-| skip      | Do not issue a release|
+The orb should have a new semantic version for each release
 
-Example: `[semver:major]`
+```console
+# writes a new semver to VERSION
+$ ./version.sh -w 2.0.0
+Succesfully Updated Version to 2.0.0
+```
 
-* Squash and merge. Ensure the semver tag is preserved and entered as a part of the commit message.
-* On merge, after manual approval, the orb will automatically be published to the Orb Registry.
+* Merge into the base branch (`main` or `hotfix`)
 
-For further questions/comments about this or other orbs, visit the Orb Category of [CircleCI Discuss](https://discuss.circleci.com/c/orbs).
+### Publishing a new release
+
+* Open a pull request from `main` or `hotfix` to `releases`
+
+* Check to make sure a new SEMVER exists in the VERSION file
+
+* Merge branch into `releases`
+
+This will automatically generate a new tagged release on github and publish the orb to the circleci registry.
