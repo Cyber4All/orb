@@ -16,10 +16,6 @@ usage:
             dockerfiles: "Dockerfile:Dockerfile.dev"
             executor-class: medium
 
-        - cyber4all/lint-app:
-            docker-image: cimg/node:16.15.0
-            isNode: true
-
         - cyber4all/publish-docker:
             image: "$CIRCLE_PROJECT_REPONAME"
             tag: $(cat ./package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')

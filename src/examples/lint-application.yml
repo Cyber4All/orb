@@ -1,0 +1,24 @@
+description: |
+  Shows examples of how to lint different applications.
+
+usage:
+  version: 2.1
+  orbs:
+    cyber4all: cyber4all/orb@2.0.0-alpha
+  
+  workflows:
+    go-app:
+      jobs:
+        - cyber4all/lint:
+            docker-image: golangci/golangci-lint:latest-alpine
+            language: go
+
+    node-app:
+      jobs:
+        - cyber4all/lint
+
+    python-app:
+      jobs:
+        - cyber4all/lint:
+            docker-image: cimg/python:3.10
+            language: python
