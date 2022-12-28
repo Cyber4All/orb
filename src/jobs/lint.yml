@@ -13,7 +13,7 @@ parameters:
     description: |
       The relative path to the source code directory from the root of the repo.
       Only needed when language is "python" or "go".
-  
+
   docker-image:
     type: string
     default: "cimg/node:16.18.1"
