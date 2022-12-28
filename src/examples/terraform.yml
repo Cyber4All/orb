@@ -7,13 +7,13 @@ usage:
   orbs:
     cyber4all: cyber4all/orb@2.0.0
 
-  workflows: 
+  workflows:
     continuous-deployment:
       # creates a tfplan from the *.tf in terraform/prod
       - cyber4all/plan:
           context: [AWS]
           path: terraform/prod
-      
+
       # OPTIONAL: step to verify the tfplan
       - apply_approval:
           requires: [cyber4all/plan]
