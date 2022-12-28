@@ -86,8 +86,6 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       aws-region: <<parameters.aws-region>>
-  - attach_workspace:
-      at: .
   - run:
       name: Deploy to Elastic Beanstalk with docker platform
       command: |
