@@ -56,13 +56,13 @@ steps:
       role-arn: "$<<parameters.role-arn>>"
 
   - run:
-      name: Initialize Elastic Beanstalk 
+      name: Initialize Elastic Beanstalk
       command: |
-        eb init <<parameters.application-name>> --region $AWS_DEFAULT_REGION -p docker
+        eb init <<parameters.application>> --region $AWS_DEFAULT_REGION -p docker
   - run:
       name: Elastic Beanstalk Deployment
       command: |-
-        eb deploy <<parameters.environment-name>> --verbose --label "${CIRCLE_PROJECT_REPONAME}-v$(jq -r '.version' package.json)"
+        eb deploy <<parameters.environment>> --verbose --label "${CIRCLE_PROJECT_REPONAME}-v$(jq -r '.version' package.json)"
 
   # slack notifications
   - slack/notify:
