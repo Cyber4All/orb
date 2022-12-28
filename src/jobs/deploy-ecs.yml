@@ -70,11 +70,6 @@ parameters:
     description: |
       Env var of AWS region to operate in
       (defaults to AWS_REGION_N_VA)
-  slack-mentions:
-    type: env_var_name
-    default: MENTIONS
-    description: |
-      MENTIONS is the environment variable storing the name for the slack context.
 
 executor: aws-cli/default
 
