@@ -25,7 +25,7 @@ usage:
         - cyber4all/promote:
             context: DockerHub
             tag: "$(jq -r '.version' package.json),latest"
- 
+
         # example deploys CLARK-Gateway
         # uses EB_OIDC_ROLE for CLI authentication
         - cyber4all/elasticbeanstalk:
