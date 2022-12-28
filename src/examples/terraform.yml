@@ -9,17 +9,18 @@ usage:
 
   workflows:
     continuous-deployment:
-      # creates a tfplan from the *.tf in terraform/prod
-      - cyber4all/plan:
-          context: [AWS]
-          path: terraform/prod
+      jobs:
+        # creates a tfplan from the *.tf in terraform/prod
+        - cyber4all/plan:
+            context: [AWS]
+            path: terraform/prod
 
-      # OPTIONAL: step to verify the tfplan
-      - apply_approval:
-          requires: [cyber4all/plan]
-          type: approval
+        # OPTIONAL: step to verify the tfplan
+        - apply_approval:
+            requires: [cyber4all/plan]
+            type: approval
 
-      # applies the tfplan from cyber4all/plan
-      - cyber4all/apply:
-          requires: [apply_approval]
-          context: [AWS]
+        # applies the tfplan from cyber4all/plan
+        - cyber4all/apply:
+            requires: [apply_approval]
+            context: [AWS]
