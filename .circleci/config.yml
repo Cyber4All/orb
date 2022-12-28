@@ -30,7 +30,7 @@ workflows:
       # automate github tagged release
       - cyber4all/release:
           requires:
-            [orb-tools/lint, orb-tools/review, pack-test, shellcheck/check, bats/run]
+            [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check, bats/run]
           context: Github
           tag: $(./version.sh -r)
           filters:
