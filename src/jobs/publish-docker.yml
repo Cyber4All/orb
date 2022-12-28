@@ -33,12 +33,6 @@ parameters:
     description: |
       The Patch to the directory containing the dockerfile
       Defaults to . (working directory)
-  check-version:
-    type: boolean
-    default: true
-    description: |
-      Specify whether to check the semantic version existance on dockerhub. Job will fail if it exsits.
-      (defaults to true).
   deploy:
     type: boolean
     default: false
@@ -59,13 +53,6 @@ steps:
       docker-password: <<parameters.docker-password>>
       docker-username: <<parameters.docker-username>>
       login: <<parameters.deploy>>
-  - when:
-      condition: <<parameters.check-version>>
-      steps:
-        - check-docker-semver:
-            tag: <<parameters.tag>>
-            organization: <<parameters.organization>>
-            image: <<parameters.image>>
   - docker/build:
       debug: true
       image: "<<parameters.organization>>/<<parameters.image>>"
