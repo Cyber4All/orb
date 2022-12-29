@@ -1,0 +1,51 @@
+description: |
+  Deploys an application to AWS Lambda. The job will recieve an artifact persisted to the workspace and deploy the zip.
+  The job uses AWS IAM OIDC Web Identity for authentication. Uses LAMBDA_OIDC_ROLE context variable as default for role ARN.
+  The environment variables SLACK_ACCESS_TOKEN and SLACK_DEFAULT_CHANNEL must be set fro the this job to work.
+
+parameters:
+  # --------------------------------------------------------------------------------
+  # REQUIRED PARAMETERS
+  # You must provide a value for each of these parameters.
+  # ---------------------------------------------------------------------------------
+  function-name:
+    type: string
+    description: |
+      The name of the lambda function to be updated.
+
+  # ---------------------------------------------------------------------------------
+  # OPTIONAL PARAMETERS
+  # These parameters have reasonable defaults.
+  # ---------------------------------------------------------------------------------
+  role-arn:
+    type: env_var_name
+    default: LAMBDA_OIDC_ROLE
+    description: |
+      The Amazon Resource Name (ARN) of the role that the caller is assuming.
+      Role ARN must be configured for web identity.
+
+
+machine:
+  image: ubuntu-2004:current
+
+steps:
+  # authenticates CLI using web identity
+  - aws-cli/setup:
+      # aws-region: AWS_DEFAULT_REGION /* uses default region */
+      role-arn: "$<<parameters.role-arn>>"
+  
+  # attaches deployment-package.zip from build job
+  - attach_workspace:
+      at: .
+  - run:
+      name: Update Lambda with Deploy Package Artifact
+      command: >
+        aws lambda update-function-code --function-name <<parameters.function-name>> --publish --zip-file fileb://deployment-package.zip
+  
+  # slack notifications
+  - slack/notify:
+      event: fail
+      template: basic_fail_1
+  - slack/notify:
+      event: pass
+      custom: success_tagged_deploy_1
