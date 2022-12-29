@@ -21,7 +21,7 @@ workflows:
 
       # lints shell scripts
       - shellcheck/check:
-          exclude: 'SC2148,SC2038,SC2086,SC2002,SC2016'
+          exclude: 'SC2148,SC2038,SC2086,SC2002,SC2016,SC2034'
 
       # runs bat tests
       - bats/run:
