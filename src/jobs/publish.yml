@@ -3,7 +3,15 @@ description: |
   The sha256 digest persists to the workspace with the file name digest.txt and can be attached by another job in the same workflow.
   See [Attach Workspace](https://circleci.com/docs/configuration-reference/#attachworkspace).
 
+executor:
+  name: docker/machine
+  dlc: true
+
 parameters:
+  # ---------------------------------------------------------------------------------
+  # OPTIONAL PARAMETERS
+  # These parameters have reasonable defaults.
+  # ---------------------------------------------------------------------------------
   image:
     type: string
     default: cyber4all/$CIRCLE_PROJECT_REPONAME
@@ -16,10 +24,6 @@ parameters:
     type: string
     default: $CIRCLE_SHA1
     description: Image tag, defaults to the value of $CIRCLE_SHA1
-
-executor:
-  name: docker/machine
-  dlc: true
 
 steps:
   - checkout
