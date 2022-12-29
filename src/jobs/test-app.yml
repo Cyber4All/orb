@@ -2,7 +2,20 @@ description: |
   This job will automate running a set of backend/frontend tests.
 
 parameters:
-  # Not Required Parameters
+  # --------------------------------------------------------------------------------
+  # REQUIRED PARAMETERS
+  # You must provide a value for each of these parameters.
+  # ---------------------------------------------------------------------------------
+  language:
+    type: enum
+    enum: ["node", "go"]
+    description: |
+      The language the project is using.
+  
+  # ---------------------------------------------------------------------------------
+  # OPTIONAL PARAMETERS
+  # These parameters have reasonable defaults.
+  # ---------------------------------------------------------------------------------
   resource-class:
     type: string
     default: "medium"
@@ -10,57 +23,30 @@ parameters:
       The resource class that should be used to run tests. Defaults
       to medium 2 vCPU's and 4GB of RAM. See link for valid inputs:
       https://circleci.com/docs/2.0/configuration-reference/#docker-executor
-  docker-image:
-    type: string
-    default: "cimg/base:stable"
-    description: |
-      The docker image that will be used as an executor
-      if isNode is true, node/default is recommended
-  node-test:
-    type: string
-    default: test
-    description: |
-      The pacakge.json script to run the tests of the application.
-      (defaults to test)
-  isNode:
-    type: boolean
-    default: false
-    description: |
-      Set `true` if wanting to test a node.js application
-      Will use the script `npm run test` with all the test suites.
-  isGolang:
-    type: boolean
-    default: false
-    description: |
-      Set `true` if wanting to test a golang application
-      Will use the script `go test -v ./...` with all the test suites.
 
 docker:
-  - image: <<parameters.docker-image>>
+  - image: cimg/base:2022.12
 resource_class: <<parameters.resource-class>>
 
 steps:
   - checkout
-  - run:
-      name: "Job Overview"
-      command: >
-        echo "
-         Testing Job Overview
-        ----------------------
-        Node: <<parameters.isNode>>"
   - when:
-      condition: <<parameters.isNode>>
+      condition:
+        equal: ["node", << parameters.language >> ]
       steps:
         - node/install:
-            node-version: "16.13.2"
+            node-version: 16.18.1
         - node/install-packages
         - run:
             name: Run Tests
-            command: >
-              npm run <<parameters.node-test>>
+            command: |-
+              npm run test
   - when:
-      condition: <<parameters.isGolang>>
+      condition:
+        equal: ["go", << parameters.language >> ]
       steps:
+        - go/install:
+            version: 1.19
         - go/load-cache
         - go/mod-download
         - go/save-cache
