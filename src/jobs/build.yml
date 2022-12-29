@@ -11,7 +11,7 @@ parameters:
     enum: ["node", "rust", "python"]
     description: |
       The language used by the project.
-  
+
   # ---------------------------------------------------------------------------------
   # OPTIONAL PARAMETERS
   # These parameters have reasonable defaults.
