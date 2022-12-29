@@ -1,9 +1,6 @@
 description: |
   Builds an application and ZIPs the compiled code for distribution. The artifact is persisted to the workspace for future use.
 
-machine:
-  image: ubuntu-2004:current
-
 parameters:
   # --------------------------------------------------------------------------------
   # REQUIRED PARAMETERS
@@ -14,25 +11,37 @@ parameters:
     enum: ["node", "rust", "python"]
     description: |
       The language used by the project.
+  
+  # ---------------------------------------------------------------------------------
+  # OPTIONAL PARAMETERS
+  # These parameters have reasonable defaults.
+  # ---------------------------------------------------------------------------------
+  src-path:
+    type: string
+    default: $CIRCLE_PROJECT_REPONAME
+    description: |
+      The directory containing the source code.
+
+machine:
+  image: ubuntu-2004:current
 
 steps:
   - checkout
   - when:
       condition:
-        equal: ["node", << parameters.language >>]
+        equal: [ "node", << parameters.language >> ]
       steps:
         - node/install:
             node-version: "16.18.1"
         - node/install-packages
         - run:
             name: Compile Typescript with NPM Build Script
-            run: |-
+            command: |-
               npm run build
         - run:
             name: Zip Node Application
-            run: |-
+            command: |-
               zip -r deployment-package.zip ./lib
-
   - when:
       condition:
         equal: ["python", << parameters.language >>]
@@ -53,7 +62,6 @@ steps:
             name: Zip Source Code
             command: |-
               (cd <<parameters.src-path>> && zip -r -g ../deployment-package.zip .)
-
   - when:
       condition:
         equal: ["rust", << parameters.language >>]
@@ -61,21 +69,20 @@ steps:
         - rust/install
         - run:
             name: Install Zig
-            command: >
+            command: |-
               sudo apt update && sudo apt install snapd && sudo snap install zig --beta --classic
         - run:
             name: Install Cargo-Lambda
-            command: >
+            command: |-
               cargo install cargo-lambda
         - run:
             name: Build Project and Zip it
-            command: >
+            command: |-
               cargo lambda build --output-format Zip --release --lambda-dir .
         - run:
             name: Move and Rename boostrap.zip
-            command: >
+            command: |-
               mv ./$CIRCLE_PROJECT_REPONAME/bootstrap.zip deployment-package.zip
-
   - persist_to_workspace:
       root: .
       paths:

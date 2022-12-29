@@ -22,7 +22,7 @@ usage:
       jobs:
         - cyber4all/build:
             language: python
-   
+
         - cyber4all/lambda:
             requires: [cyber4all/build]
             context: [AWS, Slack]
