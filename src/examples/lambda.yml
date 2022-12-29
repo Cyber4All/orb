@@ -6,13 +6,13 @@ usage:
 
   orbs:
     cyber4all: cyber4all/orb@2.0.0-alpha
-  
+
   workflows:
     node-deployment:
       jobs:
         - cyber4all/build:
             language: node
-        
+
         - cyber4all/lambda:
             requires: [cyber4all/build]
             context: [AWS, Slack]
@@ -22,17 +22,17 @@ usage:
       jobs:
         - cyber4all/build:
             language: python
-        
+   
         - cyber4all/lambda:
             requires: [cyber4all/build]
             context: [AWS, Slack]
             function-name: cc-file-upload-service
-    
+
     rust-deployment:
       jobs:
         - cyber4all/build:
             language: rust
-        
+
         - cyber4all/lambda:
             requires: [cyber4all/build]
             context: [AWS, Slack]

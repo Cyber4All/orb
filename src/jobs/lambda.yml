@@ -32,7 +32,7 @@ steps:
   - aws-cli/setup:
       # aws-region: AWS_DEFAULT_REGION /* uses default region */
       role-arn: "$<<parameters.role-arn>>"
-  
+
   # attaches deployment-package.zip from build job
   - attach_workspace:
       at: .
@@ -40,7 +40,7 @@ steps:
       name: Update Lambda with Deploy Package Artifact
       command: >
         aws lambda update-function-code --function-name <<parameters.function-name>> --publish --zip-file fileb://deployment-package.zip
-  
+
   # slack notifications
   - slack/notify:
       event: fail
