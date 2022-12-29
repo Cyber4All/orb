@@ -24,7 +24,6 @@ parameters:
       The Amazon Resource Name (ARN) of the role that the caller is assuming.
       Role ARN must be configured for web identity.
 
-
 machine:
   image: ubuntu-2004:current
 
