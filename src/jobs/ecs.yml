@@ -1,0 +1,129 @@
+description: |
+  Deploys an application to AWS ECS. The job will first register a new task-definition then update the service.
+  The job uses AWS IAM OIDC Web Identity for authentication. Uses ECS_OIDC_ROLE context variable as default for role ARN.
+  The environment variables SLACK_ACCESS_TOKEN and SLACK_DEFAULT_CHANNEL must be set for this job to work.
+
+executor: aws-cli/default
+
+parameters:
+  # --------------------------------------------------------------------------------
+  # REQUIRED PARAMETERS
+  # You must provide a value for each of these parameters.
+  # ---------------------------------------------------------------------------------
+  cluster:
+    type: enum
+    enum: ["Clark-Services", "CARD-Service"]
+    description: |
+      The short name or full ARN of the cluster that hosts the service.
+
+  family:
+    type: string
+    description: |
+      Name of the task definition's family.
+
+  tag:
+    type: string
+    description: |
+      The semantic version of the project trying to be deployed
+      https://semver.org/spec/v2.0.0.html
+  
+  # ---------------------------------------------------------------------------------
+  # OPTIONAL PARAMETERS
+  # These parameters have reasonable defaults.
+  # ---------------------------------------------------------------------------------
+  container:
+    type: string
+    default: ''
+    description: |
+      Name of the container name defined in the ecs task-definition.
+      (defaults to family)
+
+  rule:
+    type: string
+    default: ''
+    description: |
+      The name of the scheduled task's rule to update.
+      If updateService is `false`, this must be set.
+
+  service:
+    type: string
+    default: ''
+    description: |
+      The name of the service to update.
+      (defaults to family)
+
+  task-definition-json:
+    type: string
+    default: ''
+    description: |
+      Location of your .json task definition file (relative or absolute)
+
+  updateService:
+    type: boolean
+    default: true
+    description: |
+      Whether to update the ECS service with a new deployment.
+      Default is `true`, set to `false` is the project is deployed as a scheduled task-definition.
+
+steps:
+  - run:
+      name: Set Default Parameters
+      command: |-
+        # checks whether parameters were set, otherwise defaults to family
+
+        if [ -z "$ECS_PARAM_CONTAINER_NAME" ]; then
+          echo 'export ECS_PARAM_CONTAINER_NAME=<<parameters.family>>' >> $BASH_ENV
+        fi
+
+        if [ -z "$ECS_PARAM_SERVICE_NAME"]; then
+          echo 'export ECS_PARAM_SERVICE_NAME=<<parameters.family>>' >> $BASH_ENV
+        fi
+
+  # authenticates CLI using web identity
+  - aws-cli/setup:
+      # aws-region: AWS_DEFAULT_REGION /* uses default region */
+      role-arn: "$<<parameters.role-arn>>"
+
+  # task-definition registration
+  # updates based on json file
+  - when:
+      condition: <<parameters.task-definition-json>>
+      steps:
+        - aws-ecs/update-task-definition-from-json:
+            task-definition-json: <<parameters.task-definition-json>>
+  # updates just tag
+  - unless:
+      condition: <<parameters.task-definition-json>>
+      steps:
+        - aws-ecs/update-task-definition:
+            container-image-name-updates: "container=$ECS_PARAM_CONTAINER_NAME,tag=<<parameters.tag>>"
+            family: <<parameters.family>>
+
+  # updates ECS service with new revision
+  - when:
+      condition: <<parameters.updateService>>
+      steps:
+        - aws-ecs/update-service:
+            cluster: <<parameters.cluster>>
+            family: <<parameters.family>>
+            service-name: "$ECS_PARAM_SERVICE_NAME"
+            skip-task-definition-registration: true
+            verify-revision-is-deployed: true
+  # updates events rule with new revision of task-definition
+  - unless:
+      condition: <<parameters.updateService>>
+      steps:
+        - aws-ecs/deploy-ecs-scheduled-task:
+            rule-name: <<parameters.rule>>
+  
+  # slack notifications
+  - slack/notify:
+      event: fail
+      template: basic_fail_1
+  - slack/notify:
+      event: pass
+      custom: success_tagged_deploy_1
+
+environment:
+  ECS_PARAM_SERVICE_NAME: <<parameters.service>>
+  ECS_PARAM_CONTAINER_NAME: <<parameters.container>>
