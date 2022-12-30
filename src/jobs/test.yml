@@ -17,8 +17,15 @@ parameters:
   # These parameters have reasonable defaults.
   # ---------------------------------------------------------------------------------
   resource-class:
-    type: string
-    default: "medium"
+    type: enum
+    enum: [       # vCPU  RAM (GB)
+      "small",    # 1     2
+      "medium",   # 2     4
+      "medium+",  # 3     6
+      "large",    # 4     8
+      "xlarge"    # 8     16
+    ]
+    default: medium
     description: |
       The resource class that should be used to run tests. Defaults
       to medium 2 vCPU's and 4GB of RAM. See link for valid inputs:
