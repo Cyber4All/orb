@@ -20,7 +20,7 @@ parameters:
     type: string
     description: |
       Name of the task definition's family.
-  
+
   # ---------------------------------------------------------------------------------
   # OPTIONAL PARAMETERS
   # These parameters have reasonable defaults.
@@ -129,7 +129,7 @@ steps:
       steps:
         - aws-ecs/deploy-ecs-scheduled-task:
             rule-name: "$ECS_PARAM_RULE"
-  
+
   # slack notifications
   - slack/notify:
       event: fail

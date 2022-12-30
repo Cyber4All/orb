@@ -24,7 +24,7 @@ usage:
             family: clark-bundling-service
             task-definition-json: ./task-definition.json
             updateService: false # deployed as a scheduled task-definition
-    
+
     ecs-scheduled-task-definition:
       jobs:
         # example shows how cards-link-check can be deployed
