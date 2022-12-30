@@ -20,12 +20,6 @@ parameters:
     type: string
     description: |
       Name of the task definition's family.
-
-  tag:
-    type: string
-    description: |
-      The semantic version of the project trying to be deployed
-      https://semver.org/spec/v2.0.0.html
   
   # ---------------------------------------------------------------------------------
   # OPTIONAL PARAMETERS
@@ -43,14 +37,23 @@ parameters:
     default: ''
     description: |
       The name of the scheduled task's rule to update.
-      If updateService is `false`, this must be set.
+      Required when updateService is `false`.
+      (defaults to family)
 
   service:
     type: string
     default: ''
     description: |
       The name of the service to update.
+      Required when updateService is `true`.
       (defaults to family)
+
+  tag:
+    type: string
+    default: ''
+    description: |
+      The semantic version of the project being deployed.
+      Required when task-definition-json is not set.
 
   task-definition-json:
     type: string
@@ -75,7 +78,11 @@ steps:
           echo 'export ECS_PARAM_CONTAINER_NAME=<<parameters.family>>' >> $BASH_ENV
         fi
 
-        if [ -z "$ECS_PARAM_SERVICE_NAME"]; then
+        if [ -z "$ECS_PARAM_RULE" ]; then
+          echo 'export ECS_PARAM_RULE=<<parameters.family>>' >> $BASH_ENV
+        fi
+
+        if [ -z "$ECS_PARAM_SERVICE_NAME" ]; then
           echo 'export ECS_PARAM_SERVICE_NAME=<<parameters.family>>' >> $BASH_ENV
         fi
 
@@ -95,6 +102,13 @@ steps:
   - unless:
       condition: <<parameters.task-definition-json>>
       steps:
+        - run:
+            name: Verify Tag is Set
+            command: |
+              if [ -z "<<parameters.tag>>" ]; then
+                echo '"tag" must be set when deploying without json.'
+                exit 1
+              fi
         - aws-ecs/update-task-definition:
             container-image-name-updates: "container=$ECS_PARAM_CONTAINER_NAME,tag=<<parameters.tag>>"
             family: <<parameters.family>>
@@ -114,7 +128,7 @@ steps:
       condition: <<parameters.updateService>>
       steps:
         - aws-ecs/deploy-ecs-scheduled-task:
-            rule-name: <<parameters.rule>>
+            rule-name: "$ECS_PARAM_RULE"
   
   # slack notifications
   - slack/notify:
@@ -125,5 +139,6 @@ steps:
       custom: success_tagged_deploy_1
 
 environment:
-  ECS_PARAM_SERVICE_NAME: <<parameters.service>>
   ECS_PARAM_CONTAINER_NAME: <<parameters.container>>
+  ECS_PARAM_RULE: <<parameters.rule>>
+  ECS_PARAM_SERVICE_NAME: <<parameters.service>>
