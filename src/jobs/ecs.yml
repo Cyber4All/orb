@@ -32,6 +32,13 @@ parameters:
       Name of the container name defined in the ecs task-definition.
       (defaults to family)
 
+  role-arn:
+    type: env_var_name
+    default: ECS_OIDC_ROLE
+    description: |
+      The Amazon Resource Name (ARN) of the role that the caller is assuming.
+      Role ARN must be configured for web identity.
+
   rule:
     type: string
     default: ''
