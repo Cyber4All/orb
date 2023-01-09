@@ -4,7 +4,7 @@ description: |
 usage:
   version: 2.1
   orbs:
-    cyber4all: cyber4all/orb@2.0.0-alpha
+    cyber4all: cyber4all/orb@2.0.0
 
   workflows:
     go-app:
