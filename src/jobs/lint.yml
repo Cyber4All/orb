@@ -27,6 +27,7 @@ parameters:
   language:
     type: enum
     enum: ["node", "python", "go"]
+    default: node
     description: |
       Language of the repository to lint.
       Options: (node, python, go)
