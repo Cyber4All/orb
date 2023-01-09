@@ -1,0 +1,35 @@
+description: |
+  This example shows how an application (CLARK-Gateway) can be deployed to elasticbeanstalk on a docker platform.
+
+usage:
+  version: 2.1
+
+  orbs:
+    cyber4all: cyber4all/orb@2.0.0-alpha
+
+  workflows:
+    delivery:
+      when:
+        equal: [ staging, << pipeline.git.branch >> ]
+      jobs:
+        # publishes a docker image to docker.io registry
+        - cyber4all/publish:
+            context: DockerHub
+            tag: staging
+
+    deployment:
+      when:
+        equal: [ releases, << pipeline.git.branch >> ]
+      jobs:
+        # promotes docker image from staging to SEMVER and latest
+        - cyber4all/promote:
+            context: DockerHub
+            tag: "$(jq -r '.version' package.json),latest"
+
+        # example deploys CLARK-Gateway
+        # uses EB_OIDC_ROLE for CLI authentication
+        - cyber4all/elasticbeanstalk:
+            requires: [cyber4all/promote]
+            context: [AWS, Slack]
+            application: CLARK-Gateway
+            environment: clark-gateway-production

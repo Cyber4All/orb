@@ -1,0 +1,52 @@
+description: |
+  This example shows how an ECS service and ECS scheduled task-definition can be deployed.
+
+usage:
+  version: 2.1
+
+  orbs:
+    cyber4all: cyber4all/orb@2.0.0-alpha
+
+  # it can be assumed for each example that the appropriate docker image
+  # was deployed and exists in the docker registry.
+  # refer to the docker example for an example of implementing cyber4all/publish
+  # and cyber4all/promote for automated docker workflows.
+  workflows:
+    update-from-json:
+      jobs:
+        # example shows how clark-bundling-service can be deployed
+        # task-definition.json is the task-definition input file
+        # container assumes the value of family
+        # rule assumes the value of family
+        - cyber4all/ecs:
+            context: [AWS, Slack]
+            cluster: Clark-Services
+            family: clark-bundling-service
+            task-definition-json: ./task-definition.json
+            updateService: false # deployed as a scheduled task-definition
+
+    ecs-scheduled-task-definition:
+      jobs:
+        # example shows how cards-link-check can be deployed
+        # tag is from VERSION file
+        # container assumes the value of family
+        # rule assumes the value of family
+        - cyber4all/ecs:
+            context: [AWS, Slack]
+            cluster: CARD-Service
+            family: cards-link-check
+            tag: $(./version.sh -r)
+            updateService: false
+
+    ecs-service:
+      jobs:
+        # example shows how learning-object-service can be deployed
+        # tag is from package.json using jq cli
+        # container assumes the value of family
+        # service assumes the value of family
+        # updateService default is `true`, will update the ECS service
+        - cyber4all/ecs:
+            context: [AWS, Slack]
+            cluster: Clark-Services
+            family: learning-object-service
+            tag: $(jq -r '.version' package.json)
