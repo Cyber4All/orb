@@ -73,7 +73,7 @@ parameters:
     default: true
     description: |
       Whether to update the ECS service with a new deployment.
-      Default is `true`, set to `false` is the project is deployed as a scheduled task-definition.
+      Default is `true`, set to `false` if the project is deployed as a scheduled task-definition.
 
 steps:
   - run:
