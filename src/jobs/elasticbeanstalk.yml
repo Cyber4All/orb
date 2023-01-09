@@ -1,0 +1,73 @@
+description: |
+  Deploys an application to Elastic Beanstalk on the docker platform. A Dockerrun.aws.json should exist in the repository.
+  The job uses AWS IAM OIDC Web Identity for authentication. Uses EB_OIDC_ROLE context variable as default for role ARN.
+  The environment variables SLACK_ACCESS_TOKEN and SLACK_DEFAULT_CHANNEL must be set for this job to work.
+
+parameters:
+  # --------------------------------------------------------------------------------
+  # REQUIRED PARAMETERS
+  # You must provide a value for each of these parameters.
+  # ---------------------------------------------------------------------------------
+  application:
+    type: enum
+    enum: [
+      "CLARK-Gateway",                   # CLARK-Gateway
+      "clark-change-authorship-service", # change-authorship-service
+      "cards-service-production-4",      # cards-service
+      "standard-guidelines-service"      # standard-guidelines-service
+    ]
+    description: |
+      The name of the elastic beanstalk application being updated.
+
+  environment:
+    type: enum
+    enum: [
+      "clark-gateway-production",         # CLARK-Gateway
+      "Clarkchangeauthorshipservice-env", # change-authorship-service
+      "production",                       # cards-service
+      "standard-guidelines-service"       # standard-guidelines-service
+    ]
+    description: |
+      The name of the elastic beanstalk environment to deploy to.
+
+  # ---------------------------------------------------------------------------------
+  # OPTIONAL PARAMETERS
+  # These parameters have reasonable defaults.
+  # ---------------------------------------------------------------------------------
+  role-arn:
+    type: env_var_name
+    default: EB_OIDC_ROLE
+    description: |
+      The Amazon Resource Name (ARN) of the role that the caller is assuming.
+      Role ARN must be configured for web identity.
+
+executor: aws-cli/default
+
+steps:
+  - checkout
+  - run:
+      name: Install AWS EB ClI
+      command: |
+        sudo pip3 install awsebcli
+
+  # authenticates CLI using web identity
+  - aws-cli/setup:
+      # aws-region: AWS_DEFAULT_REGION /* uses default region */
+      role-arn: "$<<parameters.role-arn>>"
+
+  - run:
+      name: Initialize Elastic Beanstalk
+      command: |
+        eb init <<parameters.application>> --region $AWS_DEFAULT_REGION -p docker
+  - run:
+      name: Elastic Beanstalk Deployment
+      command: |-
+        eb deploy <<parameters.environment>> --verbose --label "${CIRCLE_PROJECT_REPONAME}-v$(jq -r '.version' package.json)"
+
+  # slack notifications
+  - slack/notify:
+      event: fail
+      template: basic_fail_1
+  - slack/notify:
+      event: pass
+      custom: success_tagged_deploy_1
