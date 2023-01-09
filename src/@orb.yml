@@ -9,7 +9,7 @@ display:
 orbs:
   aws-cli: circleci/aws-cli@3.1.4
   aws-eb: circleci/aws-elastic-beanstalk@2.0.1
-  aws-ecs: circleci/aws-ecs@2.2.1 # needs to be updated to 3.2.0, caused failing pack for missing arg, should be changed in ecs job updates.
+  aws-ecs: circleci/aws-ecs@3.2.0
   aws-s3: circleci/aws-s3@3.1.1
   docker: circleci/docker@2.2.0
   gh: circleci/github-cli@2.0.0
