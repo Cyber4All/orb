@@ -7,7 +7,7 @@ orbs:
   cyber4all: cyber4all/orb@1.3.12
 
 workflows:
-  lint-pack:
+  release:
     jobs:
       # lints the yaml files
       - orb-tools/lint

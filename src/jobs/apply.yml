@@ -1,15 +1,17 @@
 description: |
-  Applies terraform plan and outputs to the stdout.
+  Applies a terraform plan (tfplan) persisted to the workspace by a job in the same workflow.
+
+executor:
+  name: tf/default
+  tag: 1.2.9
 
 parameters:
   role-arn:
     type: env_var_name
     default: CIRCLECI_OIDC_ROLE
-    description: The Amazon Resource Name (ARN) of the role that the caller is assuming. Role ARN must be configured for web identity.
-
-executor:
-  name: tf/default
-  tag: 1.2.9
+    description: >
+      The Amazon Resource Name (ARN) of the role that the caller is assuming.
+      The role ARN must be configured for web identity.
 
 steps:
   - checkout
