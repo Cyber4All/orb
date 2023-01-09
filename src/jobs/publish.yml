@@ -3,37 +3,55 @@ description: |
   The sha256 digest persists to the workspace with the file name digest.txt and can be attached by another job in the same workflow.
   See [Attach Workspace](https://circleci.com/docs/configuration-reference/#attachworkspace).
 
-parameters:
-  image:
-    type: string
-    default: cyber4all/$CIRCLE_PROJECT_REPONAME
-    description: Name of image to push
-  path:
-    type: string
-    default: .
-    description: Path to the directory containing your Dockerfile, defaults to . (working directory)
-  tag:
-    type: string
-    default: $CIRCLE_SHA1
-    description: Image tag, defaults to the value of $CIRCLE_SHA1
-
 executor:
   name: docker/machine
   dlc: true
 
+parameters:
+  # ---------------------------------------------------------------------------------
+  # OPTIONAL PARAMETERS
+  # These parameters have reasonable defaults.
+  # ---------------------------------------------------------------------------------
+  deploy:
+    type: boolean
+    default: true
+    description: |
+      Boolean that represents whether the image will be pushed to Docker registry.
+
+  image:
+    type: string
+    default: cyber4all/$CIRCLE_PROJECT_REPONAME
+    description: |
+      Name of image to push
+
+  path:
+    type: string
+    default: .
+    description: |
+      Path to the directory containing your Dockerfile, defaults to . (working directory)
+
+  tag:
+    type: string
+    default: $CIRCLE_SHA1
+    description: |
+      Image tag, defaults to the value of $CIRCLE_SHA1
+
 steps:
   - checkout
-  - docker/check
   - docker/build:
       debug: true
       image: <<parameters.image>>
       path: <<parameters.path>>
       tag: <<parameters.tag>>
-  - docker/push:
-      digest-path: "/tmp/digest.txt"
-      image: <<parameters.image>>
-      tag: <<parameters.tag>>
-  - persist_to_workspace:
-      root: /tmp
-      paths:
-        - digest.txt
+  - when:
+      condition: <<parameters.deploy>>
+      steps:
+        - docker/check
+        - docker/push:
+            digest-path: "/tmp/digest.txt"
+            image: <<parameters.image>>
+            tag: <<parameters.tag>>
+        - persist_to_workspace:
+            root: /tmp
+            paths:
+              - digest.txt
