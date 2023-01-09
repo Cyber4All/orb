@@ -1,0 +1,60 @@
+description: |
+  This job will automate running a set of backend/frontend tests.
+
+parameters:
+  # --------------------------------------------------------------------------------
+  # REQUIRED PARAMETERS
+  # You must provide a value for each of these parameters.
+  # ---------------------------------------------------------------------------------
+  language:
+    type: enum
+    enum: ["node", "go"]
+    description: |
+      The language the project is using.
+
+  # ---------------------------------------------------------------------------------
+  # OPTIONAL PARAMETERS
+  # These parameters have reasonable defaults.
+  # ---------------------------------------------------------------------------------
+  resource-class:
+    type: enum
+    enum: [       # vCPU  RAM (GB)
+      "small",    # 1     2
+      "medium",   # 2     4
+      "medium+",  # 3     6
+      "large",    # 4     8
+      "xlarge"    # 8     16
+    ]
+    default: medium
+    description: |
+      The resource class that should be used to run tests. Defaults
+      to medium 2 vCPU's and 4GB of RAM. See link for valid inputs:
+      https://circleci.com/docs/2.0/configuration-reference/#docker-executor
+
+docker:
+  - image: cimg/base:2022.12
+resource_class: <<parameters.resource-class>>
+
+steps:
+  - checkout
+  - when:
+      condition:
+        equal: ["node", << parameters.language >> ]
+      steps:
+        - node/install:
+            node-version: 16.18.1
+        - node/install-packages
+        - run:
+            name: Run Tests
+            command: |-
+              npm run test
+  - when:
+      condition:
+        equal: ["go", << parameters.language >> ]
+      steps:
+        - go/install:
+            version: "1.19"
+        - go/load-cache
+        - go/mod-download
+        - go/save-cache
+        - go/test
