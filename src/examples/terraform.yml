@@ -1,0 +1,26 @@
+description: |
+  This example shows how the terraform jobs can be used in a workflow.
+
+usage:
+  version: 2.1
+
+  orbs:
+    cyber4all: cyber4all/orb@2.0.0
+
+  workflows:
+    continuous-deployment:
+      jobs:
+        # creates a tfplan from the *.tf in terraform/prod
+        - cyber4all/plan:
+            context: [AWS]
+            path: terraform/prod
+
+        # OPTIONAL: step to verify the tfplan
+        - apply_approval:
+            requires: [cyber4all/plan]
+            type: approval
+
+        # applies the tfplan from cyber4all/plan
+        - cyber4all/apply:
+            requires: [apply_approval]
+            context: [AWS]

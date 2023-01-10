@@ -1,5 +1,0 @@
-description: |
-  This executor will be the default node executor to be used by the jobs in cyber4all/orb
-
-docker:
-  - image: cimg/node:16.13.2@sha256:0704990b98acbe821fafda00cd605a625598ac737e9b52df41713e2829cc5f78

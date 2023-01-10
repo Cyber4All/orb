@@ -1,5 +1,5 @@
 description: |
-  This command uses the create shortcut story python script to create a story for shortcut after an SBOM is generated and analyzed
+  DEPRECATED: This command uses the create shortcut story python script to create a story for shortcut after an SBOM is generated and analyzed
 
 parameters:
   # --------------------------------------------------------------------------------
