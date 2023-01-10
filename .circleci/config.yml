@@ -36,11 +36,20 @@ workflows:
           filters:
             branches:
               only: releases
+      
+      # publish orb to production
+      - orb-tools/pack:
+          name: pack-prod
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: '/^v[0-9]+\.[0-9]+\.[0-9]+$/'
   
       # publishes orb to circleci registry
       - orb-tools/publish:
           requires:
-            [orb-tools/pack]
+            [pack-prod]
           context: orb-publishing
           orb-name: cyber4all/orb
           enable-pr-comment: false
