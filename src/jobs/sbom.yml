@@ -1,5 +1,5 @@
 description: |
-  This job generates a CycloneDX Software Bill of Materials (SBOM), analyzes it using cve-bin-tool then generates a shortcut story to review the findings
+  DEPRECATED: This job generates a CycloneDX Software Bill of Materials (SBOM), analyzes it using cve-bin-tool then generates a shortcut story to review the findings
 
 parameters:
   # --------------------------------------------------------------------------------

@@ -1,0 +1,15 @@
+description: |
+  This example shows how an application can be deployed to AWS S3.
+
+usage:
+  version: 2.1
+
+  orbs:
+    cyber4all: cyber4all/orb@2.0.0
+
+  workflows:
+    deploy:
+      jobs:
+        - cyber4all/s3:
+            context: [AWS, Slack]
+            bucket: curriculum-listings

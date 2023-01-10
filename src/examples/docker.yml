@@ -1,0 +1,29 @@
+description: |
+  This example shows how a docker workflow is organized.
+
+usage:
+  version: 2.1
+
+  orbs:
+    cyber4all: cyber4all/orb@2.0.0
+
+  workflows:
+    integrations:
+      jobs:
+        # tests the build
+        - cyber4all/publish:
+            deploy: false
+
+    delivery:
+      jobs:
+        # pushes staging to docker registry
+        - cyber4all/publish:
+            context: Docker
+            tag: staging
+
+    deployment:
+      jobs:
+        # artifact promotion from staging -> latest and SEMVER
+        - cyber4all/promote:
+            context: Docker
+            tag: "$(jq -r '.version' package.json),latest"
