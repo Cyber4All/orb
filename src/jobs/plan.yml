@@ -20,12 +20,14 @@ steps:
   - checkout
   - aws-cli/setup:
       role-arn: "$<<parameters.role-arn>>"
+  - attach_workspace:
+          at: .
   - tf/init:
       path: <<parameters.path>>
   - run:
       name: Plan
       command: |
-        terraform -chdir=<<parameters.path>> plan -input=false -no-color -out=tfplan && \
+        terraform -chdir=<<parameters.path>> plan -var="image=$(cat digest.txt)" -input=false -no-color -out=tfplan && \
         terraform -chdir=<<parameters.path>> show -no-color tfplan | sed -E 's/^([[:space:]]+)([-+])/\2\1/g' > <<parameters.path>>/tfplan.txt
   - persist_to_workspace:
       root: ~/project/<<parameters.path>>
