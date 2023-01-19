@@ -2,34 +2,35 @@ description: |
   Creates a terraform plan and outputs to the stdout. Additonally, the machine and human readable plans are persisted to the workspace to use in future jobs.
   Use cyber4all/comment after plan to add a comment to the github PR with the plan.
 
+executor:
+      name: tf/default
+      tag: 1.2.9
+
 parameters:
   path:
-    type: string
     default: .
     description: Path to the terraform module
+    type: string
   role-arn:
-    type: env_var_name
     default: CIRCLECI_OIDC_ROLE
-    description: The Amazon Resource Name (ARN) of the role that the caller is assuming. Role ARN must be configured for web identity.
-
-executor:
-  name: tf/default
-  tag: 1.2.9
+    description: >-
+      The Amazon Resource Name (ARN) of the role that the caller is assuming.
+      Role ARN must be configured for web identity.
+    type: env_var_name
 
 steps:
   - checkout
   - aws-cli/setup:
-      role-arn: "$<<parameters.role-arn>>"
+      role-arn: $<<parameters.role-arn>>
   - attach_workspace:
-          at: .
+      at: .
   - tf/init:
       path: <<parameters.path>>
   - run:
       name: Plan
-      command: |
-        terraform -chdir=<<parameters.path>> plan -var="image=$(cat digest.txt)" -input=false -no-color -out=tfplan && \
-        terraform -chdir=<<parameters.path>> show -no-color tfplan | sed -E 's/^([[:space:]]+)([-+])/\2\1/g' > <<parameters.path>>/tfplan.txt
+      command: >
+        terraform -chdir=<<parameters.path>> plan -var="image=$(cat digest.txt)" -input=false -no-color -out=tfplan
   - persist_to_workspace:
-      root: ~/project/<<parameters.path>>
       paths:
         - .
+      root: ~/project/<<parameters.path>>
