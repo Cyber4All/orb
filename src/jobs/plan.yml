@@ -7,16 +7,31 @@ executor:
       tag: 1.2.9
 
 parameters:
+  # ---------------------------------------------------------------------------------
+  # OPTIONAL PARAMETERS
+  # These parameters have reasonable defaults.
+  # ---------------------------------------------------------------------------------
   path:
     default: .
     description: Path to the terraform module
     type: string
+
   role-arn:
     default: CIRCLECI_OIDC_ROLE
     description: >-
       The Amazon Resource Name (ARN) of the role that the caller is assuming.
       Role ARN must be configured for web identity.
     type: env_var_name
+
+  service:
+    type: enum
+    enum: [
+      "ecs",
+      "lambda"
+    ]
+    default: ecs
+    description: >-
+      The AWS service that is being deployed to with terraform.
 
 steps:
   - checkout
@@ -26,10 +41,22 @@ steps:
       at: .
   - tf/init:
       path: <<parameters.path>>
-  - run:
-      name: Plan
-      command: >
-        terraform -chdir=<<parameters.path>> plan -var="image=$(cat digest.txt)" -input=false -no-color -out=tfplan
+  - when:
+      condition:
+        equal: [ "ecs", << parameters.service >> ]
+      steps:
+        - run:
+            name: ECS Plan
+            command: >
+              terraform -chdir=<<parameters.path>> plan -var="image=$(cat digest.txt)" -input=false -no-color -out=tfplan
+  - when:
+      condition:
+        equal: [ "lambda", << parameters.service >> ]
+      steps:
+        - run:
+            name: ECS Plan
+            command: >
+              terraform -chdir=<<parameters.path>> plan -input=false -no-color -out=tfplan
   - persist_to_workspace:
       paths:
         - .
