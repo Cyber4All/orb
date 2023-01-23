@@ -1,11 +1,12 @@
 description: |
   This example shows how an application can be deployed to lambda in rust, python, or node.
+  This example DOES NOT use terraform.
 
 usage:
   version: 2.1
 
   orbs:
-    cyber4all: cyber4all/orb@2.0.0
+    cyber4all: cyber4all/orb@2.0.3
 
   workflows:
     node-deployment:
