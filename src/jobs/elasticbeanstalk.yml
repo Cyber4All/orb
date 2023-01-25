@@ -46,6 +46,10 @@ executor: aws-cli/default
 steps:
   - checkout
   - run:
+      name: Install Python
+      command: |
+        sudo apt update && sudo apt install -y python3-pip
+  - run:
       name: Install AWS EB ClI
       command: |
         sudo pip3 install awsebcli
