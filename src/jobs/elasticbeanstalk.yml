@@ -30,6 +30,11 @@ parameters:
     description: |
       The name of the elastic beanstalk environment to deploy to.
 
+  role-session-name:
+    type: string
+    description: |
+      name to Append to the end of arn for the session role, must conform to regex [\w+=,.@-]*
+
   # ---------------------------------------------------------------------------------
   # OPTIONAL PARAMETERS
   # These parameters have reasonable defaults.
@@ -58,6 +63,7 @@ steps:
   - aws-cli/setup:
       # aws-region: AWS_DEFAULT_REGION /* uses default region */
       role-arn: "$<<parameters.role-arn>>"
+      role-session-name: "<<parameters.role-session-name>>"
 
   - run:
       name: Initialize Elastic Beanstalk
