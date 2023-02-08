@@ -130,12 +130,6 @@ steps:
             service-name: "$ECS_PARAM_SERVICE_NAME"
             skip-task-definition-registration: true
             verify-revision-is-deployed: true
-  # updates events rule with new revision of task-definition
-  - unless:
-      condition: <<parameters.updateService>>
-      steps:
-        - aws-ecs/deploy-ecs-scheduled-task:
-            rule-name: "$ECS_PARAM_RULE"
 
   # slack notifications
   - slack/notify:
