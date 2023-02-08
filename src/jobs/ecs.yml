@@ -92,7 +92,7 @@ steps:
         if [ -z "$ECS_PARAM_SERVICE_NAME" ]; then
           echo 'export ECS_PARAM_SERVICE_NAME=<<parameters.family>>' >> $BASH_ENV
         fi
-
+  - checkout
   # authenticates CLI using web identity
   - aws-cli/setup:
       # aws-region: AWS_DEFAULT_REGION /* uses default region */
