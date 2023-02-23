@@ -9,6 +9,7 @@ parameters:
   language:
     type: enum
     enum: ["node", "go"]
+    default: "node"
     description: |
       The language the project is using.
 
@@ -16,7 +17,7 @@ parameters:
   # OPTIONAL PARAMETERS
   # These parameters have reasonable defaults.
   # ---------------------------------------------------------------------------------
-  test-command:
+  command:
     type: string,
     default: test
     description: |
