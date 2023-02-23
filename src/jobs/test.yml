@@ -62,7 +62,7 @@ steps:
         - run:
             name: Run Tests
             command: |-
-              npm run << parametes.command >>
+              npm run << parameters.command >>
   - when:
       condition:
         equal: ["go", << parameters.language >> ]
