@@ -18,7 +18,7 @@ parameters:
   # These parameters have reasonable defaults.
   # ---------------------------------------------------------------------------------
   command:
-    type: string,
+    type: string
     default: test
     description: |
       The command used to run the tests. Defaults to nodes: 'npm run test'
