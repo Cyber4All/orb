@@ -9,6 +9,7 @@ parameters:
   language:
     type: enum
     enum: ["node", "go"]
+    default: "node"
     description: |
       The language the project is using.
 
@@ -16,6 +17,11 @@ parameters:
   # OPTIONAL PARAMETERS
   # These parameters have reasonable defaults.
   # ---------------------------------------------------------------------------------
+  command:
+    type: string
+    default: test
+    description: |
+      The command used to run the tests. Defaults to nodes: 'npm run test'
   resource-class:
     type: enum
     enum: [       # vCPU  RAM (GB)
@@ -56,7 +62,7 @@ steps:
         - run:
             name: Run Tests
             command: |-
-              npm run test
+              npm run << parameters.command >>
   - when:
       condition:
         equal: ["go", << parameters.language >> ]
