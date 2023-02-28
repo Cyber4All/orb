@@ -70,11 +70,11 @@ steps:
         - run:
             name: Install Zig
             command: |-
-              sudo apt update && sudo apt install snapd && sudo snap install zig --beta --classic
+              pip3 install ziglang
         - run:
             name: Install Cargo-Lambda
             command: |-
-              cargo install cargo-lambda
+              pip3 install cargo-lambda
         - run:
             name: Build Project and Zip it
             command: |-
