@@ -1,56 +1,62 @@
 version: 2.1
-setup: true
+
 orbs:
-  orb-tools: circleci/orb-tools@11.1
+  orb-tools: circleci/orb-tools@11.6
   shellcheck: circleci/shellcheck@3.1
-  bats: circleci/bats@1.0
+  bats: circleci/bats@1.1
+  cyber4all: cyber4all/orb@1.3.12
 
 workflows:
-  lint-pack:
+  release:
     jobs:
-      - orb-tools/lint:
-          filters:
-            tags:
-              only: /.*/
+      # lints the yaml files
+      - orb-tools/lint
 
-      - orb-tools/pack:
-          filters:
-            tags:
-              only: /.*/
+      # compiles orb
+      - orb-tools/pack
 
+      # checks circleci rules
       - orb-tools/review:
           exclude: 'RC009'
-          filters:
-            tags:
-              only: /.*/
 
+      # lints shell scripts
       - shellcheck/check:
-          exclude: 'SC2148,SC2038,SC2086,SC2002,SC2016'
-          filters:
-            tags:
-              only: /.*/
+          exclude: 'SC2148,SC2038,SC2086,SC2002,SC2016,SC2034'
 
+      # runs bat tests
       - bats/run:
           path: ./src/tests
-          filters:
-            tags:
-              only: /.*/
-
-      - orb-tools/publish:
+      
+      # automate github tagged release
+      - cyber4all/release:
           requires:
             [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check, bats/run]
+          context: Github
+          tag: $(./version.sh -r)
+          filters:
+            branches:
+              only: releases
+      
+      # publish orb to production
+      - orb-tools/pack:
+          name: pack-prod
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: '/^v[0-9]+\.[0-9]+\.[0-9]+$/'
+  
+      # publishes orb to circleci registry
+      - orb-tools/publish:
+          requires:
+            [pack-prod]
           context: orb-publishing
           orb-name: cyber4all/orb
-          vcs-type: << pipeline.project.type >>
+          enable-pr-comment: false
+          pub-type: production
+          vcs-type: <<pipeline.project.type>>
           filters:
+            branches:
+              ignore: /.*/
             tags:
-              only: /.*/
-
-      - orb-tools/continue:
-          requires:
-            - orb-tools/publish
-          vcs-type: << pipeline.project.type >>
-          pipeline-number: << pipeline.number >>
-          filters:
-            tags:
-              only: /.*/
+              only: '/^v[0-9]+\.[0-9]+\.[0-9]+$/'

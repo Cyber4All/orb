@@ -1,18 +1,21 @@
 version: 2.1
 
 description: >
-  This orb will be used by the Cyber4All organization to abstract the common CICD pipelines in the config.yml files.
+  This orb is developed, maintained, and used by the developers of Cyber4All.
 
 display:
   source_url: "https://github.com/Cyber4All/orb"
 
-# Orbs that will be used in different jobs
 orbs:
-  aws-eb: circleci/aws-elastic-beanstalk@2.0.1 # https://circleci.com/developer/orbs/orb/circleci/aws-elastic-beanstalk?version=2.0.1
-  aws-cli: circleci/aws-cli@3.0.0 # https://circleci.com/developer/orbs/orb/circleci/aws-cli?version=3.0.0
-  aws-ecs: circleci/aws-ecs@2.2.1 # https://circleci.com/developer/orbs/orb/circleci/aws-ecs?version=2.2.1
-  docker: circleci/docker@2.0.3 # https://circleci.com/developer/orbs/orb/circleci/docker?version=2.0.3
-  node: circleci/node@5.0.2 # https://circleci.com/developer/orbs/orb/circleci/node?version=5.0.2
-  slack: circleci/slack@4.9.3 # https://circleci.com/developer/orbs/orb/circleci/slack?version=4.9.3
-  aws-s3: circleci/aws-s3@3.0.0 # https://circleci.com/developer/orbs/orb/circleci/aws-s3?version=3.0.0
-  python: circleci/python@2.0.3 # https://circleci.com/developer/orbs/orb/circleci/python
+  aws-cli: circleci/aws-cli@3.1.4
+  aws-eb: circleci/aws-elastic-beanstalk@2.0.1
+  aws-ecs: circleci/aws-ecs@3.2.0
+  aws-s3: circleci/aws-s3@3.1.1
+  docker: circleci/docker@2.2.0
+  gh: circleci/github-cli@2.0.0
+  go: circleci/go@1.7.1
+  node: circleci/node@5.0.3
+  python: circleci/python@2.1.1
+  rust: circleci/rust@1.6.0
+  slack: circleci/slack@4.12.0
+  tf: circleci/terraform@3.2.0

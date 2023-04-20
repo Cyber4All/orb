@@ -1,0 +1,89 @@
+description: |
+  Builds an application and ZIPs the compiled code for distribution. The artifact is persisted to the workspace for future use.
+
+parameters:
+  # --------------------------------------------------------------------------------
+  # REQUIRED PARAMETERS
+  # You must provide a value for each of these parameters.
+  # ---------------------------------------------------------------------------------
+  language:
+    type: enum
+    enum: ["node", "rust", "python"]
+    description: |
+      The language used by the project.
+
+  # ---------------------------------------------------------------------------------
+  # OPTIONAL PARAMETERS
+  # These parameters have reasonable defaults.
+  # ---------------------------------------------------------------------------------
+  src-path:
+    type: string
+    default: $CIRCLE_PROJECT_REPONAME
+    description: |
+      The directory containing the source code.
+
+machine:
+  image: ubuntu-2004:current
+
+steps:
+  - checkout
+  - when:
+      condition:
+        equal: [ "node", << parameters.language >> ]
+      steps:
+        - node/install:
+            node-version: "16.18.1"
+        - node/install-packages
+        - run:
+            name: Compile Typescript with NPM Build Script
+            command: |-
+              npm run build
+        - run:
+            name: Zip Node Application
+            command: |-
+              zip -r deployment-package.zip ./lib
+  - when:
+      condition:
+        equal: ["python", << parameters.language >>]
+      steps:
+        - run:
+            name: Upgrade pip3
+            command: |-
+              pip3 install --upgrade pip
+        - run:
+            name: Install Python Dependencies
+            command: |-
+              pip3 install --target ./package -r requirements.txt
+        - run:
+            name: Zip Dependencies
+            command: |-
+              (cd package && zip -r ../deployment-package.zip .)
+        - run:
+            name: Zip Source Code
+            command: |-
+              (cd <<parameters.src-path>> && zip -r -g ../deployment-package.zip .)
+  - when:
+      condition:
+        equal: ["rust", << parameters.language >>]
+      steps:
+        - rust/install
+        - run:
+            name: Install Zig
+            command: |-
+              pip3 install ziglang
+        - run:
+            name: Install Cargo-Lambda
+            command: |-
+              pip3 install cargo-lambda
+        - run:
+            name: Build Project and Zip it
+            command: |-
+              cargo lambda build --output-format Zip --release --lambda-dir .
+        - run:
+            name: Move and Rename boostrap.zip
+            command: |-
+              mv ./$CIRCLE_PROJECT_REPONAME/bootstrap.zip deployment-package.zip
+  - persist_to_workspace:
+      root: .
+      paths:
+        - deployment-package.zip

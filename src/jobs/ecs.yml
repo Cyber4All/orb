@@ -1,0 +1,145 @@
+description: |
+  Deploys an application to AWS ECS. The job will first register a new task-definition then update the service.
+  The job uses AWS IAM OIDC Web Identity for authentication. Uses ECS_OIDC_ROLE context variable as default for role ARN.
+  The environment variables SLACK_ACCESS_TOKEN and SLACK_DEFAULT_CHANNEL must be set for this job to work.
+
+executor: aws-cli/default
+
+parameters:
+  # --------------------------------------------------------------------------------
+  # REQUIRED PARAMETERS
+  # You must provide a value for each of these parameters.
+  # ---------------------------------------------------------------------------------
+  cluster:
+    type: enum
+    enum: ["Clark-Services", "CARD-Service"]
+    description: |
+      The short name or full ARN of the cluster that hosts the service.
+
+  family:
+    type: string
+    description: |
+      Name of the task definition's family.
+
+  # ---------------------------------------------------------------------------------
+  # OPTIONAL PARAMETERS
+  # These parameters have reasonable defaults.
+  # ---------------------------------------------------------------------------------
+  container:
+    type: string
+    default: ''
+    description: |
+      Name of the container name defined in the ecs task-definition.
+      (defaults to family)
+
+  role-arn:
+    type: env_var_name
+    default: ECS_OIDC_ROLE
+    description: |
+      The Amazon Resource Name (ARN) of the role that the caller is assuming.
+      Role ARN must be configured for web identity.
+
+  rule:
+    type: string
+    default: ''
+    description: |
+      The name of the scheduled task's rule to update.
+      Required when updateService is `false`.
+      (defaults to family)
+
+  service:
+    type: string
+    default: ''
+    description: |
+      The name of the service to update.
+      Required when updateService is `true`.
+      (defaults to family)
+
+  tag:
+    type: string
+    default: ''
+    description: |
+      The semantic version of the project being deployed.
+      Required when task-definition-json is not set.
+
+  task-definition-json:
+    type: string
+    default: ''
+    description: |
+      Location of your .json task definition file (relative or absolute)
+
+  updateService:
+    type: boolean
+    default: true
+    description: |
+      Whether to update the ECS service with a new deployment.
+      Default is `true`, set to `false` if the project is deployed as a scheduled task-definition.
+
+steps:
+  - run:
+      name: Set Default Parameters
+      command: |-
+        # checks whether parameters were set, otherwise defaults to family
+
+        if [ -z "$ECS_PARAM_CONTAINER_NAME" ]; then
+          echo 'export ECS_PARAM_CONTAINER_NAME=<<parameters.family>>' >> $BASH_ENV
+        fi
+
+        if [ -z "$ECS_PARAM_RULE" ]; then
+          echo 'export ECS_PARAM_RULE=<<parameters.family>>' >> $BASH_ENV
+        fi
+
+        if [ -z "$ECS_PARAM_SERVICE_NAME" ]; then
+          echo 'export ECS_PARAM_SERVICE_NAME=<<parameters.family>>' >> $BASH_ENV
+        fi
+  - checkout
+  # authenticates CLI using web identity
+  - aws-cli/setup:
+      # aws-region: AWS_DEFAULT_REGION /* uses default region */
+      role-arn: "$<<parameters.role-arn>>"
+
+  # task-definition registration
+  # updates based on json file
+  - when:
+      condition: <<parameters.task-definition-json>>
+      steps:
+        - aws-ecs/update-task-definition-from-json:
+            task-definition-json: <<parameters.task-definition-json>>
+  # updates just tag
+  - unless:
+      condition: <<parameters.task-definition-json>>
+      steps:
+        - run:
+            name: Verify Tag is Set
+            command: |
+              if [ -z "<<parameters.tag>>" ]; then
+                echo '"tag" must be set when deploying without json.'
+                exit 1
+              fi
+        - aws-ecs/update-task-definition:
+            container-image-name-updates: "container=$ECS_PARAM_CONTAINER_NAME,tag=<<parameters.tag>>"
+            family: <<parameters.family>>
+
+  # updates ECS service with new revision
+  - when:
+      condition: <<parameters.updateService>>
+      steps:
+        - aws-ecs/update-service:
+            cluster: <<parameters.cluster>>
+            family: <<parameters.family>>
+            service-name: "$ECS_PARAM_SERVICE_NAME"
+            skip-task-definition-registration: true
+            verify-revision-is-deployed: true
+
+  # slack notifications
+  - slack/notify:
+      event: fail
+      template: basic_fail_1
+  - slack/notify:
+      event: pass
+      template: success_tagged_deploy_1
+
+environment:
+  ECS_PARAM_CONTAINER_NAME: <<parameters.container>>
+  ECS_PARAM_RULE: <<parameters.rule>>
+  ECS_PARAM_SERVICE_NAME: <<parameters.service>>

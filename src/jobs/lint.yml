@@ -1,0 +1,77 @@
+description: |
+  This job will lint the application based on what language the application is written in.
+  If language is node, job requires the npm script `build` to be defined.
+
+parameters:
+  # ---------------------------------------------------------------------------------
+  # OPTIONAL PARAMETERS
+  # These parameters have reasonable defaults.
+  # ---------------------------------------------------------------------------------
+  directory:
+    type: string
+    default: "./src"
+    description: |
+      The relative path to the source code directory from the root of the repo.
+      Only needed when language is "python" or "go".
+
+  docker-image:
+    type: string
+    default: "cimg/node:16.18.1"
+    description: |
+      The executor's docker docker-image.
+      When language is:
+        - node, use "cimg/node:16.18.1"
+        - python, use "cimg/python:3.10"
+        - go, use "golangci/golangci-lint:latest-alpine"
+
+  language:
+    type: enum
+    enum: ["node", "python", "go"]
+    default: node
+    description: |
+      Language of the repository to lint.
+      Options: (node, python, go)
+
+docker:
+  - image: <<parameters.docker-image>>
+
+steps:
+  - checkout
+  # lints the repository if language is node
+  - when:
+      condition:
+        equal: [ "node", << parameters.language >> ]
+      steps:
+        - node/install-packages
+        - run:
+            name: Run Linting
+            command: |-
+              npm run lint
+
+  # lints the repository if language is go
+  - when:
+      condition:
+        equal: [ "go", << parameters.language >> ]
+      steps:
+        - run:
+            name: Verify Golangci-lint Install
+            command: |-
+              golangci-lint verison
+        - run:
+            name: Lint Golang Application
+            command: |-
+              golangci-lint run <<parameters.directory>>
+
+  # lints the repository if language is python
+  - when:
+      condition:
+        equal: [ "python", << parameters.language >> ]
+      steps:
+        - run:
+            name: Install Pylint
+            command: |-
+              pip3 install pylint
+        - run:
+            name: Run Pylint
+            command: |-
+              pylint --rcfile=./.pylintrc <<parameters.directory>>
