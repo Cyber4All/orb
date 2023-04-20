@@ -3,8 +3,7 @@ description: |
   Use cyber4all/comment after plan to add a comment to the github PR with the plan.
 
 executor:
-      name: tf/default
-      tag: 1.2.9
+  name: aws-cli/default
 
 parameters:
   # ---------------------------------------------------------------------------------
@@ -39,6 +38,8 @@ steps:
       role-arn: $<<parameters.role-arn>>
   - attach_workspace:
       at: .
+  - tf/install:
+      terraform_version: 1.2.9
   - tf/init:
       path: <<parameters.path>>
   - when:
