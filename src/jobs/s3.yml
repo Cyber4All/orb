@@ -46,7 +46,7 @@ steps:
       role-arn: "$<<parameters.role-arn>>"
       # aws-region: AWS_DEFAULT_REGION /* uses default region */
       from: <<parameters.source>>
-      to: "s3://$<<parameters.bucket>>"
+      to: "s3://<<parameters.bucket>>"
   - run:
       name: Invalidate index.html and /assets directory in CloudFront
       command: |-
