@@ -1,5 +1,5 @@
 description: |
-  Deploys an application to AWS S3. The npm script "build:prod" is required for this job.
+  Deploys an application to AWS S3. An npm script must be defined for this job, the default is "build:prod". Additionally, the project variable CLOUDFRONT_ID is required.
 
 executor: python/default
 
@@ -24,6 +24,12 @@ parameters:
       The Amazon Resource Name (ARN) of the role that the caller is assuming.
       Role ARN must be configured for web identity.
 
+  script:
+    type: string
+    default: "build:prod"
+    description: |
+      The npm script used to build the application prior to deploying to S3.
+
   source:
     type: string
     default: ./dist
@@ -39,7 +45,7 @@ steps:
   - run:
       name: Build Application
       command: |-
-        npm run build:prod
+        npm run <<parameters.script>>
 
   # syncs files and invalidates cloud front
   - aws-s3/sync:
