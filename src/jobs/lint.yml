@@ -46,7 +46,9 @@ steps:
         - run:
             name: Run Linting
             command: |-
-              npm run lint
+              npm run lint -- --format junit -o reports/junit/js-lint-results.xml
+        - store_test_results:
+            path: reports/junit
 
   # lints the repository if language is go
   - when:
