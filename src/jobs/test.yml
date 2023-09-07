@@ -6,12 +6,8 @@ parameters:
   # REQUIRED PARAMETERS
   # You must provide a value for each of these parameters.
   # ---------------------------------------------------------------------------------
-  language:
-    type: enum
-    enum: ["node", "go"]
-    default: "node"
-    description: |
-      The language the project is using.
+
+  # No required parameters defined
 
   # ---------------------------------------------------------------------------------
   # OPTIONAL PARAMETERS
@@ -22,6 +18,7 @@ parameters:
     default: test
     description: |
       The command used to run the tests. Defaults to nodes: 'npm run test'
+
   resource-class:
     type: enum
     enum: [       # vCPU  RAM (GB)
@@ -36,15 +33,24 @@ parameters:
       The resource class that should be used to run tests. Defaults
       to medium 2 vCPU's and 4GB of RAM. See link for valid inputs:
       https://circleci.com/docs/2.0/configuration-reference/#docker-executor
+
   docker-image:
     type: enum
     enum: [
       "cimg/node@sha256:9e7dff70aee20446a146e374367c3fddc58df1e39cca318dbd4993e625892880",
+      "cimg/node:16.18.1",
       "cimg/base:2022.12"
     ]
     default: "cimg/node@sha256:9e7dff70aee20446a146e374367c3fddc58df1e39cca318dbd4993e625892880"
     description: |
       The docker image to use for the tests.
+
+  language:
+    type: enum
+    enum: ["node", "go"]
+    default: "node"
+    description: |
+      The language the project is using.
 
 docker:
   - image: <<parameters.docker-image>>
@@ -56,13 +62,19 @@ steps:
       condition:
         equal: ["node", << parameters.language >> ]
       steps:
-        - node/install:
-            node-version: 16.18.1
         - node/install-packages
+        - run:
+            name: Install JUnit coverage reporter
+            command: yarn add --dev jest-junit
         - run:
             name: Run Tests
             command: |-
-              npm run << parameters.command >>
+              npm run test -- --ci --runInBand --reporters=default --reporters=jest-junit
+            environment:
+              JEST_JUNIT_OUTPUT_DIR: ./reports/junit
+        - store_test_results:
+            path: ./reports/junit
+
   - when:
       condition:
         equal: ["go", << parameters.language >> ]
