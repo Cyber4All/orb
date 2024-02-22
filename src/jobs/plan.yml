@@ -24,10 +24,7 @@ parameters:
 
   service:
     type: enum
-    enum: [
-      "ecs",
-      "lambda"
-    ]
+    enum: ["ecs", "lambda"]
     default: ecs
     description: >-
       The AWS service that is being deployed to with terraform.
@@ -35,6 +32,7 @@ parameters:
 steps:
   - checkout
   - aws-cli/setup:
+      role-session-name: plan
       role-arn: $<<parameters.role-arn>>
   - attach_workspace:
       at: .
@@ -44,7 +42,7 @@ steps:
       path: <<parameters.path>>
   - when:
       condition:
-        equal: [ "ecs", << parameters.service >> ]
+        equal: ["ecs", << parameters.service >>]
       steps:
         - run:
             name: ECS Plan
@@ -52,7 +50,7 @@ steps:
               terraform -chdir=<<parameters.path>> plan -var="image=$(cat digest.txt)" -input=false -no-color -out=tfplan
   - when:
       condition:
-        equal: [ "lambda", << parameters.service >> ]
+        equal: ["lambda", << parameters.service >>]
       steps:
         - run:
             name: ECS Plan

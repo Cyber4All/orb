@@ -27,7 +27,7 @@ parameters:
   # ---------------------------------------------------------------------------------
   container:
     type: string
-    default: ''
+    default: ""
     description: |
       Name of the container name defined in the ecs task-definition.
       (defaults to family)
@@ -41,7 +41,7 @@ parameters:
 
   rule:
     type: string
-    default: ''
+    default: ""
     description: |
       The name of the scheduled task's rule to update.
       Required when updateService is `false`.
@@ -49,7 +49,7 @@ parameters:
 
   service:
     type: string
-    default: ''
+    default: ""
     description: |
       The name of the service to update.
       Required when updateService is `true`.
@@ -57,14 +57,14 @@ parameters:
 
   tag:
     type: string
-    default: ''
+    default: ""
     description: |
       The semantic version of the project being deployed.
       Required when task-definition-json is not set.
 
   task-definition-json:
     type: string
-    default: ''
+    default: ""
     description: |
       Location of your .json task definition file (relative or absolute)
 
@@ -95,7 +95,7 @@ steps:
   - checkout
   # authenticates CLI using web identity
   - aws-cli/setup:
-      # aws-region: AWS_DEFAULT_REGION /* uses default region */
+      role-session-name: ecs
       role-arn: "$<<parameters.role-arn>>"
 
   # task-definition registration

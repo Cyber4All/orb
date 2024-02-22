@@ -15,6 +15,7 @@ parameters:
 steps:
   - checkout
   - aws-cli/setup:
+      role-session-name: apply
       role-arn: "$<<parameters.role-arn>>"
   - attach_workspace:
       at: .
