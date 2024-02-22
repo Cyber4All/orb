@@ -30,8 +30,8 @@ machine:
 steps:
   # authenticates CLI using web identity
   - aws-cli/setup:
-      role-session-name: lambda
-      role-arn: "$<<parameters.role-arn>>"
+      role_session_name: lambda
+      role_arn: "$<<parameters.role-arn>>"
 
   # attaches deployment-package.zip from build job
   - attach_workspace:

@@ -95,16 +95,16 @@ steps:
   - checkout
   # authenticates CLI using web identity
   - aws-cli/setup:
-      role-session-name: ecs
-      role-arn: "$<<parameters.role-arn>>"
+      role_session_name: ecs
+      role_arn: "$<<parameters.role-arn>>"
 
   # task-definition registration
   # updates based on json file
   - when:
       condition: <<parameters.task-definition-json>>
       steps:
-        - aws-ecs/update-task-definition-from-json:
-            task-definition-json: <<parameters.task-definition-json>>
+        - aws-ecs/update_task_definition_from_json:
+            task_definition_json: <<parameters.task-definition-json>>
   # updates just tag
   - unless:
       condition: <<parameters.task-definition-json>>
@@ -116,20 +116,20 @@ steps:
                 echo '"tag" must be set when deploying without json.'
                 exit 1
               fi
-        - aws-ecs/update-task-definition:
-            container-image-name-updates: "container=$ECS_PARAM_CONTAINER_NAME,tag=<<parameters.tag>>"
+        - aws-ecs/update_task_definition:
+            container_image_name_updates: "container=$ECS_PARAM_CONTAINER_NAME,tag=<<parameters.tag>>"
             family: <<parameters.family>>
 
   # updates ECS service with new revision
   - when:
       condition: <<parameters.updateService>>
       steps:
-        - aws-ecs/update-service:
+        - aws-ecs/update_service:
             cluster: <<parameters.cluster>>
             family: <<parameters.family>>
-            service-name: "$ECS_PARAM_SERVICE_NAME"
-            skip-task-definition-registration: true
-            verify-revision-is-deployed: true
+            service_name: "$ECS_PARAM_SERVICE_NAME"
+            skip_task_definition_registration: true
+            verify_revision_is_deployed: true
 
   # slack notifications
   - slack/notify:

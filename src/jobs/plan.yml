@@ -32,8 +32,8 @@ parameters:
 steps:
   - checkout
   - aws-cli/setup:
-      role-session-name: plan
-      role-arn: $<<parameters.role-arn>>
+      role_session_name: plan
+      role_arn: $<<parameters.role-arn>>
   - attach_workspace:
       at: .
   - tf/install:
