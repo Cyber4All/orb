@@ -48,9 +48,11 @@ steps:
         npm run <<parameters.script>>
 
   # syncs files and invalidates cloud front
+  - aws-cli/setup:
+      role_session_name: s3
+      role_arn: "$<<parameters.role-arn>>"
   - aws-s3/sync:
-      role-arn: "$<<parameters.role-arn>>"
-      # aws-region: AWS_DEFAULT_REGION /* uses default region */
+      profile_name: s3
       from: <<parameters.source>>
       to: "s3://<<parameters.bucket>>"
   - run:

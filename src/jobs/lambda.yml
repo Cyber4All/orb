@@ -30,8 +30,8 @@ machine:
 steps:
   # authenticates CLI using web identity
   - aws-cli/setup:
-      # aws-region: AWS_DEFAULT_REGION /* uses default region */
-      role-arn: "$<<parameters.role-arn>>"
+      role_session_name: lambda
+      role_arn: "$<<parameters.role-arn>>"
 
   # attaches deployment-package.zip from build job
   - attach_workspace:
