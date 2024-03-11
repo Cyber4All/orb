@@ -52,7 +52,6 @@ steps:
       role_session_name: s3
       role_arn: "$<<parameters.role-arn>>"
   - aws-s3/sync:
-      profile_name: s3
       from: <<parameters.source>>
       to: "s3://<<parameters.bucket>>"
   - run:
