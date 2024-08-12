@@ -56,7 +56,7 @@ steps:
   # syncs files and invalidates cloud front
   - aws-cli/setup:
       role_session_name: s3
-      role_arn: "$<<parameters.role-arn>>"
+      role_arn: "$<<parameters.role_arn>>"
   - aws-s3/sync:
       from: <<parameters.source>>
       to: "s3://<<parameters.bucket>>"
