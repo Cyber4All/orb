@@ -23,6 +23,15 @@ parameters:
     description: |
       The CloudFront distribution ID to invalidate.
 
+  region:
+    type: enum
+    default: us-east-1
+    enum:
+      - us-east-1
+      - us-east-2
+    description: |
+      The AWS region where the S3 bucket is located.
+
   role_arn:
     type: env_var_name
     default: S3_OIDC_ROLE
@@ -55,6 +64,7 @@ steps:
 
   - aws-cli/setup:
       profile_name: s3_oidc
+      region: <<parameters.region>>
       role_arn: "$<<parameters.role_arn>>"
 
   # syncs files and invalidates cloud front
