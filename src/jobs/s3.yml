@@ -73,7 +73,7 @@ steps:
   - run:
       name: Invalidate index.html and /assets directory in CloudFront
       command: |-
-        aws cloudfront create-invalidation --distribution-id <<parameters.distribution_id>> --paths /index.html /assets*
+        aws cloudfront create-invalidation --distribution-id $<<parameters.distribution_id>> --paths /index.html /assets*
 
   # slack notificaitons
   - slack/notify:
