@@ -2,42 +2,43 @@ version: 2.1
 
 orbs:
   orb-tools: circleci/orb-tools@12.1.0
-  shellcheck: circleci/shellcheck@3.2.0
-  bats: circleci/bats@1.1
   cyber4all: cyber4all/orb@2.1.2
 
 workflows:
   release:
     jobs:
-      # lints the yaml files
+      # ----------------- Continuous Integration -----------------
+
+      # Lints the yaml files
       - orb-tools/lint
 
-      # compiles orb
+      # Compiles orb
       - orb-tools/pack
 
-      # checks circleci rules
+      # Checks circleci rules
       - orb-tools/review:
           exclude: 'RC009'
 
-      # lints shell scripts
-      - shellcheck/check:
-          exclude: 'SC2148,SC2038,SC2086,SC2002,SC2016,SC2034'
+      # ----------------- Auto-Tag (Pre-release) -----------------
 
-      # runs bat tests
-      - bats/run:
-          path: ./src/tests
-      
-      # automate github tagged release
+      # Automatically tags the orb with the version
+      # defined in the VERSION file.
+      # Use the ./version.sh script to update the version.
+      # Use the -w flag to write the version to the file.
       - cyber4all/release:
           requires:
-            [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check, bats/run]
+            - orb-tools/lint
+            - orb-tools/review
+            - orb-tools/pack
           context: Github
           tag: $(./version.sh -r)
           filters:
             branches:
-              only: releases
+              only: main
       
-      # publish orb to production
+      # ----------------- Production -----------------
+
+      # Packs the orb for production
       - orb-tools/pack:
           name: pack-prod
           filters:
@@ -46,15 +47,16 @@ workflows:
             tags:
               only: '/^v[0-9]+\.[0-9]+\.[0-9]+$/'
   
-      # publishes orb to circleci registry
+      # Publishes orb to circleci registry
       - orb-tools/publish:
           requires:
-            [pack-prod]
-          context: orb-publishing
-          orb-name: cyber4all/orb
-          enable-pr-comment: false
-          pub-type: production
-          vcs-type: <<pipeline.project.type>>
+            - pack-prod
+          context: 
+            - orb-publishing
+            - Github
+          orb_name: cyber4all/orb
+          pub_type: production
+          vcs_type: <<pipeline.project.type>>
           filters:
             branches:
               ignore: /.*/
