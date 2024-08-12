@@ -8,7 +8,7 @@ parameters:
     type: string
     default: cyber4all/$CIRCLE_PROJECT_REPONAME
     description: Name of image to push
-  source-tag:
+  source_tag:
     type: string
     default: staging
     description: Image tag that is being promoted, defaults to staging
@@ -35,7 +35,7 @@ steps:
         docker pull $image
         set +x
       environment:
-        PARAM_IMAGE_W_TAG: <<parameters.image>>:<<parameters.source-tag>>
+        PARAM_IMAGE_W_TAG: <<parameters.image>>:<<parameters.source_tag>>
   - run:
       name: Tag Dockerfile
       command: |-

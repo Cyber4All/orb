@@ -16,7 +16,7 @@ parameters:
   # OPTIONAL PARAMETERS
   # These parameters have reasonable defaults.
   # ---------------------------------------------------------------------------------
-  src-path:
+  src_path:
     type: string
     default: $CIRCLE_PROJECT_REPONAME
     description: |
@@ -61,7 +61,7 @@ steps:
         - run:
             name: Zip Source Code
             command: |-
-              (cd <<parameters.src-path>> && zip -r -g ../deployment-package.zip .)
+              (cd <<parameters.src_path>> && zip -r -g ../deployment-package.zip .)
   - when:
       condition:
         equal: ["rust", << parameters.language >>]

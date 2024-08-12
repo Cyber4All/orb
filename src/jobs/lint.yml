@@ -14,11 +14,11 @@ parameters:
       The relative path to the source code directory from the root of the repo.
       Only needed when language is "python" or "go".
 
-  docker-image:
+  docker_image:
     type: string
     default: "cimg/node:16.18.1"
     description: |
-      The executor's docker docker-image.
+      The executor's docker docker_image.
       When language is:
         - node, use "cimg/node:16.18.1"
         - python, use "cimg/python:3.10"
@@ -33,7 +33,7 @@ parameters:
       Options: (node, python, go)
 
 docker:
-  - image: <<parameters.docker-image>>
+  - image: <<parameters.docker_image>>
 
 steps:
   - checkout

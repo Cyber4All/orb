@@ -32,7 +32,7 @@ parameters:
       Name of the container name defined in the ecs task-definition.
       (defaults to family)
 
-  role-arn:
+  role_arn:
     type: env_var_name
     default: ECS_OIDC_ROLE
     description: |
@@ -44,7 +44,7 @@ parameters:
     default: ""
     description: |
       The name of the scheduled task's rule to update.
-      Required when updateService is `false`.
+      Required when update_service is `false`.
       (defaults to family)
 
   service:
@@ -52,7 +52,7 @@ parameters:
     default: ""
     description: |
       The name of the service to update.
-      Required when updateService is `true`.
+      Required when update_service is `true`.
       (defaults to family)
 
   tag:
@@ -60,15 +60,15 @@ parameters:
     default: ""
     description: |
       The semantic version of the project being deployed.
-      Required when task-definition-json is not set.
+      Required when task_definition_json is not set.
 
-  task-definition-json:
+  task_definition_json:
     type: string
     default: ""
     description: |
       Location of your .json task definition file (relative or absolute)
 
-  updateService:
+  update_service:
     type: boolean
     default: true
     description: |
@@ -96,18 +96,18 @@ steps:
   # authenticates CLI using web identity
   - aws-cli/setup:
       role_session_name: ecs
-      role_arn: "$<<parameters.role-arn>>"
+      role_arn: "$<<parameters.role_arn>>"
 
   # task-definition registration
   # updates based on json file
   - when:
-      condition: <<parameters.task-definition-json>>
+      condition: <<parameters.task_definition_json>>
       steps:
         - aws-ecs/update_task_definition_from_json:
-            task_definition_json: <<parameters.task-definition-json>>
+            task_definition_json: <<parameters.task_definition_json>>
   # updates just tag
   - unless:
-      condition: <<parameters.task-definition-json>>
+      condition: <<parameters.task_definition_json>>
       steps:
         - run:
             name: Verify Tag is Set
@@ -122,7 +122,7 @@ steps:
 
   # updates ECS service with new revision
   - when:
-      condition: <<parameters.updateService>>
+      condition: <<parameters.update_service>>
       steps:
         - aws-ecs/update_service:
             cluster: <<parameters.cluster>>

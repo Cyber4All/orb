@@ -15,7 +15,7 @@ parameters:
     description: Path to the terraform module
     type: string
 
-  role-arn:
+  role_arn:
     default: CIRCLECI_OIDC_ROLE
     description: >-
       The Amazon Resource Name (ARN) of the role that the caller is assuming.
@@ -33,7 +33,7 @@ steps:
   - checkout
   - aws-cli/setup:
       role_session_name: plan
-      role_arn: $<<parameters.role-arn>>
+      role_arn: $<<parameters.role_arn>>
   - attach_workspace:
       at: .
   - tf/install:
