@@ -8,7 +8,7 @@ parameters:
   # REQUIRED PARAMETERS
   # You must provide a value for each of these parameters.
   # ---------------------------------------------------------------------------------
-  function-name:
+  function_name:
     type: string
     description: |
       The name of the lambda function to be updated.
@@ -17,7 +17,7 @@ parameters:
   # OPTIONAL PARAMETERS
   # These parameters have reasonable defaults.
   # ---------------------------------------------------------------------------------
-  role-arn:
+  role_arn:
     type: env_var_name
     default: LAMBDA_OIDC_ROLE
     description: |
@@ -31,7 +31,7 @@ steps:
   # authenticates CLI using web identity
   - aws-cli/setup:
       role_session_name: lambda
-      role_arn: "$<<parameters.role-arn>>"
+      role_arn: "$<<parameters.role_arn>>"
 
   # attaches deployment-package.zip from build job
   - attach_workspace:
@@ -39,7 +39,7 @@ steps:
   - run:
       name: Update Lambda with Deploy Package Artifact
       command: >
-        aws lambda update-function-code --function-name <<parameters.function-name>> --publish --zip-file fileb://deployment-package.zip
+        aws lambda update-function-code --function_name <<parameters.function_name>> --publish --zip-file fileb://deployment-package.zip
 
   # slack notifications
   - slack/notify:
