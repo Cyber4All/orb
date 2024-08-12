@@ -63,14 +63,12 @@ steps:
         npm run <<parameters.script>>
 
   - aws-cli/setup:
-      profile_name: s3_oidc
       region: <<parameters.region>>
       role_arn: "$<<parameters.role_arn>>"
 
   # syncs files and invalidates cloud front
   - aws-s3/sync:
       from: <<parameters.source>>
-      profile_name: s3_oidc
       to: "s3://<<parameters.bucket>>"
   - run:
       name: Invalidate index.html and /assets directory in CloudFront
