@@ -35,12 +35,7 @@ parameters:
       https://circleci.com/docs/2.0/configuration-reference/#docker-executor
 
   docker_image:
-    type: enum
-    enum: [
-      "cimg/node@sha256:9e7dff70aee20446a146e374367c3fddc58df1e39cca318dbd4993e625892880",
-      "cimg/node:16.18.1",
-      "cimg/base:2022.12"
-    ]
+    type: string
     default: "cimg/node@sha256:9e7dff70aee20446a146e374367c3fddc58df1e39cca318dbd4993e625892880"
     description: |
       The docker image to use for the tests.
