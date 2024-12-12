@@ -11,8 +11,7 @@ parameters:
   # You must provide a value for each of these parameters.
   # ---------------------------------------------------------------------------------
   cluster:
-    type: enum
-    enum: ["Clark-Services", "CARD-Service"]
+    type: string
     description: |
       The short name or full ARN of the cluster that hosts the service.
 
