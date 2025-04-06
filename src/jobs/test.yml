@@ -59,8 +59,8 @@ steps:
       steps:
         - node/install-packages
         - run:
-            name: Install JUnit coverage reporter
-            command: yarn add --dev jest-junit
+            name: Install all packages and JUnit coverage reporter
+            command: npm install --save-dev jest-junit
         - run:
             name: Run Tests
             command: |-
