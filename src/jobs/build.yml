@@ -32,7 +32,7 @@ steps:
         equal: [ "node", << parameters.language >> ]
       steps:
         - node/install:
-            node-version: "16.18.1"
+            node-version: "18.19.0"
         - node/install-packages
         - run:
             name: Compile Typescript with NPM Build Script
