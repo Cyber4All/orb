@@ -55,7 +55,7 @@ steps:
   # compiles nodejs front-end app
   - checkout
   - node/install:
-      node-version: 18.13.0
+      node-version: 18.19.0
   - node/install-packages
   - run:
       name: Build Application
