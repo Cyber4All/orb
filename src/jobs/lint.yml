@@ -58,7 +58,7 @@ steps:
         - run:
             name: Verify Golangci-lint Install
             command: |-
-              golangci-lint verison
+              golangci-lint version
         - run:
             name: Lint Golang Application
             command: |-
