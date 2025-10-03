@@ -37,7 +37,7 @@ steps:
   - attach_workspace:
       at: .
   - tf/install:
-      terraform_version: 1.2.9
+      terraform_version: 1.6.0
   - tf/init:
       path: <<parameters.path>>
   - when:
